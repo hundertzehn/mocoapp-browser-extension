@@ -1,0 +1,14 @@
+{
+  "name": "moco-browser-extensions",
+  "description": "Browser plugin for MOCO",
+  "version": "0.9.20",
+  "main": "bundle.js",
+  "scripts": {
+    "webpack": "webpack --mode=development --watch"
+  },
+  "devDependencies": {
+    "webpack": "^4.15.0",
+    "webpack-cli": "^3.0.8",
+    "webpack-chrome-extension-reloader": "^0.8.3"
+  }
+}
