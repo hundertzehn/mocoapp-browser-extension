@@ -21,13 +21,6 @@
   "optional_permissions": [
     "*://*/"
   ],
-  "background": {
-    "scripts": [
-      "node_modules/jquery/dist/jquery.min.js",
-      "node_modules/select2/select2.js",
-      "background.min.js"
-    ]
-  },
   "browser_action": {
     "default_icon": "src/images/logo.png",
     "default_title": "MOCO Time Tracking",
