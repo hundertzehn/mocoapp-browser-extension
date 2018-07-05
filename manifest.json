@@ -1,0 +1,47 @@
+{
+  "name": "MOCO Zeiterfassung",
+  "short_name": "MOCO",
+  "description": "MOCO Zeiterfassung Plugin",
+  "version": "0.9.20",
+  "manifest_version": 2,
+  "description" : "MOCO Time Tracking Plugin",
+  "icons": { "16": "src/images/logo.png",
+             "48": "src/images/logo.png",
+            "128": "src/images/logo.png" },
+  "options_ui": {
+    "page": "options.html",
+    "chrome_style": true
+  },
+  "permissions": [
+    "https://*.mocoapp.com/*",
+    "background",
+    "storage",
+    "tabs"
+  ],
+  "optional_permissions": [
+    "*://*/"
+  ],
+  "background": {
+    "scripts": [
+      "node_modules/jquery/dist/jquery.min.js",
+      "node_modules/select2/select2.js",
+      "background.min.js"
+    ]
+  },
+  "browser_action": {
+    "default_icon": "src/images/logo.png",
+    "default_title": "MOCO Time Tracking",
+    "default_popup": "popup.html"
+  },
+  "web_accessible_resources": [
+    "src/images/*"
+  ],
+  "commands": {
+    "_execute_browser_action": {
+      "suggested_key": {
+        "default": "Ctrl+M",
+        "mac": "Command+M"
+      }
+    }
+  }
+}
