@@ -3,6 +3,7 @@ const path = require('path')
 module.exports = {
   entry: {
     background: './src/js/background.js',
+    bubble: './src/js/bubble.js',
     options: './src/js/options.js',
     popup: './src/js/popup.js',
   },
