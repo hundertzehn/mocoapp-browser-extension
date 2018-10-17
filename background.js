@@ -108,13 +108,10 @@ chrome.tabs.onUpdated.addListener(function (tabId, changeInfo, tab) {
     file: "/styles.css"
   }, function () {
     chrome.tabs.executeScript(tabId, {
-      code: "const div = document.createElement('div'); div.setAttribute('id', 'moco'); document.body.appendChild(div)"
+      file: "/bubble.js"
     }, function () {
-      chrome.tabs.executeScript(tabId, {
-        file: "/popup.js"
-      }, function () {
-        console.log("inejected /popup.js");
-      });
+      // chrome.tabs.executeScript(tabId, {file: "/popup.js"}, () => {
+      console.log("injected bubble.js"); // })
     });
   });
 });
@@ -148,7 +145,7 @@ function () {
   _createClass(DomainCheck, [{
     key: "hasMatch",
     get: function get() {
-      return this.url.match(/github/);
+      return this.url.match(/github/) || this.url.match(/trello/) || this.url.match(/mocoapp/);
     }
   }]);
 
