@@ -1,8 +1,6 @@
-console.log("okish from popup.js")
-
-import React, { createElement } from 'react'
+import { createElement } from 'react'
 import ReactDOM from 'react-dom'
-import Modal from './components/Modal'
+import Form from './components/Form'
 
-const domContainer = document.querySelector('#moco')
-ReactDOM.render(createElement(Modal), domContainer)
+const domContainer = document.querySelector('#moco-bx-container')
+ReactDOM.render(createElement(Form, {inline: false}), domContainer)

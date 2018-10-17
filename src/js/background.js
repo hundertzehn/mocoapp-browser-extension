@@ -10,12 +10,10 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
   // inject css + js
   chrome.tabs.insertCSS(tabId, {file: "/styles.css"}, () => {
-    chrome.tabs.executeScript(tabId, {
-      code: "const div = document.createElement('div'); div.setAttribute('id', 'moco'); document.body.appendChild(div)"
-    }, () => {
-      chrome.tabs.executeScript(tabId, {file: "/popup.js"}, () => {
-        console.log("inejected /popup.js")
-      })
+    chrome.tabs.executeScript(tabId, {file: "/bubble.js"}, () => {
+      // chrome.tabs.executeScript(tabId, {file: "/popup.js"}, () => {
+        console.log("injected bubble.js")
+      // })
     })
   })
 })
