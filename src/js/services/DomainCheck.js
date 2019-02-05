@@ -1,11 +1,31 @@
+import Route from "route-parser"
+
 class DomainCheck {
-  constructor(url) {
-    this.url = url
+  #services;
+
+  constructor(config) {
+    this.#services = config.services.map(service => ({
+      ...service,
+       route: new Route(service.urlPattern), 
+    }))
   }
 
-  get hasMatch() {
-    return this.url.match(/github/) || this.url.match(/trello/) || this.url.match(/mocoapp/)
+  #findService = url =>
+    this.#services.find(service => service.route.match(url));
+
+  match(url) {
+    const service = this.#findService(url)
+
+    if (!service) {
+      return false
+    }
+
+    return {
+      ...service,
+      match: service.route.match(url),
+    }
   }
+
 }
 
 export default DomainCheck

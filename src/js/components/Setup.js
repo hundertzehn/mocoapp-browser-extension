@@ -1,26 +1,26 @@
-import React, { Component } from "react";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
+import React, { Component } from "react"
+import { observable } from "mobx"
+import { observer } from "mobx-react"
 
 @observer
 class Setup extends Component {
-  @observable loading = true;
-  @observable subdomain = "";
-  @observable apiKey = "";
+  @observable loading = true
+  @observable subdomain = ""
+  @observable apiKey = ""
 
   componentDidMount() {
     chrome.storage.sync.get(null, store => {
-      this.loading = false;
-      this.subdomain = store.subdomain || "";
-      this.apiKey = store.api_key || "";
-    });
+      this.loading = false
+      this.subdomain = store.subdomain || ""
+      this.apiKey = store.api_key || ""
+    })
   }
 
   // EVENTS
 
   onChange = event => {
-    this[event.target.name] = event.target.value;
-  };
+    this[event.target.name] = event.target.value
+  }
 
   onSubmit = _event => {
     chrome.storage.sync.set(
@@ -29,13 +29,13 @@ class Setup extends Component {
         api_key: this.apiKey.trim()
       },
       () => window.close()
-    );
-  };
+    )
+  }
 
   // RENDER -------------------------------------------------------------------
 
   render() {
-    if (this.loading) return null;
+    if (this.loading) return null
 
     return (
       <form onSubmit={this.onSubmit}>
@@ -67,8 +67,8 @@ class Setup extends Component {
         </div>
         <button>Save</button>
       </form>
-    );
+    )
   }
 }
 
-export default Setup;
+export default Setup

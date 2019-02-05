@@ -1,21 +1,25 @@
-import React, { Component } from "react";
-import Modal, { Content } from "components/Modal";
-import Form from "components/Form";
-import { observable } from "mobx";
-import { observer } from "mobx-react";
-import logoUrl from "../../images/logo.png";
+import React, { Component } from "react"
+import Modal, { Content } from "components/Modal"
+import Form from "components/Form"
+import { observable } from "mobx"
+import { observer } from "mobx-react"
+import logoUrl from "../../images/logo.png"
 
 @observer
 class Bubble extends Component {
-  @observable open = false;
+  @observable open = false
 
-  onOpen = _e => {
-    this.open = true;
-  };
+  onOpen = _event => {
+    this.open = true
+  }
 
-  onClose = _e => {
-    this.open = false;
-  };
+  onClose = _event => {
+    this.open = false
+  }
+
+  componentDidMount() {
+    console.log(this.props.service)
+  }
 
   // RENDER -------------------------------------------------------------------
 
@@ -37,8 +41,8 @@ class Bubble extends Component {
           </Modal>
         )}
       </>
-    );
+    )
   }
 }
 
-export default Bubble;
+export default Bubble

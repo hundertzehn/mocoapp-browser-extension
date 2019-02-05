@@ -1,12 +1,12 @@
-const path = require("path");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const path = require("path")
+const CleanWebpackPlugin = require("clean-webpack-plugin")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const CopyWebpackPlugin = require("copy-webpack-plugin")
 
 module.exports = {
   entry: {
     background: "./src/js/background.js",
-    bubble: "./src/js/bubble.js",
+    content: "./src/js/content.js",
     options: "./src/js/options.js",
     popup: "./src/js/popup.js"
   },
@@ -60,7 +60,7 @@ module.exports = {
               version: process.env.npm_package_version,
               ...JSON.parse(content.toString())
             })
-          );
+          )
         }
       }
     ]),
@@ -80,4 +80,4 @@ module.exports = {
   // https://stackoverflow.com/a/49100966
   devtool: "none",
   mode: process.env.NODE_ENV || "development"
-};
+}
