@@ -1,0 +1,63 @@
+#moco-bx-container {
+  .form-group {
+    width: 100%;
+    margin: 1rem 0;
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 0.25rem;
+    }
+
+    input {
+      padding: 0.5rem 0.75rem;
+      width: 100%;
+    }
+
+    text-muted {
+      color: #eee;
+    }
+
+    .input-group {
+      position: relative;
+      display: table;
+      border-collapse: separate;
+
+      input {
+        position: relative;
+        display: table-cell;
+      }
+
+      .input-group-addon {
+        padding: 0.5rem 0.75rem;
+        font-weight: normal;
+        color: #555555;
+        text-align: center;
+        background-color: #eeeeee;
+        border: 1px solid #cccccc;
+        border-left: none;
+        display: table-cell;
+        width: 1%;
+      }
+    }
+  }
+
+  button {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    color: white;
+    background-image: none;
+    background-color: #7dc332;
+    border-color: #7dc332;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #639a28;
+      border-color: #639a28;
+    }
+  }
+}
