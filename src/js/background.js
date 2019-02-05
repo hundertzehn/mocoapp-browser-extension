@@ -1,16 +1,24 @@
-import DomainCheck from "./services/DomainCheck";
+import DomainCheck from "./services/DomainCheck"
+import config from "./config"
+
+const domainCheck = new DomainCheck(config)
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // inject files only after the page is fully loaded
-  if (changeInfo.status != "complete") return;
+  if (changeInfo.status != "complete") {
+    return
+  }
 
-  // inject files only for supported websites
-  const domainCheck = new DomainCheck(tab.url);
-  if (!domainCheck.hasMatch) return;
+  // inject files only for supported services
+  const service = domainCheck.match(tab.url)
 
-  chrome.tabs.executeScript(tabId, { file: "/bubble.js" }, () => {
-    // chrome.tabs.executeScript(tabId, {file: "/popup.js"}, () => {
-    console.log("injected bubble.js");
-    // })
-  });
-});
+  if (service) {
+    chrome.tabs.sendMessage(tabId, { type: "mountBubble", service }, () => {
+      console.log("bubble mounted")
+    })
+  } else {
+    chrome.tabs.sendMessage(tabId, { type: "unmountBubble" }, () => {
+      console.log("bubble unmounted")
+    })
+  }
+})

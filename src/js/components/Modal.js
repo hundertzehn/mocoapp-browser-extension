@@ -1,25 +1,25 @@
-import React, { Component } from 'react'
-import { createPortal } from 'react-dom'
-import PropTypes from 'prop-types'
+import React, { Component } from "react"
+import { createPortal } from "react-dom"
+import PropTypes from "prop-types"
 
 class Modal extends Component {
   static propTypes = {
-    children: PropTypes.node.isRequired,
+    children: PropTypes.node.isRequired
   }
 
   constructor(props) {
     super(props)
-    this.el = document.createElement('div')
-    this.el.setAttribute('class', 'moco-bx-modal')
+    this.el = document.createElement("div")
+    this.el.setAttribute("class", "moco-bx-modal")
   }
 
   componentDidMount() {
-    const modalRoot = document.getElementById('moco-bx-container')
+    const modalRoot = document.getElementById("moco-bx-container")
     modalRoot.appendChild(this.el)
   }
 
   componentWillUnmount() {
-    const modalRoot = document.getElementById('moco-bx-container')
+    const modalRoot = document.getElementById("moco-bx-container")
     modalRoot.removeChild(this.el)
   }
 
@@ -30,10 +30,12 @@ class Modal extends Component {
   }
 }
 
-export function Content({children}) {
-  return (
-    <div className="moco-bx-modal-content">{children}</div>
-  )
+export function Content({ children }) {
+  return <div className="moco-bx-modal-content">{children}</div>
+}
+
+Content.propTypes = {
+  children: PropTypes.node
 }
 
 export default Modal

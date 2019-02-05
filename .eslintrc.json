@@ -23,6 +23,7 @@
   },
   "rules": {
     "strict": 0,
+    "semi": ["error", "never"],
     "array-callback-return": "warn",
     "getter-return": "warn",
     "no-const-assign": "warn",
