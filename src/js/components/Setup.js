@@ -9,26 +9,28 @@ class Setup extends Component {
   @observable apiKey = ""
 
   componentDidMount() {
-    chrome.storage.sync.get(null, store => {
+    chrome.storage.sync.get(["subdomain", "apiKey"], store => {
       this.loading = false
       this.subdomain = store.subdomain || ""
-      this.apiKey = store.api_key || ""
+      this.apiKey = store.apiKey || ""
     })
   }
 
   // EVENTS
 
   onChange = event => {
-    this[event.target.name] = event.target.value
+    this[event.target.name] = event.target.value.trim()
   }
 
   onSubmit = _event => {
     chrome.storage.sync.set(
       {
-        subdomain: this.subdomain.trim(),
-        api_key: this.apiKey.trim()
+        subdomain: this.subdomain,
+        apiKey: this.apiKey
       },
-      () => window.close()
+      () => {
+        window.close()
+      }
     )
   }
 
