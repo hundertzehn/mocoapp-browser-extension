@@ -1,65 +1,62 @@
-import axios from 'axios'
+import axios from "axios"
 
 class Client {
   constructor() {
-    // this.warningPresent = false
-    this.client = axios.create({responseType: 'json', headers: {'x-client-version': this.clientVersion()}})
-    // this.client.interceptors.response.use(this.forceUpdateInterceptor)
+    this.client = axios.create({
+      responseType: "json"
+    })
   }
 
-  // csrfToken() {
-  //   return document.getElementsByName('csrf-token')[0].getAttribute('content')
-  // }
+  registerStorage(storage) {
+    storage.sync.get(["subdomain", "apiKey"], store => {
+      this.setSubdomain(store.subdomain)
+      this.setCredentials(store.apiKey)
+    })
 
-  clientVersion() {
-    return "1.0.0"
-    // FIXME: on server sync with real version numbers return chrome.runtime.getManifest().version
+    storage.onChanged.addListener(({ subdomain, apiKey }) => {
+      subdomain && this.setSubdomain(subdomain.newValue)
+      apiKey && this.setCredentials(apiKey.newValue)
+    })
   }
 
-  // clientVersionMajor() {
-  //   const [major] = this.clientVersion().split('.')
-  //   return parseInt(major)
-  // }
+  setSubdomain(subdomain) {
+    this.client.defaults.baseURL = `https://${encodeURIComponent(
+      subdomain
+    )}.mocoapp.com/api/v1`
+  }
 
-  // forceUpdateInterceptor = (response) => {
-  //   const [serverMajor] = response.headers['x-moco-version'].split('.')
+  setCredentials(apiKey) {
+    this.client.defaults.headers.common[
+      "Authorization"
+    ] = `Token token=${encodeURIComponent(apiKey)}`
+  }
 
-  //   // if (parseInt(serverMajor) > this.clientVersionMajor() && !this.warningPresent) {
-  //   //   this.warningPresent = true
-  //   // }
+  setClientVersion(version) {
+    this.client.defaults.headers.common["x-client-version"] = version
+  }
 
-  //   if (response.headers['x-moco-version'] != this.clientVersion())
-  //     window.updateRequired = true
-
-  //   return response
-  // }
+  get defaults() {
+    return this.client.defaults
+  }
 
   get(url, config = {}) {
     return this.client.get(url, config)
   }
 
   post(url, data) {
-    return this.client.post(url, data, {
-      // headers: {'x-csrf-token': this.csrfToken()}
-    })
+    return this.client.post(url, data)
   }
 
   put(url, data) {
-    return this.client.put(url, data, {
-      // headers: { 'x-csrf-token': this.csrfToken() }
-    })
+    return this.client.put(url, data)
   }
 
   patch(url, data) {
-    return this.client.patch(url, data, {
-      // headers: { 'x-csrf-token': this.csrfToken() }
-    })
+    return this.client.patch(url, data)
   }
 
   delete(url) {
-    return this.client.delete(url, {
-      // headers: { 'x-csrf-token': this.csrfToken() }
-    })
+    return this.client.delete(url)
   }
 }
 
