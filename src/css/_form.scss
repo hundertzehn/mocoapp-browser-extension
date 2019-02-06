@@ -1,4 +1,8 @@
 #moco-bx-container {
+  input {
+    border-radius: 0;
+  }
+
   .form-group {
     width: 100%;
     margin: 1rem 0;
@@ -9,8 +13,10 @@
       margin-bottom: 0.25rem;
     }
 
-    input {
-      padding: 0.5rem 0.75rem;
+    input, textarea {
+      padding: 0.25rem 0.5rem;
+      background-color: white;
+      border-color: #cccccc;
       width: 100%;
     }
 
@@ -42,6 +48,15 @@
     }
   }
 
+  input[name="hours"] {
+    width: 33%;
+  }
+
+  textarea[name="description"] {
+    resize: none;
+    width: 100%;
+  }
+
   button {
     display: inline-block;
     padding: 6px 12px;
@@ -55,9 +70,14 @@
     border-color: #7dc332;
     cursor: pointer;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: #639a28;
       border-color: #639a28;
+    }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: default;
     }
   }
 }

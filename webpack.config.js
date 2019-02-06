@@ -78,7 +78,7 @@ module.exports = {
   resolve: {
     modules: [path.join(__dirname, "src/js"), "node_modules"],
     alias: {
-      images: path.join(__dirname, 'src/images')
+      images: path.join(__dirname, "src/images")
     }
   },
   // webpack creates sourcemaps by default and evals js code

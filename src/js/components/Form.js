@@ -1,38 +1,83 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
-import { login } from 'api/session'
-import { observable } from 'mobx'
-import { observer } from 'mobx-react'
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import Select from "components/Select"
 
-@observer
 class Form extends Component {
-  @observable loading = true
-
   static propTypes = {
-    inline: PropTypes.bool,
-  }
+    isLoading: PropTypes.bool.isRequired,
+    changeset: PropTypes.shape({
+      project: PropTypes.object,
+      task: PropTypes.object,
+      hours: PropTypes.string
+    }).isRequired,
+    projects: PropTypes.array.isRequired,
+    tasks: PropTypes.array.isRequired,
+    onChange: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
+  };
 
   static defaultProps = {
-    inline: true,
-  }
+    inline: true
+  };
 
-  componentDidMount() {
-    chrome.storage.sync.get(null, (store) => {
-      login(store.subdomain, store.api_key)
-        .then((response) => this.loading = false)
-        .catch((error) => console.log(error))
-    })
-  }
+  isValid = () => {
+    const { changeset } = this.props
+    return ["project", "task", "hours", "description"]
+      .map(prop => changeset[prop])
+      .every(Boolean)
+  };
 
   // RENDER -------------------------------------------------------------------
 
   render() {
-    if (this.loading) return null
+    if (this.isLoading) {
+      return null
+    }
+
+    const { projects, tasks, changeset, onChange, onSubmit } = this.props
 
     return (
-      <div>
-        This is the Form {this.props.inline ? <span>INLINE</span> : <span>DEDICATED</span>}.
-      </div>
+      <form onSubmit={onSubmit}>
+        <div className="form-group">
+          <Select
+            name="project"
+            options={projects}
+            value={changeset.project}
+            onChange={onChange}
+          />
+        </div>
+        <div className="form-group">
+          <Select
+            name="task"
+            options={tasks}
+            value={changeset.task}
+            onChange={onChange}
+            noOptionsMessage={() => "Zuerst Projekt wählen"}
+          />
+        </div>
+        <div className="form-group">
+          <input
+            name="hours"
+            className="form-control"
+            onChange={onChange}
+            value={changeset.hours}
+            placeholder="0.00 h"
+            autoComplete="off"
+            autoFocus
+          />
+        </div>
+        <div className="form-group">
+          <textarea
+            name="description"
+            onChange={onChange}
+            value={changeset.description}
+            placeholder="Beschreibung der Tätigkeit - mind. 3 Zeichen"
+            rows={4}
+          />
+        </div>
+
+        <button disabled={!this.isValid()}>Speichern</button>
+      </form>
     )
   }
 }

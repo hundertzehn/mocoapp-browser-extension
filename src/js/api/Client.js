@@ -1,63 +1,26 @@
 import axios from "axios"
 
-class Client {
-  constructor() {
-    this.client = axios.create({
-      responseType: "json"
+export default class Client {
+  #client
+  #apiKey
+
+  constructor({ subdomain, apiKey, clientVersion }) {
+    this.#apiKey = apiKey
+    this.#client = axios.create({
+      responseType: "json",
+      baseURL: `https://${encodeURIComponent(
+        subdomain
+      )}.mocoapp.com/api/browser_extensions`,
+      headers: {
+        common: {
+          "x-api-key": apiKey,
+          "x-client-version": clientVersion
+        }
+      }
     })
   }
 
-  registerStorage(storage) {
-    storage.sync.get(["subdomain", "apiKey"], store => {
-      this.setSubdomain(store.subdomain)
-      this.setCredentials(store.apiKey)
-    })
+  login = () => this.#client.post("session", { api_key: this.#apiKey })
 
-    storage.onChanged.addListener(({ subdomain, apiKey }) => {
-      subdomain && this.setSubdomain(subdomain.newValue)
-      apiKey && this.setCredentials(apiKey.newValue)
-    })
-  }
-
-  setSubdomain(subdomain) {
-    this.client.defaults.baseURL = `https://${encodeURIComponent(
-      subdomain
-    )}.mocoapp.com/api/v1`
-  }
-
-  setCredentials(apiKey) {
-    this.client.defaults.headers.common[
-      "Authorization"
-    ] = `Token token=${encodeURIComponent(apiKey)}`
-  }
-
-  setClientVersion(version) {
-    this.client.defaults.headers.common["x-client-version"] = version
-  }
-
-  get defaults() {
-    return this.client.defaults
-  }
-
-  get(url, config = {}) {
-    return this.client.get(url, config)
-  }
-
-  post(url, data) {
-    return this.client.post(url, data)
-  }
-
-  put(url, data) {
-    return this.client.put(url, data)
-  }
-
-  patch(url, data) {
-    return this.client.patch(url, data)
-  }
-
-  delete(url) {
-    return this.client.delete(url)
-  }
+  projects = () => this.#client.get("projects")
 }
-
-export default new Client()
