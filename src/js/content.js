@@ -3,10 +3,10 @@ import ReactDOM from "react-dom"
 import Bubble from "./components/Bubble"
 import "../css/main.scss"
 
-chrome.runtime.onMessage.addListener(({ type, service }) => {
+chrome.runtime.onMessage.addListener(({ type, payload }) => {
   switch (type) {
     case "mountBubble": {
-      return mountBubble(service)
+      return mountBubble(payload)
     }
 
     case "unmountBubble": {
@@ -15,7 +15,7 @@ chrome.runtime.onMessage.addListener(({ type, service }) => {
   }
 })
 
-const mountBubble = service => {
+const mountBubble = ({ service, settings }) => {
   if (document.getElementById("moco-bx-bubble")) {
     return
   }
@@ -28,7 +28,7 @@ const mountBubble = service => {
   domBubble.setAttribute("id", "moco-bx-bubble")
   document.body.appendChild(domBubble)
 
-  ReactDOM.render(createElement(Bubble, { service }), domBubble)
+  ReactDOM.render(createElement(Bubble, { service, settings }), domBubble)
 }
 
 const unmountBubble = () => {
