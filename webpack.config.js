@@ -75,6 +75,12 @@ module.exports = {
       chunks: ["options"]
     })
   ],
+  resolve: {
+    modules: [path.join(__dirname, "src/js"), "node_modules"],
+    alias: {
+      images: path.join(__dirname, 'src/images')
+    }
+  },
   // webpack creates sourcemaps by default and evals js code
   // this is not allowed by chrome extensions
   // https://stackoverflow.com/a/49100966
