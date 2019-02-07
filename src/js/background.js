@@ -1,7 +1,8 @@
-import DomainCheck from "./services/DomainCheck"
-import config from "./config"
+import { parseServices, createMatcher } from 'utils/urlMatcher'
+import remoteServices from "./remoteServices"
 
-const domainCheck = new DomainCheck(config)
+const services = parseServices(remoteServices)
+const matcher = createMatcher(services)
 const { version } = chrome.runtime.getManifest()
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
@@ -10,14 +11,14 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     return
   }
 
-  const service = domainCheck.match(tab.url)
+  const service = matcher(tab.url)
 
   if (service) {
     chrome.storage.sync.get(
       ["subdomain", "apiKey"],
       ({ subdomain, apiKey }) => {
         const settings = { subdomain, apiKey, version }
-        const payload = { service, settings }
+        const payload = { serviceKey: service.key, settings }
         chrome.tabs.sendMessage(tabId, { type: "mountBubble", payload }, () => {
           console.log("bubble mounted")
         })
