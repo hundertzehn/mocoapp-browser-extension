@@ -14,13 +14,13 @@ const nilToArray = input => input || []
 
 export const findLastProject = id =>
   compose(
-    find(pathEq("value", id)),
+    find(pathEq("value", Number(id))),
     flatMap(get("options"))
   )
 
 export const findLastTask = id =>
   compose(
-    find(pathEq("value", id)),
+    find(pathEq("value", Number(id))),
     get("tasks")
   )
 

@@ -12,6 +12,14 @@ import { findLastProject, findLastTask, groupedProjectOptions } from "utils"
 @observer
 class Bubble extends Component {
   static propTypes = {
+    service: PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      url: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      description: PropTypes.string,
+      projectId: PropTypes.string,
+      taskId: PropTypes.string
+    }).isRequired,
     settings: PropTypes.shape({
       subdomain: PropTypes.string,
       apiKey: PropTypes.string,

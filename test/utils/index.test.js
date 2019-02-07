@@ -1,9 +1,9 @@
-import { projects } from "./data"
+import { projects } from "../data"
 import {
   findLastProject,
   findLastTask,
   groupedProjectOptions
-} from "../src/js/utils"
+} from "../../src/js/utils"
 import { map } from "lodash/fp"
 
 describe("utils", () => {
