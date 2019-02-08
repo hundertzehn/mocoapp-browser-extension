@@ -3,10 +3,9 @@ import PropTypes from "prop-types"
 import ApiClient from "api/Client"
 import Modal, { Content } from "components/Modal"
 import Form from "components/Form"
-import { observable } from "mobx"
+import { observable, computed } from "mobx"
 import { observer } from "mobx-react"
 import logoUrl from "images/logo.png"
-import get from "lodash/get"
 import { findLastProject, findLastTask, groupedProjectOptions } from "utils"
 
 @observer
@@ -29,15 +28,32 @@ class Bubble extends Component {
 
   @observable isLoading = true;
   @observable isOpen = false;
-  @observable userSettings;
   @observable projects;
-  @observable tasks = [];
-  @observable changeset = {
-    project: null,
-    task: null,
-    hours: '',
-    description: ''
-  };
+  @observable lastProjectId;
+  @observable lastTaskId;
+  @observable changeset = {};
+
+  @computed get changesetWithDefaults() {
+    const { service } = this.props
+
+    const project = findLastProject(service.projectId || this.lastProjectId)(
+      this.projects
+    ) || this.projects[0]
+
+    const defaults = {
+      id: service.id,
+      name: service.name,
+      project,
+      task: findLastTask(service.taskId || this.lastTaskId)(project),
+      hours: "",
+      description: service.description
+    }
+
+    return {
+      ...defaults,
+      ...this.changeset
+    }
+  }
 
   componentDidMount() {
     const { settings } = this.props
@@ -59,21 +75,12 @@ class Bubble extends Component {
   };
 
   fetchData = () => {
-    Promise.all([this.apiClient.login(), this.apiClient.projects()])
-      .then(responses => {
-        this.userSettings = get(responses, "[0].data")
-        this.projects = groupedProjectOptions(
-          get(responses, "[1].data.projects")
-        )
-
-        const {
-          last_project_id: lastProjectId,
-          last_task_id: lastTaskId
-        } = this.userSettings
-
-        this.changeset.project = findLastProject(lastProjectId)(this.projects)
-        this.changeset.task = findLastTask(lastTaskId)(this.changeset.project)
-
+    this.apiClient
+      .projects()
+      .then(({ data }) => {
+        this.projects = groupedProjectOptions(data.projects)
+        this.lastProjectId = data.last_project_id
+        this.lastTaskId = data.lastTaskId
         this.isLoading = false
       })
       .catch(console.error)
@@ -96,7 +103,6 @@ class Bubble extends Component {
 
     if (name === "project") {
       this.changeset.task = null
-      this.tasks = value.tasks
     }
   };
 
@@ -125,8 +131,7 @@ class Bubble extends Component {
             <Content>
               <Form
                 projects={this.projects}
-                tasks={this.tasks}
-                changeset={this.changeset}
+                changeset={this.changesetWithDefaults}
                 isLoading={this.isLoading}
                 onChange={this.handleChange}
                 onSubmit={this.handleSubmit}
