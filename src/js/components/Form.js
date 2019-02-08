@@ -11,7 +11,6 @@ class Form extends Component {
       hours: PropTypes.string
     }).isRequired,
     projects: PropTypes.array.isRequired,
-    tasks: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired
   };
@@ -34,7 +33,7 @@ class Form extends Component {
       return null
     }
 
-    const { projects, tasks, changeset, onChange, onSubmit } = this.props
+    const { projects, changeset, onChange, onSubmit } = this.props
 
     return (
       <form onSubmit={onSubmit}>
@@ -49,7 +48,7 @@ class Form extends Component {
         <div className="form-group">
           <Select
             name="task"
-            options={tasks}
+            options={changeset.project?.tasks || []}
             value={changeset.task}
             onChange={onChange}
             noOptionsMessage={() => "Zuerst Projekt wählen"}
