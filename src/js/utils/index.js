@@ -9,6 +9,7 @@ import {
   find,
   curry
 } from "lodash/fp"
+import { format } from "date-fns"
 
 const nilToArray = input => input || []
 
@@ -25,9 +26,10 @@ export const findLastTask = id =>
   )
 
 function taskOptions(tasks) {
-  return tasks.map(({ id, name }) => ({
+  return tasks.map(({ id, name, billable }) => ({
     label: name,
-    value: id
+    value: id,
+    billable
   }))
 }
 
@@ -55,3 +57,6 @@ export const trace = curry((tag, value) => {
   console.log(tag, value)
   return value
 })
+
+export const currentDate = (locale = "de") =>
+  format(new Date(), "YYYY-MM-DD", { locale })
