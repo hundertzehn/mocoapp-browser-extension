@@ -13,7 +13,7 @@ const createEvaluator = args => fnOrValue => {
   return fnOrValue
 }
 
-export const parseServices = compose(
+const parseServices = compose(
   map(([key, config]) => ({
     ...config,
     key,
@@ -22,9 +22,11 @@ export const parseServices = compose(
   toPairs
 )
 
-export const createEnhancer = document => services => (key, url) => {
-  const service = services[key]
-  service.key = key
+export const createEnhancer = document => url => service => {
+  if (!service) {
+    return
+  }
+
   const route = new Route(service.urlPattern)
   const match = route.match(url)
   const args = [document, service, match]
@@ -32,14 +34,15 @@ export const createEnhancer = document => services => (key, url) => {
 
   return {
     ...service,
-    key,
     url,
     id: evaluate(service.id) || match.id,
     description: evaluate(service.description),
     projectId: evaluate(service.projectId),
-    taskId: evaluate(service.taskId),
+    taskId: evaluate(service.taskId)
   }
 }
 
-export const createMatcher = services => url =>
-  services.find(service => service.route.match(url))
+export const createMatcher = remoteServices => {
+  const services = parseServices(remoteServices)
+  return url => services.find(service => service.route.match(url))
+}

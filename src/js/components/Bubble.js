@@ -2,9 +2,10 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import ApiClient from "api/Client"
 import Modal, { Content } from "components/Modal"
+import MissingConfigurationError from "components/MissingConfigurationError"
 import Form from "components/Form"
-import { observable, computed } from "mobx"
-import { observer } from "mobx-react"
+import { observable, computed, reaction } from "mobx"
+import { observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
 import {
   findLastProject,
@@ -12,6 +13,7 @@ import {
   groupedProjectOptions,
   currentDate
 } from "utils"
+import { head } from "lodash"
 
 @observer
 class Bubble extends Component {
@@ -33,19 +35,20 @@ class Bubble extends Component {
 
   #apiClient;
 
-  @observable isLoading = true;
+  @observable isLoading = false;
   @observable isOpen = false;
   @observable projects;
   @observable lastProjectId;
   @observable lastTaskId;
   @observable changeset = {};
+  @observable errors = {};
 
   @computed get changesetWithDefaults() {
     const { service } = this.props
 
     const project =
       findLastProject(service.projectId || this.lastProjectId)(this.projects) ||
-      this.projects[0]
+      head(this.projects)
 
     const defaults = {
       id: service.id,
@@ -86,9 +89,17 @@ class Bubble extends Component {
   }
 
   componentDidMount() {
-    const { settings } = this.props
-    this.#apiClient = new ApiClient(settings)
-    this.fetchData()
+    disposeOnUnmount(
+      this,
+      reaction(
+        () =>
+          this.hasMissingConfiguration() ? null : this.props.settings,
+        this.fetchData,
+        {
+          fireImmediately: true
+        }
+      )
+    )
     window.addEventListener("keydown", this.handleKeyDown)
   }
 
@@ -104,16 +115,28 @@ class Bubble extends Component {
     this.isOpen = false
   };
 
-  fetchData = () => {
+  hasMissingConfiguration = () => {
+    const { settings } = this.props
+    return ["subdomain", "apiKey", "version"].some(key => !settings[key])
+  };
+
+  fetchData = settings => {
+    if (!settings) {
+      return
+    }
+
+    this.isLoading = true
+
+    this.#apiClient = new ApiClient(settings)
     this.#apiClient
       .projects()
       .then(({ data }) => {
         this.projects = groupedProjectOptions(data.projects)
         this.lastProjectId = data.last_project_id
         this.lastTaskId = data.lastTaskId
-        this.isLoading = false
       })
       .catch(console.error)
+      .finally(() => (this.isLoading = false))
   };
 
   // EVENT HANDLERS -----------------------------------------------------------
@@ -151,6 +174,23 @@ class Bubble extends Component {
       return null
     }
 
+    let content
+    if (this.hasMissingConfiguration()) {
+      content = <MissingConfigurationError />
+    } else if (this.isOpen) {
+      content = (
+        <Form
+          projects={this.projects}
+          changeset={this.changesetWithDefaults}
+          isLoading={this.isLoading}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+        />
+      )
+    } else {
+      content = null
+    }
+
     return (
       <>
         <img
@@ -158,18 +198,9 @@ class Bubble extends Component {
           src={chrome.extension.getURL(logoUrl)}
           width="50%"
         />
-
         {this.isOpen && (
           <Modal>
-            <Content>
-              <Form
-                projects={this.projects}
-                changeset={this.changesetWithDefaults}
-                isLoading={this.isLoading}
-                onChange={this.handleChange}
-                onSubmit={this.handleSubmit}
-              />
-            </Content>
+            <Content>{content}</Content>
           </Modal>
         )}
       </>

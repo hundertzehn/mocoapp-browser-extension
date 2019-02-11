@@ -2,10 +2,13 @@ import { createElement } from "react"
 import ReactDOM from "react-dom"
 import Bubble from "./components/Bubble"
 import services from "remoteServices"
-import { createEnhancer } from "utils/urlMatcher"
+import { parseServices, createMatcher, createEnhancer } from "utils/urlMatcher"
+import remoteServices from "./remoteServices"
+import { pipe } from 'lodash/fp'
 import "../css/main.scss"
 
-const serviceEnhancer = createEnhancer(window.document)(services)
+const matcher = createMatcher(remoteServices)
+const serviceEnhancer = createEnhancer(window.document)
 
 chrome.runtime.onMessage.addListener(({ type, payload }) => {
   switch (type) {
@@ -19,7 +22,16 @@ chrome.runtime.onMessage.addListener(({ type, payload }) => {
   }
 })
 
-const mountBubble = ({ serviceKey, settings }) => {
+const mountBubble = (settings) => {
+  const service = pipe(
+    matcher,
+    serviceEnhancer(window.location.href)
+  )(window.location.href)
+
+  if (!service) {
+    return
+  }
+
   if (!document.getElementById("moco-bx-container")) {
     const domContainer = document.createElement("div")
     domContainer.setAttribute("id", "moco-bx-container")
@@ -32,7 +44,6 @@ const mountBubble = ({ serviceKey, settings }) => {
     document.body.appendChild(domBubble)
   }
 
-  const service = serviceEnhancer(serviceKey, window.location.href)
   ReactDOM.render(
     createElement(Bubble, { service, settings }),
     document.getElementById("moco-bx-bubble")

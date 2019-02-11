@@ -1,9 +1,9 @@
-import { parseServices, createMatcher } from 'utils/urlMatcher'
+import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
 
-const services = parseServices(remoteServices)
-const matcher = createMatcher(services)
+const matcher = createMatcher(remoteServices)
 const { version } = chrome.runtime.getManifest()
+const registeredTabIds = new Set()
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // run only after the page is fully loaded
@@ -14,19 +14,42 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   const service = matcher(tab.url)
 
   if (service) {
+    registeredTabIds.add(tabId)
     chrome.storage.sync.get(
       ["subdomain", "apiKey"],
       ({ subdomain, apiKey }) => {
-        const settings = { subdomain, apiKey, version }
-        const payload = { serviceKey: service.key, settings }
-        chrome.tabs.sendMessage(tabId, { type: "mountBubble", payload }, () => {
-          console.log("bubble mounted")
-        })
+        const payload = { subdomain, apiKey, version }
+        chrome.tabs.sendMessage(tabId, { type: "mountBubble", payload })
       }
     )
   } else {
-    chrome.tabs.sendMessage(tabId, { type: "unmountBubble" }, () => {
-      console.log("bubble unmounted")
-    })
+    registeredTabIds.delete(tabId)
+    chrome.tabs.sendMessage(tabId, { type: "unmountBubble" })
+  }
+})
+
+chrome.tabs.onRemoved.addListener(tabId => registeredTabIds.delete(tabId))
+
+chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
+  if (areaName === "sync" && (apiKey || subdomain)) {
+    chrome.storage.sync.get(
+      ["subdomain", "apiKey"],
+      ({ subdomain, apiKey }) => {
+        const payload = { subdomain, apiKey, version }
+        for (let tabId of registeredTabIds.values()) {
+          chrome.tabs.sendMessage(tabId, { type: "mountBubble", payload })
+        }
+      }
+    )
+  }
+})
+
+chrome.runtime.onMessage.addListener(({ type }) => {
+  switch (type) {
+    case "openOptions": {
+      chrome.tabs.create({
+        url: `chrome://extensions/?options=${chrome.runtime.id}`
+      })
+    }
   }
 })
