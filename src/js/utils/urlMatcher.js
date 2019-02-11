@@ -34,7 +34,7 @@ export const createEnhancer = document => services => (key, url) => {
     ...service,
     key,
     url,
-    id: evaluate(service.id),
+    id: evaluate(service.id) || match.id,
     description: evaluate(service.description),
     projectId: evaluate(service.projectId),
     taskId: evaluate(service.taskId),

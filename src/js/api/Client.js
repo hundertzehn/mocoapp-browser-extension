@@ -1,8 +1,8 @@
 import axios from "axios"
 
 export default class Client {
-  #client
-  #apiKey
+  #client;
+  #apiKey;
 
   constructor({ subdomain, apiKey, clientVersion }) {
     this.#apiKey = apiKey
@@ -20,7 +20,9 @@ export default class Client {
     })
   }
 
-  login = () => this.#client.post("session", { api_key: this.#apiKey })
+  login = () => this.#client.post("session", { api_key: this.#apiKey });
 
-  projects = () => this.#client.get("projects")
+  projects = () => this.#client.get("projects");
+
+  createActivity = activity => this.#client.post("activities", { activity });
 }

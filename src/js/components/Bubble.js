@@ -6,7 +6,12 @@ import Form from "components/Form"
 import { observable, computed } from "mobx"
 import { observer } from "mobx-react"
 import logoUrl from "images/logo.png"
-import { findLastProject, findLastTask, groupedProjectOptions } from "utils"
+import {
+  findLastProject,
+  findLastTask,
+  groupedProjectOptions,
+  currentDate
+} from "utils"
 
 @observer
 class Bubble extends Component {
@@ -26,6 +31,8 @@ class Bubble extends Component {
     })
   };
 
+  #apiClient;
+
   @observable isLoading = true;
   @observable isOpen = false;
   @observable projects;
@@ -36,9 +43,9 @@ class Bubble extends Component {
   @computed get changesetWithDefaults() {
     const { service } = this.props
 
-    const project = findLastProject(service.projectId || this.lastProjectId)(
-      this.projects
-    ) || this.projects[0]
+    const project =
+      findLastProject(service.projectId || this.lastProjectId)(this.projects) ||
+      this.projects[0]
 
     const defaults = {
       id: service.id,
@@ -55,9 +62,32 @@ class Bubble extends Component {
     }
   }
 
+  @computed get activityParams() {
+    const {
+      id,
+      name,
+      hours,
+      description,
+      project,
+      task
+    } = this.changesetWithDefaults
+
+    return {
+      date: currentDate(),
+      hours,
+      description,
+      assignment_id: project.value,
+      task_id: task.value,
+      billable: task.billable,
+      remote_service: name,
+      remote_id: id,
+      remote_url: window.location.href
+    }
+  }
+
   componentDidMount() {
     const { settings } = this.props
-    this.apiClient = new ApiClient(settings)
+    this.#apiClient = new ApiClient(settings)
     this.fetchData()
     window.addEventListener("keydown", this.handleKeyDown)
   }
@@ -75,7 +105,7 @@ class Bubble extends Component {
   };
 
   fetchData = () => {
-    this.apiClient
+    this.#apiClient
       .projects()
       .then(({ data }) => {
         this.projects = groupedProjectOptions(data.projects)
@@ -108,7 +138,10 @@ class Bubble extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    this.close()
+    this.#apiClient
+      .createActivity(this.activityParams)
+      .then(() => this.close())
+      .catch(error => console.log(error))
   };
 
   // RENDER -------------------------------------------------------------------
