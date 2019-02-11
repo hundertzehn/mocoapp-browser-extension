@@ -38,7 +38,7 @@ module.exports = {
         }
       },
       {
-        test: /\.(png)$/,
+        test: /\.(jpg|png)$/,
         loader: "file-loader",
         options: {
           name: "[path][name].[ext]"
