@@ -8,7 +8,9 @@ import {
   join,
   filter,
   compose,
-  property
+  property,
+  flatMap,
+  pathEq
 } from "lodash/fp"
 
 const customTheme = theme => ({
@@ -43,19 +45,33 @@ const filterOption = createFilter({
 export default class Select extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
+    value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+    options: PropTypes.array,
     onChange: PropTypes.func.isRequired
+  };
+
+
+  static findOptionByValue = (selectOptions, value) => {
+    const options = flatMap(
+      option => (option.options ? option.options : option),
+      selectOptions
+    )
+
+    return options.find(pathEq("value", value))
   }
 
-  handleChange = value => {
+  handleChange = option => {
     const { name, onChange } = this.props
+    const { value } = option
     onChange({ target: { name, value } })
-  }
+  };
 
   render() {
-    const passThroughProps = this.props
+    const { value, ...passThroughProps } = this.props
     return (
       <ReactSelect
         {...passThroughProps}
+        value={Select.findOptionByValue(this.props.options, value)}
         onChange={this.handleChange}
         filterOption={filterOption}
         theme={customTheme}
