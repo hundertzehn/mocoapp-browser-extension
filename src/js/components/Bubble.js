@@ -147,6 +147,7 @@ class Bubble extends Component {
       .createActivity(this.changesetWithDefaults)
       .then(() => {
         this.close()
+        this.changeset = {}
         this.formErrors = {}
       })
       .catch(this.handleSubmitError)
@@ -173,6 +174,7 @@ class Bubble extends Component {
         <Form
           projects={this.projects}
           changeset={this.changesetWithDefaults}
+          errors={this.formErrors}
           isLoading={this.isLoading}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}

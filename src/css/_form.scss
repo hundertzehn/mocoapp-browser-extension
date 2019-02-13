@@ -24,6 +24,16 @@
       color: #eee;
     }
 
+    &.has-error {
+      input, textarea {
+        border-color: #FB3A2F;
+      }
+    }
+
+    .form-error {
+      color: #FB3A2F;
+    }
+
     .input-group {
       position: relative;
       display: table;

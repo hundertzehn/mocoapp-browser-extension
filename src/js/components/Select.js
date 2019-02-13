@@ -12,6 +12,7 @@ import {
   flatMap,
   pathEq
 } from "lodash/fp"
+import { trace } from "utils"
 
 const customTheme = theme => ({
   ...theme,
@@ -23,7 +24,11 @@ const customTheme = theme => ({
   }
 })
 
-const customStyles = {
+const customStyles = props => ({
+  control: (base, _state) => ({
+    ...base,
+    borderColor: props.hasError ? "#FB3A2F" : base.borderColor
+  }),
   groupHeading: (base, _state) => ({
     ...base,
     color: "black",
@@ -31,7 +36,7 @@ const customStyles = {
     fontWeight: "bold",
     fontSize: "100%"
   })
-}
+})
 
 const filterOption = createFilter({
   stringify: compose(
@@ -47,9 +52,9 @@ export default class Select extends Component {
     name: PropTypes.string.isRequired,
     value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     options: PropTypes.array,
+    hasError: PropTypes.bool,
     onChange: PropTypes.func.isRequired
   };
-
 
   static findOptionByValue = (selectOptions, value) => {
     const options = flatMap(
@@ -58,7 +63,7 @@ export default class Select extends Component {
     )
 
     return options.find(pathEq("value", value))
-  }
+  };
 
   handleChange = option => {
     const { name, onChange } = this.props
@@ -67,7 +72,7 @@ export default class Select extends Component {
   };
 
   render() {
-    const { value, ...passThroughProps } = this.props
+    const { value, hasError, ...passThroughProps } = this.props
     return (
       <ReactSelect
         {...passThroughProps}
@@ -75,7 +80,7 @@ export default class Select extends Component {
         onChange={this.handleChange}
         filterOption={filterOption}
         theme={customTheme}
-        styles={customStyles}
+        styles={customStyles(this.props)}
       />
     )
   }
