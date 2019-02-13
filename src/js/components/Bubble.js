@@ -41,7 +41,7 @@ class Bubble extends Component {
   @observable lastProjectId;
   @observable lastTaskId;
   @observable changeset = {};
-  @observable errors = {};
+  @observable formErrors = {};
 
   @computed get changesetWithDefaults() {
     const { service } = this.props
@@ -50,11 +50,16 @@ class Bubble extends Component {
       findLastProject(service.projectId || this.lastProjectId)(this.projects) ||
       head(this.projects)
 
+    const task = findLastTask(service.taskId || this.lastTaskId)(project)
+
     const defaults = {
-      id: service.id,
-      name: service.name,
-      project,
-      task: findLastTask(service.taskId || this.lastTaskId)(project),
+      remote_service: service.name,
+      remote_id: service.id,
+      remote_url: window.location.href,
+      date: currentDate(),
+      assignment_id: project?.value,
+      task_id: task?.value, 
+      billable: task?.billable,
       hours: "",
       description: service.description
     }
@@ -62,29 +67,6 @@ class Bubble extends Component {
     return {
       ...defaults,
       ...this.changeset
-    }
-  }
-
-  @computed get activityParams() {
-    const {
-      id,
-      name,
-      hours,
-      description,
-      project,
-      task
-    } = this.changesetWithDefaults
-
-    return {
-      date: currentDate(),
-      hours,
-      description,
-      assignment_id: project.value,
-      task_id: task.value,
-      billable: task.billable,
-      remote_service: name,
-      remote_id: id,
-      remote_url: window.location.href
     }
   }
 
@@ -154,7 +136,7 @@ class Bubble extends Component {
 
     this.changeset[name] = value
 
-    if (name === "project") {
+    if (name === "assignment_id") {
       this.changeset.task = null
     }
   };
@@ -162,10 +144,19 @@ class Bubble extends Component {
   handleSubmit = event => {
     event.preventDefault()
     this.#apiClient
-      .createActivity(this.activityParams)
-      .then(() => this.close())
-      .catch(error => console.log(error))
+      .createActivity(this.changesetWithDefaults)
+      .then(() => {
+        this.close()
+        this.formErrors = {}
+      })
+      .catch(this.handleSubmitError)
   };
+
+  handleSubmitError = error => {
+    if (error.response?.status === 422) {
+      this.formErrors = error.response.data
+    }
+  }
 
   // RENDER -------------------------------------------------------------------
 

@@ -21,7 +21,7 @@ class Form extends Component {
 
   isValid = () => {
     const { changeset } = this.props
-    return ["project", "task", "hours", "description"]
+    return ["assignment_id", "task_id", "hours", "description"]
       .map(prop => changeset[prop])
       .every(Boolean)
   };
@@ -34,22 +34,23 @@ class Form extends Component {
     }
 
     const { projects, changeset, onChange, onSubmit } = this.props
+    const project = Select.findOptionByValue(projects, changeset.assignment_id)
 
     return (
       <form onSubmit={onSubmit}>
         <div className="form-group">
           <Select
-            name="project"
+            name="assignment_id"
             options={projects}
-            value={changeset.project}
+            value={changeset.assignment_id}
             onChange={onChange}
           />
         </div>
         <div className="form-group">
           <Select
-            name="task"
-            options={changeset.project?.tasks || []}
-            value={changeset.task}
+            name="task_id"
+            options={project?.tasks || []}
+            value={changeset.task_id}
             onChange={onChange}
             noOptionsMessage={() => "Zuerst Projekt wählen"}
           />
