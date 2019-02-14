@@ -40,6 +40,7 @@ class Bubble extends Component {
   @observable projects;
   @observable lastProjectId;
   @observable lastTaskId;
+  @observable bookedHours;
   @observable changeset = {};
   @observable formErrors = {};
 
@@ -58,7 +59,7 @@ class Bubble extends Component {
       remote_url: window.location.href,
       date: currentDate(),
       assignment_id: project?.value,
-      task_id: task?.value, 
+      task_id: task?.value,
       billable: task?.billable,
       hours: "",
       description: service.description
@@ -70,17 +71,27 @@ class Bubble extends Component {
     }
   }
 
+  constructor(props) {
+    super(props)
+    this.#apiClient = new ApiClient(props.settings)
+  }
+
   componentDidMount() {
     disposeOnUnmount(
       this,
       reaction(
-        () =>
-          this.hasMissingConfiguration() ? null : this.props.settings,
-        this.fetchData,
+        () => (this.hasMissingConfiguration() ? null : this.props.settings),
+        this.fetchProjects,
         {
           fireImmediately: true
         }
       )
+    )
+    disposeOnUnmount(
+      this,
+      reaction(() => this.props.service, this.fetchBookedHours, {
+        fireImmediately: true
+      })
     )
     window.addEventListener("keydown", this.handleKeyDown)
   }
@@ -102,7 +113,7 @@ class Bubble extends Component {
     return ["subdomain", "apiKey", "version"].some(key => !settings[key])
   };
 
-  fetchData = settings => {
+  fetchProjects = settings => {
     if (!settings) {
       return
     }
@@ -117,6 +128,16 @@ class Bubble extends Component {
         this.lastProjectId = data.last_project_id
         this.lastTaskId = data.lastTaskId
       })
+      .catch(console.error)
+      .finally(() => (this.isLoading = false))
+  };
+
+  fetchBookedHours = service => {
+    this.isLoading = true
+
+    this.#apiClient
+      .bookedHours(service)
+      .then(({ data }) => (this.bookedHours = data[0]?.hours))
       .catch(console.error)
       .finally(() => (this.isLoading = false))
   };
@@ -157,13 +178,13 @@ class Bubble extends Component {
     if (error.response?.status === 422) {
       this.formErrors = error.response.data
     }
-  }
+  };
 
   // RENDER -------------------------------------------------------------------
 
   render() {
     if (this.isLoading) {
-      return null
+      return "Loading..."
     }
 
     let content
@@ -191,6 +212,7 @@ class Bubble extends Component {
           src={chrome.extension.getURL(logoUrl)}
           width="50%"
         />
+      {this.bookedHours && <span className="booked-hours"><small>{this.bookedHours}</small></span>}
         {this.isOpen && (
           <Modal>
             <Content>{content}</Content>

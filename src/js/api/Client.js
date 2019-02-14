@@ -24,5 +24,10 @@ export default class Client {
 
   projects = () => this.#client.get("projects");
 
+  bookedHours = service =>
+    this.#client.get("activities/tags", {
+      params: { selection: [service.id], remote_service: service.name }
+    });
+
   createActivity = activity => this.#client.post("activities", { activity });
 }
