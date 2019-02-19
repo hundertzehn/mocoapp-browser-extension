@@ -1,11 +1,11 @@
 #moco-bx-bubble, #moco-bx-container {
-  @keyframes spinner {
+  @keyframes moco-bx-spinner {
     to {
       transform: rotate(360deg);
     }
   }
 
-  .spinner {
+  .moco-bx-spinner {
     display: inline-block;
     width: 2rem;
     height: 2rem;
@@ -13,6 +13,6 @@
     border: 2px solid #999;
     border-right-color: transparent;
     border-radius: 50%;
-    animation: spinner .75s linear infinite;
+    animation: moco-bx-spinner .75s linear infinite;
   }
 }

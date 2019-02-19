@@ -12,7 +12,6 @@ import {
   flatMap,
   pathEq
 } from "lodash/fp"
-import { trace } from "utils"
 
 const customTheme = theme => ({
   ...theme,

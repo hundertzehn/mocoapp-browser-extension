@@ -1,11 +1,11 @@
-import { createElement } from "react"
+import React from "react"
 import ReactDOM from "react-dom"
+import ShadowDOM from "react-shadow"
 import Bubble from "./components/Bubble"
-import services from "remoteServices"
-import { parseServices, createMatcher, createEnhancer } from "utils/urlMatcher"
+import { createMatcher, createEnhancer } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
 import { pipe } from 'lodash/fp'
-import "../css/main.scss"
+import "../css/content.scss"
 
 const matcher = createMatcher(remoteServices)
 const serviceEnhancer = createEnhancer(window.document)
@@ -32,35 +32,27 @@ const mountBubble = (settings) => {
     return
   }
 
-  if (!document.getElementById("moco-bx-container")) {
-    const domContainer = document.createElement("div")
-    domContainer.setAttribute("id", "moco-bx-container")
-    document.body.appendChild(domContainer)
-  }
-
-  if (!document.getElementById("moco-bx-bubble")) {
-    const domBubble = document.createElement("div")
-    domBubble.setAttribute("id", "moco-bx-bubble")
-    document.body.appendChild(domBubble)
+  if (!document.getElementById("moco-bx-root")) {
+    const domRoot = document.createElement("div")
+    domRoot.setAttribute("id", "moco-bx-root")
+    document.body.appendChild(domRoot)
   }
 
   ReactDOM.render(
-    createElement(Bubble, { service, settings }),
-    document.getElementById("moco-bx-bubble")
+    <ShadowDOM include={[chrome.extension.getURL('content.css')]}>
+      <div>
+        <Bubble service={service} settings={settings} />
+      </div>
+    </ShadowDOM>,
+    document.getElementById("moco-bx-root")
   )
 }
 
 const unmountBubble = () => {
-  const domBubble = document.getElementById("moco-bx-bubble")
-  const domContainer = document.getElementById("moco-bx-container")
+  const domRoot = document.getElementById("moco-bx-root")
 
-  if (domBubble) {
-    ReactDOM.unmountComponentAtNode(domBubble)
-    domBubble.remove()
-  }
-
-  if (domContainer) {
-    ReactDOM.unmountComponentAtNode(domContainer)
-    domContainer.remove()
+  if (domRoot) {
+    ReactDOM.unmountComponentAtNode(domRoot)
+    domRoot.remove()
   }
 }

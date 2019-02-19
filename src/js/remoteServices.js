@@ -25,6 +25,12 @@ export default {
     description: (document, service, { org, repo, id }) =>
       `${org}/${repo}/${id} - ${document
         .querySelector(".gh-header-title")
-        .textContent.trim()}`
+        .textContent.trim()}`,
+  },
+
+  "trello": {
+    name: "trello",
+    urlPattern: "https://trello.com/c/:id/:title",
+    description: (document, service, { title }) => title.split('-').slice(1).join(' ')
   }
 }
