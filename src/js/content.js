@@ -1,6 +1,5 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import ShadowDOM from "react-shadow"
 import Bubble from "./components/Bubble"
 import { createMatcher, createEnhancer } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
@@ -39,11 +38,7 @@ const mountBubble = (settings) => {
   }
 
   ReactDOM.render(
-    <ShadowDOM include={[chrome.extension.getURL('content.css')]}>
-      <div>
-        <Bubble service={service} settings={settings} />
-      </div>
-    </ShadowDOM>,
+   <Bubble service={service} settings={settings} />,
     document.getElementById("moco-bx-root")
   )
 }
