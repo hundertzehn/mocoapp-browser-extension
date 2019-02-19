@@ -62,7 +62,7 @@ export default class Select extends Component {
       selectOptions
     )
 
-    return options.find(pathEq("value", value))
+    return options.find(pathEq("value", value)) || null
   };
 
   handleChange = option => {
@@ -73,6 +73,7 @@ export default class Select extends Component {
 
   render() {
     const { value, hasError, ...passThroughProps } = this.props
+
     return (
       <ReactSelect
         {...passThroughProps}

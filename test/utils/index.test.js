@@ -2,7 +2,8 @@ import { projects } from "../data"
 import {
   findLastProject,
   findLastTask,
-  groupedProjectOptions
+  groupedProjectOptions,
+  secondsFromHours
 } from "../../src/js/utils"
 import { map } from "lodash/fp"
 
@@ -60,6 +61,29 @@ describe("utils", () => {
         "MOCO APP",
         "sharoo"
       ])
+    })
+  })
+
+  describe("secondsFromHours", () => {
+    it("converts a single number to seconds", () => {
+      expect(secondsFromHours('1')).toEqual(3600)
+      expect(secondsFromHours('2')).toEqual(7200)
+    })
+
+    it("treats number after dot as fractional hours", () => {
+      expect(secondsFromHours('1.3')).toEqual(4680)
+      expect(secondsFromHours('2.8')).toEqual(10080)
+    })
+
+    it("treats number after colon as minutes", () => {
+      expect(secondsFromHours('1:20')).toEqual(4800)
+      expect(secondsFromHours('2:50')).toEqual(10200)
+    })
+
+    it("treats invalid numbers as zero", () => {
+      expect(secondsFromHours(undefined)).toEqual(0)
+      expect(secondsFromHours('ab')).toEqual(0)
+      expect(secondsFromHours('a:i')).toEqual(0)
     })
   })
 })

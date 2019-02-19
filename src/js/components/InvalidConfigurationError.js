@@ -1,9 +1,9 @@
 import React from "react"
 import configurationSettingsUrl from "images/configurationSettings.png"
 
-const MissingConfigurationError = () => (
+const InvalidConfigurationError = () => (
   <div>
-    <h2>Fehlende Konfiguration</h2>
+    <h2>Konfiguration ungültig</h2>
     <p>
       Bitte trage deine Internetadresse und deinen API-Schlüssel in den
       Einstellungen der MOCO Browser-Erweiterung ein. Deinen API-Key findest du
@@ -19,4 +19,4 @@ const MissingConfigurationError = () => (
   </div>
 )
 
-export default MissingConfigurationError
+export default InvalidConfigurationError

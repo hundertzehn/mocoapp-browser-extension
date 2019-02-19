@@ -2,8 +2,9 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import ApiClient from "api/Client"
 import Modal, { Content } from "components/Modal"
-import MissingConfigurationError from "components/MissingConfigurationError"
+import InvalidConfigurationError from "components/InvalidConfigurationError"
 import Form from "components/Form"
+import Spinner from "components/Spinner"
 import { observable, computed, reaction } from "mobx"
 import { observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
@@ -11,7 +12,8 @@ import {
   findLastProject,
   findLastTask,
   groupedProjectOptions,
-  currentDate
+  currentDate,
+  secondsFromHours
 } from "utils"
 import { head } from "lodash"
 
@@ -40,9 +42,10 @@ class Bubble extends Component {
   @observable projects;
   @observable lastProjectId;
   @observable lastTaskId;
-  @observable bookedHours;
+  @observable bookedHours = 0;
   @observable changeset = {};
   @observable formErrors = {};
+  @observable unauthorizedError = false;
 
   @computed get changesetWithDefaults() {
     const { service } = this.props
@@ -62,6 +65,7 @@ class Bubble extends Component {
       task_id: task?.value,
       billable: task?.billable,
       hours: "",
+      seconds: secondsFromHours(this.changeset.hours),
       description: service.description
     }
 
@@ -80,7 +84,7 @@ class Bubble extends Component {
     disposeOnUnmount(
       this,
       reaction(
-        () => (this.hasMissingConfiguration() ? null : this.props.settings),
+        () => (this.hasInvalidConfiguration() ? null : this.props.settings),
         this.fetchProjects,
         {
           fireImmediately: true
@@ -108,9 +112,9 @@ class Bubble extends Component {
     this.isOpen = false
   };
 
-  hasMissingConfiguration = () => {
+  hasInvalidConfiguration = () => {
     const { settings } = this.props
-    return ["subdomain", "apiKey", "version"].some(key => !settings[key])
+    return ["subdomain", "apiKey"].some(key => !settings[key])
   };
 
   fetchProjects = settings => {
@@ -127,9 +131,16 @@ class Bubble extends Component {
         this.projects = groupedProjectOptions(data.projects)
         this.lastProjectId = data.last_project_id
         this.lastTaskId = data.lastTaskId
+        this.unauthorizedError = false
       })
-      .catch(console.error)
-      .finally(() => (this.isLoading = false))
+      .catch(error => {
+        if (error.response?.status === 401) {
+          this.unauthorizedError = true
+        }
+      })
+      .finally(() => {
+        this.isLoading = false
+      })
   };
 
   fetchBookedHours = service => {
@@ -137,8 +148,12 @@ class Bubble extends Component {
 
     this.#apiClient
       .bookedHours(service)
-      .then(({ data }) => (this.bookedHours = data[0]?.hours))
-      .catch(console.error)
+      .then(({ data }) => (this.bookedHours = parseFloat(data[0]?.hours) || 0))
+      .catch(error => {
+        if (error.response?.status === 401) {
+          this.unauthorizedError = true
+        }
+      })
       .finally(() => (this.isLoading = false))
   };
 
@@ -158,7 +173,7 @@ class Bubble extends Component {
     this.changeset[name] = value
 
     if (name === "assignment_id") {
-      this.changeset.task = null
+      this.changeset.task_id = null
     }
   };
 
@@ -166,8 +181,9 @@ class Bubble extends Component {
     event.preventDefault()
     this.#apiClient
       .createActivity(this.changesetWithDefaults)
-      .then(() => {
+      .then(({ data }) => {
         this.close()
+        this.bookedHours += data.hours
         this.changeset = {}
         this.formErrors = {}
       })
@@ -182,16 +198,11 @@ class Bubble extends Component {
 
   // RENDER -------------------------------------------------------------------
 
-  render() {
-    if (this.isLoading) {
-      return "Loading..."
-    }
-
-    let content
-    if (this.hasMissingConfiguration()) {
-      content = <MissingConfigurationError />
+  renderContent = () => {
+    if (this.unauthorizedError || this.hasInvalidConfiguration()) {
+      return <InvalidConfigurationError />
     } else if (this.isOpen) {
-      content = (
+      return (
         <Form
           projects={this.projects}
           changeset={this.changesetWithDefaults}
@@ -202,7 +213,13 @@ class Bubble extends Component {
         />
       )
     } else {
-      content = null
+      return null
+    }
+  }
+
+  render() {
+    if (this.isLoading) {
+      return <Spinner />
     }
 
     return (
@@ -212,10 +229,10 @@ class Bubble extends Component {
           src={chrome.extension.getURL(logoUrl)}
           width="50%"
         />
-      {this.bookedHours && <span className="booked-hours"><small>{this.bookedHours}</small></span>}
+        {this.bookedHours > 0 && <span className="booked-hours"><small>{this.bookedHours}h</small></span>}
         {this.isOpen && (
           <Modal>
-            <Content>{content}</Content>
+            <Content>{this.renderContent()}</Content>
           </Modal>
         )}
       </>
