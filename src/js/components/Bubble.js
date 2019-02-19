@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import ApiClient from "api/Client"
-import Modal, { Content } from "components/Modal"
+import Modal from "components/Modal"
 import InvalidConfigurationError from "components/InvalidConfigurationError"
 import Form from "components/Form"
 import Spinner from "components/Spinner"
@@ -160,6 +160,7 @@ class Bubble extends Component {
   // EVENT HANDLERS -----------------------------------------------------------
 
   handleKeyDown = event => {
+    event.stopPropagation()
     if (event.keyCode === 27) {
       this.close()
     }
@@ -223,19 +224,18 @@ class Bubble extends Component {
     }
 
     return (
-      <>
+      <div className="moco-bx-bubble">
         <img
           onClick={this.open}
           src={chrome.extension.getURL(logoUrl)}
-          width="50%"
         />
         {this.bookedHours > 0 && <span className="booked-hours"><small>{this.bookedHours}h</small></span>}
         {this.isOpen && (
           <Modal>
-            <Content>{this.renderContent()}</Content>
+            {this.renderContent()}
           </Modal>
         )}
-      </>
+      </div>
     )
   }
 }

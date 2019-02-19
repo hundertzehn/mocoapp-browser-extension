@@ -1,9 +1,7 @@
 import React from 'react'
 
 const Spinner = () => (
-  <div className="spinner" role="status">
-    <span className="sr-only">Loading...</span>
-  </div>
+  <div className="moco-bx-spinner" role="status" />
 )
 
 export default Spinner

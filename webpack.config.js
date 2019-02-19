@@ -1,4 +1,5 @@
 const path = require("path")
+const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const CleanWebpackPlugin = require("clean-webpack-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
@@ -7,8 +8,7 @@ module.exports = {
   entry: {
     background: "./src/js/background.js",
     content: "./src/js/content.js",
-    options: "./src/js/options.js",
-    popup: "./src/js/popup.js"
+    options: "./src/js/options.js"
   },
   output: {
     path: path.join(__dirname, "build"),
@@ -19,7 +19,9 @@ module.exports = {
       {
         test: /\.scss$/,
         use: [
-          "style-loader",
+          {
+            loader: MiniCssExtractPlugin.loader
+          },
           "css-loader",
           {
             loader: "sass-loader",
@@ -48,6 +50,10 @@ module.exports = {
     ]
   },
   plugins: [
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+      chunkFilename: '[id].css'
+    }),
     new CleanWebpackPlugin(["build"]),
     new CopyWebpackPlugin([
       {
@@ -62,13 +68,11 @@ module.exports = {
             })
           )
         }
+      },
+      {
+        from: "src/css/styles.css",
       }
     ]),
-    new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "popup.html"),
-      filename: "popup.html",
-      chunks: ["popup"]
-    }),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, "src", "options.html"),
       filename: "options.html",

@@ -1,93 +1,91 @@
-#moco-bx-container {
-  input {
-    border-radius: 0;
+input {
+  border-radius: 0;
+}
+
+.form-group {
+  width: 100%;
+  margin: 1rem 0;
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
   }
 
-  .form-group {
+  input, textarea {
+    padding: 0.25rem 0.5rem;
+    background-color: white;
+    border-color: #cccccc;
     width: 100%;
-    margin: 1rem 0;
+  }
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 0.25rem;
-    }
+  text-muted {
+    color: #eee;
+  }
 
+  &.has-error {
     input, textarea {
-      padding: 0.25rem 0.5rem;
-      background-color: white;
-      border-color: #cccccc;
-      width: 100%;
+      border-color: #FB3A2F;
     }
+  }
 
-    text-muted {
-      color: #eee;
-    }
+  .form-error {
+    color: #FB3A2F;
+  }
 
-    &.has-error {
-      input, textarea {
-        border-color: #FB3A2F;
-      }
-    }
+  .input-group {
+    position: relative;
+    display: table;
+    border-collapse: separate;
 
-    .form-error {
-      color: #FB3A2F;
-    }
-
-    .input-group {
+    input {
       position: relative;
-      display: table;
-      border-collapse: separate;
-
-      input {
-        position: relative;
-        display: table-cell;
-      }
-
-      .input-group-addon {
-        padding: 0.25rem 0.5rem;
-        font-weight: normal;
-        color: #555555;
-        text-align: center;
-        background-color: #eeeeee;
-        border: 1px solid #cccccc;
-        border-left: none;
-        display: table-cell;
-        width: 1%;
-      }
-    }
-  }
-
-  input[name="hours"] {
-    width: 33%;
-  }
-
-  textarea[name="description"] {
-    resize: none;
-    width: 100%;
-  }
-
-  button {
-    display: inline-block;
-    padding: 6px 12px;
-    margin-bottom: 0;
-    font-weight: normal;
-    text-align: center;
-    white-space: nowrap;
-    color: white;
-    background-image: none;
-    background-color: #7dc332;
-    border-color: #7dc332;
-    cursor: pointer;
-
-    &:hover:not(:disabled) {
-      background-color: #639a28;
-      border-color: #639a28;
+      display: table-cell;
     }
 
-    &:disabled {
-      opacity: 0.65;
-      cursor: default;
+    .input-group-addon {
+      padding: 0.25rem 0.5rem;
+      font-weight: normal;
+      color: #555555;
+      text-align: center;
+      background-color: #eeeeee;
+      border: 1px solid #cccccc;
+      border-left: none;
+      display: table-cell;
+      width: 1%;
     }
+  }
+}
+
+input[name="hours"] {
+  width: 33%;
+}
+
+textarea[name="description"] {
+  resize: none;
+  width: 100%;
+}
+
+button {
+  display: inline-block;
+  padding: 6px 12px;
+  margin-bottom: 0;
+  font-weight: normal;
+  text-align: center;
+  white-space: nowrap;
+  color: white;
+  background-image: none;
+  background-color: #7dc332;
+  border-color: #7dc332;
+  cursor: pointer;
+
+  &:hover:not(:disabled) {
+    background-color: #639a28;
+    border-color: #639a28;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: default;
   }
 }
