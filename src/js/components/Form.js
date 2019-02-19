@@ -51,7 +51,7 @@ class Form extends Component {
             onChange={onChange}
           />
           {errors.assignment_id ? (
-            <div className="form-error">{errors.assignment_id.join('; ')}</div>
+            <div className="form-error">{errors.assignment_id.join("; ")}</div>
           ) : null}
         </div>
         <div className={cn("form-group", { "has-error": errors.task_id })}>
@@ -64,7 +64,7 @@ class Form extends Component {
             noOptionsMessage={() => "Zuerst Projekt wählen"}
           />
           {errors.task_id ? (
-            <div className="form-error">{errors.task_id.join('; ')}</div>
+            <div className="form-error">{errors.task_id.join("; ")}</div>
           ) : null}
         </div>
         <div className={cn("form-group", { "has-error": errors.hours })}>
@@ -73,12 +73,12 @@ class Form extends Component {
             className="form-control"
             onChange={onChange}
             value={changeset.hours}
-            placeholder="0.00 h"
+            placeholder="0:00"
             autoComplete="off"
             autoFocus
           />
           {errors.hours ? (
-            <div className="form-error">{errors.hours.join('; ')}</div>
+            <div className="form-error">{errors.hours.join("; ")}</div>
           ) : null}
         </div>
         <div className={cn("form-group", { "has-error": errors.description })}>
@@ -90,7 +90,7 @@ class Form extends Component {
             rows={4}
           />
           {errors.description ? (
-            <div className="form-error">{errors.description.join('; ')}</div>
+            <div className="form-error">{errors.description.join("; ")}</div>
           ) : null}
         </div>
 

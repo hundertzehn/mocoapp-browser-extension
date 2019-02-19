@@ -11,6 +11,9 @@ import {
 } from "lodash/fp"
 import { format } from "date-fns"
 
+const SECONDS_PER_HOUR = 3600
+const SECONDS_PER_MINUTE = 60
+
 const nilToArray = input => input || []
 
 export const findLastProject = id =>
@@ -63,3 +66,18 @@ export const currentDate = (locale = "de") =>
 
 export const extensionSettingsUrl = () =>
   `chrome://extensions/?id=${chrome.runtime.id}`
+
+export const secondsFromHours = hours => {
+  if (!hours) {
+    return 0
+  }
+
+  let number = Number(hours)
+
+  if (!isNaN(number)) {
+    return number * SECONDS_PER_HOUR
+  }
+
+  const parts = hours.split(':', 2).map(part => parseInt(part, 10) || 0)
+  return parts[0] * SECONDS_PER_HOUR + (parts[1] || 0) * SECONDS_PER_MINUTE
+}
