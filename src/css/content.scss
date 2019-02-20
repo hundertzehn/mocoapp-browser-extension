@@ -1,7 +1,3 @@
-@import "mixins";
-@import "form";
-@import "spinner";
-
 #moco-bx-root {
   position: fixed;
   bottom: 40px;
@@ -17,21 +13,42 @@
     2px 2px 15px 4px rgba(0, 0, 0, 0.05);
   padding: 5px;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  align-items: center;
-
   cursor: pointer;
 
+  iframe {
+    border: 0;
+  }
+
   .moco-bx-bubble {
-    img {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+
+    img.moco-logo {
       width: 30px;
       height: 30px;
     }
+
+    .moco-bx-badge {
+      display: inline-block;
+      min-width: 10px;
+      padding: 2px 4px;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1;
+      color: #fff;
+      text-align: center;
+      white-space: nowrap;
+      vertical-align: middle;
+      background-color: #7dc332;
+      border-radius: 10px;
+    }
   }
 
-  .moco-bx-modal {
+  .moco-bx-popup {
     position: fixed; /* Stay in place */
     z-index: 2000; /* Sit on top */
     padding-top: 100px; /* Location of the box */
@@ -43,11 +60,43 @@
     background-color: rgb(0, 0, 0); /* Fallback color */
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 
-    .moco-bx-modal-content {
+    .moco-bx-popup-content {
       background-color: white;
       width: 600px;
-      padding: 40px;
+      height: 400px;
+      padding: 2rem;
       margin: 0 auto;
+    }
+  }
+
+  #moco-bx-invalid-configuration-error {
+    img {
+      width: 536px;
+    }
+  }
+
+  button {
+    display: inline-block;
+    padding: 6px 12px;
+    margin-bottom: 0;
+    font-weight: normal;
+    text-align: center;
+    white-space: nowrap;
+    color: white;
+    background-image: none;
+    background-color: #7dc332;
+    border-color: #7dc332;
+    border-radius: 0;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      background-color: #639a28;
+      border-color: #639a28;
+    }
+
+    &:disabled {
+      opacity: 0.65;
+      cursor: default;
     }
   }
 }

@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import ApiClient from "api/Client"
-import Modal from "components/Modal"
+import Popup from "components/Popup"
 import InvalidConfigurationError from "components/InvalidConfigurationError"
 import Form from "components/Form"
 import Spinner from "components/Spinner"
@@ -32,14 +32,15 @@ class Bubble extends Component {
       subdomain: PropTypes.string,
       apiKey: PropTypes.string,
       version: PropTypes.string
-    })
+    }),
+    browser: PropTypes.object.isRequired,
   };
 
   #apiClient;
 
   @observable isLoading = false;
   @observable isOpen = false;
-  @observable projects;
+  @observable projects = [];
   @observable lastProjectId;
   @observable lastTaskId;
   @observable bookedHours = 0;
@@ -47,91 +48,77 @@ class Bubble extends Component {
   @observable formErrors = {};
   @observable unauthorizedError = false;
 
-  @computed get changesetWithDefaults() {
-    const { service } = this.props
-
-    const project =
-      findLastProject(service.projectId || this.lastProjectId)(this.projects) ||
-      head(this.projects)
-
-    const task = findLastTask(service.taskId || this.lastTaskId)(project)
-
-    const defaults = {
-      remote_service: service.name,
-      remote_id: service.id,
-      remote_url: window.location.href,
-      date: currentDate(),
-      assignment_id: project?.value,
-      task_id: task?.value,
-      billable: task?.billable,
-      hours: "",
-      seconds: secondsFromHours(this.changeset.hours),
-      description: service.description
-    }
-
-    return {
-      ...defaults,
-      ...this.changeset
-    }
-  }
-
   constructor(props) {
     super(props)
-    this.#apiClient = new ApiClient(props.settings)
+    this.initializeApiClient(props.settings)
   }
 
   componentDidMount() {
     disposeOnUnmount(
       this,
-      reaction(
-        () => (this.hasInvalidConfiguration() ? null : this.props.settings),
-        this.fetchProjects,
-        {
-          fireImmediately: true
-        }
-      )
+      reaction(() => this.props.settings, settings => {
+        this.initializeApiClient(settings)
+        this.fetchBookedHours()
+        this.close()
+      })
     )
+
     disposeOnUnmount(
       this,
       reaction(() => this.props.service, this.fetchBookedHours, {
         fireImmediately: true
       })
     )
-    window.addEventListener("keydown", this.handleKeyDown)
+    this.props.browser.runtime.onMessage.addListener(this.receiveMessage)
+    window.addEventListener("keydown", this.handleKeyDown, true)
   }
 
   componentWillUnmount() {
+    this.props.browser.runtime.onMessage.removeListener(this.receiveMessage)
     window.removeEventListener("keydown", this.handleKeyDown)
   }
 
-  open = _event => {
+  open = event => {
+    if (event && event.target && event.target.classList.contains('moco-bx-popup')) {
+      return this.close()
+    }
     this.isOpen = true
+    this.fetchProjects().then(() => (this.isOpen = true))
   };
 
   close = _event => {
     this.isOpen = false
   };
 
-  hasInvalidConfiguration = () => {
-    const { settings } = this.props
-    return ["subdomain", "apiKey"].some(key => !settings[key])
-  };
+  receiveMessage = ({ type, payload }) => {
+    switch(type) {
+      case 'submitForm': {
+        return this.createActivity(payload).then(() => this.close())
+      }
+      case 'closeForm': {
+        return this.close()
+      }
+    }
+  }
 
-  fetchProjects = settings => {
-    if (!settings) {
-      return
+  initializeApiClient = settings => {
+    this.#apiClient = new ApiClient(settings)
+  }
+
+  fetchProjects = () => {
+    if (this.projects.length > 0) {
+      return Promise.resolve();
     }
 
     this.isLoading = true
 
-    this.#apiClient = new ApiClient(settings)
-    this.#apiClient
+    return this.#apiClient
       .projects()
       .then(({ data }) => {
+        this.unauthorizedError = false
         this.projects = groupedProjectOptions(data.projects)
         this.lastProjectId = data.last_project_id
         this.lastTaskId = data.lastTaskId
-        this.unauthorizedError = false
       })
       .catch(error => {
         if (error.response?.status === 401) {
@@ -143,12 +130,16 @@ class Bubble extends Component {
       })
   };
 
-  fetchBookedHours = service => {
+  fetchBookedHours = () => {
+    const { service } = this.props
     this.isLoading = true
 
     this.#apiClient
       .bookedHours(service)
-      .then(({ data }) => (this.bookedHours = parseFloat(data[0]?.hours) || 0))
+      .then(({ data }) => {
+        this.bookedHours = parseFloat(data[0]?.hours) || 0
+        this.unauthorizedError = false
+      })
       .catch(error => {
         if (error.response?.status === 401) {
           this.unauthorizedError = true
@@ -157,83 +148,63 @@ class Bubble extends Component {
       .finally(() => (this.isLoading = false))
   };
 
-  // EVENT HANDLERS -----------------------------------------------------------
-
-  handleKeyDown = event => {
-    event.stopPropagation()
-    if (event.keyCode === 27) {
-      this.close()
-    }
-  };
-
-  handleChange = event => {
-    const {
-      target: { name, value }
-    } = event
-
-    this.changeset[name] = value
-
-    if (name === "assignment_id") {
-      this.changeset.task_id = null
-    }
-  };
-
-  handleSubmit = event => {
-    event.preventDefault()
+  createActivity = payload =>
     this.#apiClient
-      .createActivity(this.changesetWithDefaults)
+      .createActivity(payload)
       .then(({ data }) => {
-        this.close()
         this.bookedHours += data.hours
         this.changeset = {}
         this.formErrors = {}
+        this.unauthorizedError = false
       })
       .catch(this.handleSubmitError)
-  };
 
   handleSubmitError = error => {
     if (error.response?.status === 422) {
       this.formErrors = error.response.data
     }
+    if (error.response?.status === 401) {
+      this.unauthorizedError = true
+    }
+  };
+
+  handleKeyDown = event => {
+    if (event.key === 'm' && (event.metaKey || event.ctrlKey)) {
+      event.preventDefault()
+      this.open()
+    }
+  };
+
+  hasInvalidConfiguration = () => {
+    const { settings } = this.props
+    return ["subdomain", "apiKey"].some(key => !settings[key])
   };
 
   // RENDER -------------------------------------------------------------------
-
-  renderContent = () => {
-    if (this.unauthorizedError || this.hasInvalidConfiguration()) {
-      return <InvalidConfigurationError />
-    } else if (this.isOpen) {
-      return (
-        <Form
-          projects={this.projects}
-          changeset={this.changesetWithDefaults}
-          errors={this.formErrors}
-          isLoading={this.isLoading}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        />
-      )
-    } else {
-      return null
-    }
-  }
 
   render() {
     if (this.isLoading) {
       return <Spinner />
     }
 
+    const { service, browser } = this.props;
+
     return (
-      <div className="moco-bx-bubble">
-        <img
-          onClick={this.open}
-          src={chrome.extension.getURL(logoUrl)}
-        />
-        {this.bookedHours > 0 && <span className="booked-hours"><small>{this.bookedHours}h</small></span>}
+      <div className="moco-bx-bubble" onClick={this.open}>
+        <img className="moco-logo" src={this.props.browser.extension.getURL(logoUrl)} />
+        {this.bookedHours > 0
+          ? <span className="moco-bx-badge">{this.bookedHours}h</span>
+          : null
+        }
         {this.isOpen && (
-          <Modal>
-            {this.renderContent()}
-          </Modal>
+          <Popup
+            service={service}
+            projects={this.projects}
+            lastProjectId={this.lastProjectId}
+            lastTaskId={this.lastTaskId}
+            browser={browser}
+            unauthorizedError={this.unauthorizedError}
+          />
         )}
       </div>
     )

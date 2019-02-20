@@ -1,18 +1,19 @@
-const path = require("path")
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const CleanWebpackPlugin = require("clean-webpack-plugin")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
-const CopyWebpackPlugin = require("copy-webpack-plugin")
+const path = require('path')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const CopyWebpackPlugin = require('copy-webpack-plugin')
 
 module.exports = {
   entry: {
-    background: "./src/js/background.js",
-    content: "./src/js/content.js",
-    options: "./src/js/options.js"
+    background: './src/js/background.js',
+    content: './src/js/content.js',
+    popup: './src/js/popup.js',
+    options: './src/js/options.js'
   },
   output: {
-    path: path.join(__dirname, "build"),
-    filename: "[name].js"
+    path: path.join(__dirname, 'build'),
+    filename: '[name].js'
   },
   module: {
     rules: [
@@ -22,11 +23,11 @@ module.exports = {
           {
             loader: MiniCssExtractPlugin.loader
           },
-          "css-loader",
+          'css-loader',
           {
-            loader: "sass-loader",
+            loader: 'sass-loader',
             options: {
-              includePaths: [path.join(__dirname, "src/css")]
+              includePaths: [path.join(__dirname, 'src/css')]
             }
           }
         ],
@@ -36,14 +37,14 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
-          loader: "babel-loader"
+          loader: 'babel-loader'
         }
       },
       {
         test: /\.(jpg|png)$/,
-        loader: "file-loader",
+        loader: 'file-loader',
         options: {
-          name: "[path][name].[ext]"
+          name: '[path][name].[ext]'
         },
         exclude: /node_modules/
       }
@@ -51,14 +52,14 @@ module.exports = {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: "[name].css",
+      filename: '[name].css',
       chunkFilename: '[id].css'
     }),
-    new CleanWebpackPlugin(["build"]),
+    new CleanWebpackPlugin(['build']),
     new CopyWebpackPlugin([
       {
-        from: "src/manifest.json",
-        transform: function(content, _path) {
+        from: 'src/manifest.json',
+        transform: function (content, _path) {
           // generates the manifest file using the package.json informations
           return Buffer.from(
             JSON.stringify({
@@ -68,26 +69,28 @@ module.exports = {
             })
           )
         }
-      },
-      {
-        from: "src/css/styles.css",
       }
     ]),
     new HtmlWebpackPlugin({
-      template: path.join(__dirname, "src", "options.html"),
-      filename: "options.html",
-      chunks: ["options"]
+      template: path.join(__dirname, 'src', 'popup.html'),
+      filename: 'popup.html',
+      chunks: ['popup']
+    }),
+    new HtmlWebpackPlugin({
+      template: path.join(__dirname, 'src', 'options.html'),
+      filename: 'options.html',
+      chunks: ['options']
     })
   ],
   resolve: {
-    modules: [path.join(__dirname, "src/js"), "node_modules"],
+    modules: [path.join(__dirname, 'src/js'), 'node_modules'],
     alias: {
-      images: path.join(__dirname, "src/images")
+      images: path.join(__dirname, 'src/images')
     }
   },
   // webpack creates sourcemaps by default and evals js code
   // this is not allowed by chrome extensions
   // https://stackoverflow.com/a/49100966
-  devtool: "none",
-  mode: process.env.NODE_ENV || "development"
+  devtool: 'none',
+  mode: process.env.NODE_ENV || 'development'
 }

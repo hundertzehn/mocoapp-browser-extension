@@ -32,18 +32,5 @@
       "css": ["content.css"]
     }
   ],
-  "browser_action": {
-    "default_icon": "src/images/logo.png",
-    "default_title": "MOCO Time Tracking",
-    "default_popup": "popup.html"
-  },
-  "web_accessible_resources": ["src/images/*", "content.css"],
-  "commands": {
-    "_execute_browser_action": {
-      "suggested_key": {
-        "default": "Ctrl+M",
-        "mac": "Command+M"
-      }
-    }
-  }
+  "web_accessible_resources": ["src/images/*", "popup.html"]
 }
