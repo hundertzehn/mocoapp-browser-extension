@@ -2,14 +2,16 @@ import {
   groupBy,
   compose,
   map,
+  mapValues,
   toPairs,
   flatMap,
   pathEq,
   get,
   find,
-  curry
-} from "lodash/fp"
-import { format } from "date-fns"
+  curry,
+  pick
+} from 'lodash/fp'
+import { format } from 'date-fns'
 
 const SECONDS_PER_HOUR = 3600
 const SECONDS_PER_MINUTE = 60
@@ -18,17 +20,17 @@ const nilToArray = input => input || []
 
 export const findLastProject = id =>
   compose(
-    find(pathEq("value", Number(id))),
-    flatMap(get("options"))
+    find(pathEq('value', Number(id))),
+    flatMap(get('options'))
   )
 
 export const findLastTask = id =>
   compose(
-    find(pathEq("value", Number(id))),
-    get("tasks")
+    find(pathEq('value', Number(id))),
+    get('tasks')
   )
 
-function taskOptions(tasks) {
+function taskOptions (tasks) {
   return tasks.map(({ id, name, billable }) => ({
     label: name,
     value: id,
@@ -36,7 +38,7 @@ function taskOptions(tasks) {
   }))
 }
 
-export function projectOptions(projects) {
+export function projectOptions (projects) {
   return projects.map(project => ({
     value: project.id,
     label: project.name,
@@ -51,8 +53,18 @@ export const groupedProjectOptions = compose(
     options: projectOptions(projects)
   })),
   toPairs,
-  groupBy("customer_name"),
+  groupBy('customer_name'),
   nilToArray
+)
+
+export const serializeProps = attrs => compose(
+  mapValues(JSON.stringify),
+  pick(attrs)
+)
+
+export const parseProps = attrs => compose(
+  mapValues(JSON.parse),
+  pick(attrs)
 )
 
 export const trace = curry((tag, value) => {
@@ -61,8 +73,8 @@ export const trace = curry((tag, value) => {
   return value
 })
 
-export const currentDate = (locale = "de") =>
-  format(new Date(), "YYYY-MM-DD", { locale })
+export const currentDate = (locale = 'de') =>
+  format(new Date(), 'YYYY-MM-DD', { locale })
 
 export const extensionSettingsUrl = () =>
   `chrome://extensions/?id=${chrome.runtime.id}`

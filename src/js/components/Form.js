@@ -5,7 +5,6 @@ import cn from "classnames"
 
 class Form extends Component {
   static propTypes = {
-    isLoading: PropTypes.bool.isRequired,
     changeset: PropTypes.shape({
       project: PropTypes.object,
       task: PropTypes.object,
@@ -14,7 +13,8 @@ class Form extends Component {
     errors: PropTypes.object,
     projects: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
+    onSubmit: PropTypes.func.isRequired,
+    onCancel: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -31,10 +31,6 @@ class Form extends Component {
   // RENDER -------------------------------------------------------------------
 
   render() {
-    if (this.isLoading) {
-      return null
-    }
-
     const { projects, changeset, errors, onChange, onSubmit } = this.props
     const project = Select.findOptionByValue(projects, changeset.assignment_id)
 
@@ -95,6 +91,7 @@ class Form extends Component {
         </div>
 
         <button disabled={!this.isValid()}>Speichern</button>
+        <button type="button" className="secondary" onClick={this.props.onCancel}>Abbrechen</button>
       </form>
     )
   }

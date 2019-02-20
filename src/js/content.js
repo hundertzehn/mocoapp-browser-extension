@@ -1,21 +1,21 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import Bubble from "./components/Bubble"
-import { createMatcher, createEnhancer } from "utils/urlMatcher"
-import remoteServices from "./remoteServices"
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Bubble from './components/Bubble'
+import { createMatcher, createEnhancer } from 'utils/urlMatcher'
+import remoteServices from './remoteServices'
 import { pipe } from 'lodash/fp'
-import "../css/content.scss"
+import '../css/content.scss'
 
 const matcher = createMatcher(remoteServices)
-const serviceEnhancer = createEnhancer(window.document)
+const enhancer = createEnhancer(window.document)
 
 chrome.runtime.onMessage.addListener(({ type, payload }) => {
   switch (type) {
-    case "mountBubble": {
+    case 'mountBubble': {
       return mountBubble(payload)
     }
 
-    case "unmountBubble": {
+    case 'unmountBubble': {
       return unmountBubble()
     }
   }
@@ -24,27 +24,27 @@ chrome.runtime.onMessage.addListener(({ type, payload }) => {
 const mountBubble = (settings) => {
   const service = pipe(
     matcher,
-    serviceEnhancer(window.location.href)
+    enhancer(window.location.href)
   )(window.location.href)
 
   if (!service) {
     return
   }
 
-  if (!document.getElementById("moco-bx-root")) {
-    const domRoot = document.createElement("div")
-    domRoot.setAttribute("id", "moco-bx-root")
+  if (!document.getElementById('moco-bx-root')) {
+    const domRoot = document.createElement('div')
+    domRoot.setAttribute('id', 'moco-bx-root')
     document.body.appendChild(domRoot)
   }
 
   ReactDOM.render(
-   <Bubble service={service} settings={settings} />,
-    document.getElementById("moco-bx-root")
+    <Bubble service={service} settings={settings} browser={chrome} />,
+    document.getElementById('moco-bx-root')
   )
 }
 
 const unmountBubble = () => {
-  const domRoot = document.getElementById("moco-bx-root")
+  const domRoot = document.getElementById('moco-bx-root')
 
   if (domRoot) {
     ReactDOM.unmountComponentAtNode(domRoot)

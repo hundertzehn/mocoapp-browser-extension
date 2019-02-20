@@ -18,6 +18,7 @@
     "mobx": "^5.5.0",
     "mobx-react": "^5.2.8",
     "prop-types": "^15.6.2",
+    "query-string": "^6.2.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "react-select": "^2.3.0",

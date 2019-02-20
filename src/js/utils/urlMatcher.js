@@ -1,5 +1,5 @@
-import Route from "route-parser"
-import { isFunction, isUndefined, compose, toPairs, map } from "lodash/fp"
+import Route from 'route-parser'
+import { isFunction, isUndefined, compose, toPairs, map, omit } from 'lodash/fp'
 
 const createEvaluator = args => fnOrValue => {
   if (isUndefined(fnOrValue)) {
@@ -33,7 +33,7 @@ export const createEnhancer = document => url => service => {
   const evaluate = createEvaluator(args)
 
   return {
-    ...service,
+    ...omit(['route'], service),
     url,
     id: evaluate(service.id) || match.id,
     description: evaluate(service.description),

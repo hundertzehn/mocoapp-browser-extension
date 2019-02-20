@@ -3,7 +3,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 
 @observer
-class Setup extends Component {
+class Options extends Component {
   @observable loading = true
   @observable subdomain = ""
   @observable apiKey = ""
@@ -62,7 +62,7 @@ class Setup extends Component {
             value={this.apiKey}
             onChange={this.onChange}
           />
-          <div className="text-muted mt-1">
+          <div className="text-muted" style={{ marginTop: '0.5rem' }}>
             Deinen API-Schlüssel findest du in der MOCO-App unter
             Profil/Integrationen.
           </div>
@@ -73,4 +73,4 @@ class Setup extends Component {
   }
 }
 
-export default Setup
+export default Options

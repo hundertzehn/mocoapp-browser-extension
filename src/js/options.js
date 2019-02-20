@@ -1,7 +1,7 @@
-import React from "react"
-import ReactDOM from "react-dom"
-import Setup from "./components/Setup"
-import "../css/options.scss"
+import React from 'react'
+import ReactDOM from 'react-dom'
+import Options from './components/Options'
+import '../css/options.scss'
 
-const domContainer = document.querySelector("#moco-bx-root")
-ReactDOM.render(<Setup />, domContainer)
+const domContainer = document.querySelector('#moco-bx-root')
+ReactDOM.render(<Options />, domContainer)
