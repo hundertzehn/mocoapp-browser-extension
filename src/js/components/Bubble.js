@@ -137,7 +137,7 @@ class Bubble extends Component {
       return <Spinner />
     }
 
-    const { service, settings, browser } = this.props;
+    const { service, settings, browser } = this.props
 
     return (
       <div className="moco-bx-bubble" onClick={this.open}>

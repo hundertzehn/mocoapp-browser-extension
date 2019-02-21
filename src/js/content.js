@@ -4,6 +4,7 @@ import Bubble from './components/Bubble'
 import { createMatcher, createEnhancer } from 'utils/urlMatcher'
 import remoteServices from './remoteServices'
 import { pipe } from 'lodash/fp'
+import { ErrorBoundary } from 'utils/notifier'
 import '../css/content.scss'
 
 const matcher = createMatcher(remoteServices)
@@ -38,7 +39,9 @@ const mountBubble = (settings) => {
   }
 
   ReactDOM.render(
-    <Bubble service={service} settings={settings} browser={chrome} />,
+    <ErrorBoundary>
+      <Bubble service={service} settings={settings} browser={chrome} />
+    </ErrorBoundary>,
     document.getElementById('moco-bx-root')
   )
 }
