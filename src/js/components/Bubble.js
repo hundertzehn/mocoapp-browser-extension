@@ -140,7 +140,7 @@ class Bubble extends Component {
     const { service, settings, browser } = this.props
 
     return (
-      <div className="moco-bx-bubble" onClick={this.open}>
+      <div className="moco-bx-bubble" onClick={this.open} style={service.position}>
         <img className="moco-bx-logo" src={this.props.browser.extension.getURL(logoUrl)} />
         {this.bookedHours > 0
           ? <span className="moco-bx-badge">{this.bookedHours}h</span>
