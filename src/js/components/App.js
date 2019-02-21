@@ -12,6 +12,7 @@ import {
   currentDate,
   secondsFromHours
 } from "utils"
+import logoUrl from 'images/logo.png'
 import { head } from "lodash"
 
 @observer
@@ -173,14 +174,21 @@ class App extends Component {
     const { service } = this.props;
     
     return (
-      <Form
-        changeset={this.changesetWithDefaults}
-        projects={this.projects}
-        errors={this.formErrors}
-        onChange={this.handleChange}
-        onSubmit={this.handleSubmit}
-        onCancel={this.handleCancel}
-      />
+      <>
+        <div className="moco-bx-logo__container">
+          <img className="moco-bx-logo" src={this.props.browser.extension.getURL(logoUrl)} />
+          <h1>MOCO Zeiterfassung</h1>
+        </div>
+        
+        <Form
+          changeset={this.changesetWithDefaults}
+          projects={this.projects}
+          errors={this.formErrors}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+          onCancel={this.handleCancel}
+        />
+      </>
     )
   }
 }

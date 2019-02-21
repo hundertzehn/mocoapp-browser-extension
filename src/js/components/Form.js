@@ -23,7 +23,7 @@ class Form extends Component {
 
   isValid = () => {
     const { changeset } = this.props
-    return ["assignment_id", "task_id", "hours", "description"]
+    return ["assignment_id", "task_id", "description"]
       .map(prop => changeset[prop])
       .every(Boolean)
   };
@@ -73,6 +73,7 @@ class Form extends Component {
             autoComplete="off"
             autoFocus
           />
+          &nbsp;&nbsp;<span className="text-muted">Leer lassen, um Timer zu starten</span>
           {errors.hours ? (
             <div className="form-error">{errors.hours.join("; ")}</div>
           ) : null}
