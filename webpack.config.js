@@ -3,7 +3,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const { BugsnagBuildReporterPlugin, BugsnagSourceMapUploaderPlugin } = require('webpack-bugsnag-plugins')
+var ZipPlugin = require('zip-webpack-plugin')
+const { BugsnagBuildReporterPlugin } = require('webpack-bugsnag-plugins')
 
 module.exports = env => {
   const config = {
@@ -57,7 +58,7 @@ module.exports = env => {
         filename: '[name].css',
         chunkFilename: '[id].css'
       }),
-      new CleanWebpackPlugin(['build']),
+      new CleanWebpackPlugin(['build/chrome']),
       new CopyWebpackPlugin([
         {
           from: 'src/manifest.json',
@@ -98,14 +99,14 @@ module.exports = env => {
     config.devtool = 'source-map'
 
     config.plugins.push(
+      new ZipPlugin({
+        filename: 'moco-browser-extension.zip',
+        exclude: [/\.map$/]
+      }),
       new BugsnagBuildReporterPlugin({
         apiKey: 'da6caac4af70af3e4683454b40fe5ef5',
         appVersion: process.env.npm_package_version,
         releaseStage: 'production'
-      }),
-      new BugsnagSourceMapUploaderPlugin({
-        apiKey: 'da6caac4af70af3e4683454b40fe5ef5',
-        appVersion: process.env.npm_package_version
       }),
     )
   }
