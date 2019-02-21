@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import ApiClient from "api/Client"
 import Form from "components/Form"
 import Spinner from "components/Spinner"
-import { observable, computed, reaction } from "mobx"
+import { observable, computed, toJS } from "mobx"
 import { observer, disposeOnUnmount } from "mobx-react"
 import {
   findLastProject,
@@ -25,24 +25,30 @@ class App extends Component {
       projectId: PropTypes.string,
       taskId: PropTypes.string
     }).isRequired,
-    projects: PropTypes.arrayOf(PropTypes.object).isRequired,
-    lastProjectId: PropTypes.number,
-    lastTaskId: PropTypes.number,
+    settings: PropTypes.shape({
+      subdomain: PropTypes.string,
+      apiKey: PropTypes.string,
+      version: PropTypes.string
+    }),
     browser: PropTypes.object.isRequired
   };
 
+  @observable projects = []
+  @observable lastProjectId
+  @observable lastTaskId
   @observable changeset = {};
   @observable formErrors = {};
+  @observable isLoading = true
 
   @computed get changesetWithDefaults() {
-    const { service, projects, lastProjectId, lastTaskId } = this.props
+    const { service } = this.props
 
     const project =
-      findLastProject(service.projectId || lastProjectId)(projects) ||
-      head(projects)
+      findLastProject(service.projectId || this.lastProjectId)(this.projects) ||
+      head(this.projects)
 
     const task =
-      findLastTask(service.taskId || lastTaskId)(project) ||
+      findLastTask(service.taskId || this.lastTaskId)(project) ||
       head(project?.tasks)
 
     const defaults = {
@@ -64,14 +70,67 @@ class App extends Component {
     }
   }
 
+  #apiClient
+
+  constructor(props) {
+    super(props)
+    this.initializeApiClient(props.settings)
+  }
+
   componentDidMount() {
+    this.fetchProjects()
     window.addEventListener("keydown", this.handleKeyDown)
   }
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown)
   }
-  
+
+  initializeApiClient = settings => {
+    this.#apiClient = new ApiClient(settings)
+  }
+
+  fetchProjects = () => {
+    this.isLoading = true
+
+    return this.#apiClient
+      .projects()
+      .then(({ data }) => {
+        this.projects = groupedProjectOptions(data.projects)
+        this.lastProjectId = data.last_project_id
+        this.lastTaskId = data.lastTaskId
+      })
+      .catch(error => {
+        console.log(error)
+      })
+      .finally(() => {
+        this.isLoading = false
+      })
+  };
+
+  createActivity = () => {
+    this.isLoading = true
+    
+    this.#apiClient
+      .createActivity(this.changesetWithDefaults)
+      .then(({ data }) => {
+        this.changeset = {}
+        this.formErrors = {}
+        this.sendMessage(
+          { type: 'activityCreated', payload: { hours: data.hours} }
+        )
+      })
+      .catch(error => {
+        if (error.response?.status === 422) {
+          this.formErrors = error.response.data
+        }
+        if (error.response?.status === 401) {
+          this.unauthorizedError = true
+        }
+      })
+      .finally(() => this.isLoading = false)
+  }
+
   handleKeyDown = event => {
     event.stopPropagation()
     if (event.keyCode === 27) {
@@ -93,7 +152,7 @@ class App extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    this.sendMessage({ type: 'submitForm', payload: this.changesetWithDefaults })
+    this.createActivity()
   }
 
   handleCancel = () => {
@@ -107,12 +166,16 @@ class App extends Component {
     )
 
   render() {
-    const { service, projects } = this.props;
+    if (this.isLoading) {
+      return <Spinner />
+    }
 
+    const { service } = this.props;
+    
     return (
       <Form
         changeset={this.changesetWithDefaults}
-        projects={projects}
+        projects={this.projects}
         errors={this.formErrors}
         onChange={this.handleChange}
         onSubmit={this.handleSubmit}
