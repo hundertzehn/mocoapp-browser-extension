@@ -14,7 +14,8 @@ export default {
         ?.textContent.trim()
         ?.match(/^\[(\d+)\]/)
       return match && match[1]
-    }
+    },
+    position: { left: '50%' },
   },
 
   "github-issue": {
@@ -26,11 +27,13 @@ export default {
       `${org}/${repo}/${id} - ${document
         .querySelector(".gh-header-title")
         .textContent.trim()}`,
+    position: { left: '2rem' },
   },
 
   "trello": {
     name: "trello",
     urlPattern: "https://trello.com/c/:id/:title",
-    description: (document, service, { title }) => title.split('-').slice(1).join(' ')
+    description: (document, service, { title }) => title.split('-').slice(1).join(' '),
+    position: { right: '2rem' },
   }
 }

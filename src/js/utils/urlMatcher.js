@@ -38,7 +38,8 @@ export const createEnhancer = document => url => service => {
     id: evaluate(service.id) || match.id,
     description: evaluate(service.description),
     projectId: evaluate(service.projectId),
-    taskId: evaluate(service.taskId)
+    taskId: evaluate(service.taskId),
+    position: service.position || { left: '50%', transform: 'translateX(-50%)' }
   }
 }
 
