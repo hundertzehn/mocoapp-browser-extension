@@ -3,12 +3,30 @@
 
 html {
   height: 100%;
-  
+
   body {
     height: 100%;
 
     #moco-bx-root {
       height: 100%;
+
+      .moco-bx-logo__container {
+        display: flex;
+        margin-bottom: 2rem;
+        text-align: center;
+
+        img.moco-bx-logo {
+          flex: 0 0 48px;
+          width: 48px;
+          height: 48px;
+          margin-right: 1rem;
+        }
+
+        h1 {
+          line-height: 48px;
+          margin: 0;
+        }
+      }
     }
   }
 }

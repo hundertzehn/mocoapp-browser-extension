@@ -141,7 +141,7 @@ class Bubble extends Component {
 
     return (
       <div className="moco-bx-bubble" onClick={this.open}>
-        <img className="moco-logo" src={this.props.browser.extension.getURL(logoUrl)} />
+        <img className="moco-bx-logo" src={this.props.browser.extension.getURL(logoUrl)} />
         {this.bookedHours > 0
           ? <span className="moco-bx-badge">{this.bookedHours}h</span>
           : null
