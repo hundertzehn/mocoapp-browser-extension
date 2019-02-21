@@ -4,6 +4,7 @@
   }
 
   .moco-bx-bubble {
+    box-sizing: content-box;
     position: fixed;
     bottom: 2rem;
     z-index: 1000;

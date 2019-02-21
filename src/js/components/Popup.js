@@ -18,7 +18,7 @@ const Popup = props => {
         {props.unauthorizedError
           ? <InvalidConfigurationError />
           : <iframe
-            src={props.browser.extension.getURL(`popup.html?${queryString.stringify(serializedProps)}`)}
+            src={chrome.extension.getURL(`popup.html?${queryString.stringify(serializedProps)}`)}
             width={styles.width}
             height={styles.height} />
         }
@@ -29,7 +29,6 @@ const Popup = props => {
 
 Popup.propTypes = {
   service: PropTypes.object.isRequired,
-  browser: PropTypes.object.isRequired,
   unauthorizedError: PropTypes.bool.isRequired
 }
 

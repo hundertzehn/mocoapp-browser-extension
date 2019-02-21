@@ -30,8 +30,7 @@ class App extends Component {
       subdomain: PropTypes.string,
       apiKey: PropTypes.string,
       version: PropTypes.string
-    }),
-    browser: PropTypes.object.isRequired
+    })
   };
 
   @observable projects = []
@@ -102,7 +101,7 @@ class App extends Component {
         this.lastTaskId = data.lastTaskId
       })
       .catch(error => {
-        console.log(error)
+        this.sendMessage({ type: 'closeForm' })
       })
       .finally(() => {
         this.isLoading = false
@@ -111,7 +110,7 @@ class App extends Component {
 
   createActivity = () => {
     this.isLoading = true
-    
+
     this.#apiClient
       .createActivity(this.changesetWithDefaults)
       .then(({ data }) => {
@@ -161,7 +160,7 @@ class App extends Component {
   }
 
   sendMessage = action =>
-    this.props.browser.tabs.query(
+    chrome.tabs.query(
       { active: true, currentWindow: true },
       tabs => chrome.tabs.sendMessage(tabs[0].id, action)
     )
@@ -172,14 +171,14 @@ class App extends Component {
     }
 
     const { service } = this.props;
-    
+
     return (
       <>
         <div className="moco-bx-logo__container">
-          <img className="moco-bx-logo" src={this.props.browser.extension.getURL(logoUrl)} />
+          <img className="moco-bx-logo" src={chrome.extension.getURL(logoUrl)} />
           <h1>MOCO Zeiterfassung</h1>
         </div>
-        
+
         <Form
           changeset={this.changesetWithDefaults}
           projects={this.projects}
