@@ -40,12 +40,7 @@ class Bubble extends Component {
 
   @observable isLoading = false;
   @observable isOpen = false;
-  @observable projects = [];
-  @observable lastProjectId;
-  @observable lastTaskId;
   @observable bookedHours = 0;
-  @observable changeset = {};
-  @observable formErrors = {};
   @observable unauthorizedError = false;
 
   constructor(props) {
@@ -57,9 +52,9 @@ class Bubble extends Component {
     disposeOnUnmount(
       this,
       reaction(() => this.props.settings, settings => {
+        this.close()
         this.initializeApiClient(settings)
         this.fetchBookedHours()
-        this.close()
       })
     )
 
@@ -78,12 +73,15 @@ class Bubble extends Component {
     window.removeEventListener("keydown", this.handleKeyDown)
   }
 
+  initializeApiClient = settings => {
+    this.#apiClient = new ApiClient(settings)
+  }
+  
   open = event => {
     if (event && event.target && event.target.classList.contains('moco-bx-popup')) {
       return this.close()
     }
     this.isOpen = true
-    this.fetchProjects().then(() => (this.isOpen = true))
   };
 
   close = _event => {
@@ -92,43 +90,15 @@ class Bubble extends Component {
 
   receiveMessage = ({ type, payload }) => {
     switch(type) {
-      case 'submitForm': {
-        return this.createActivity(payload).then(() => this.close())
+      case 'activityCreated': {
+        this.bookedHours += payload.hours
+        return this.close()
       }
       case 'closeForm': {
         return this.close()
       }
     }
   }
-
-  initializeApiClient = settings => {
-    this.#apiClient = new ApiClient(settings)
-  }
-
-  fetchProjects = () => {
-    if (this.projects.length > 0) {
-      return Promise.resolve();
-    }
-
-    this.isLoading = true
-
-    return this.#apiClient
-      .projects()
-      .then(({ data }) => {
-        this.unauthorizedError = false
-        this.projects = groupedProjectOptions(data.projects)
-        this.lastProjectId = data.last_project_id
-        this.lastTaskId = data.lastTaskId
-      })
-      .catch(error => {
-        if (error.response?.status === 401) {
-          this.unauthorizedError = true
-        }
-      })
-      .finally(() => {
-        this.isLoading = false
-      })
-  };
 
   fetchBookedHours = () => {
     const { service } = this.props
@@ -146,26 +116,6 @@ class Bubble extends Component {
         }
       })
       .finally(() => (this.isLoading = false))
-  };
-
-  createActivity = payload =>
-    this.#apiClient
-      .createActivity(payload)
-      .then(({ data }) => {
-        this.bookedHours += data.hours
-        this.changeset = {}
-        this.formErrors = {}
-        this.unauthorizedError = false
-      })
-      .catch(this.handleSubmitError)
-
-  handleSubmitError = error => {
-    if (error.response?.status === 422) {
-      this.formErrors = error.response.data
-    }
-    if (error.response?.status === 401) {
-      this.unauthorizedError = true
-    }
   };
 
   handleKeyDown = event => {
@@ -187,7 +137,7 @@ class Bubble extends Component {
       return <Spinner />
     }
 
-    const { service, browser } = this.props;
+    const { service, settings, browser } = this.props;
 
     return (
       <div className="moco-bx-bubble" onClick={this.open}>
@@ -199,9 +149,7 @@ class Bubble extends Component {
         {this.isOpen && (
           <Popup
             service={service}
-            projects={this.projects}
-            lastProjectId={this.lastProjectId}
-            lastTaskId={this.lastTaskId}
+            settings={settings}
             browser={browser}
             unauthorizedError={this.unauthorizedError}
           />

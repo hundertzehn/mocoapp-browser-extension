@@ -5,9 +5,9 @@ import queryString from 'query-string'
 import { parseProps } from 'utils'
 import '../css/popup.scss'
 
-const parsedProps = parseProps(
-  ['service', 'projects', 'lastProjectId', 'lastTaskId']
-)(queryString.parse(location.search))
+const parsedProps = parseProps(['service', 'settings'])(
+  queryString.parse(location.search)
+)
 
 ReactDOM.render(
   <App

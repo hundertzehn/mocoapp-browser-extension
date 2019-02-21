@@ -1,5 +1,14 @@
 @import "form";
 @import "spinner";
 
-#moco-bx-root {
+html {
+  height: 100%;
+  
+  body {
+    height: 100%;
+
+    #moco-bx-root {
+      height: 100%;
+    }
+  }
 }

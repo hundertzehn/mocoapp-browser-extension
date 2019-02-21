@@ -5,9 +5,7 @@ import queryString from 'query-string'
 import { serializeProps } from 'utils'
 
 const Popup = props => {
-  const serializedProps = serializeProps(
-    ['service', 'projects', 'lastProjectId', 'lastTaskId']
-  )(props)
+  const serializedProps = serializeProps(['service', 'settings'])(props)
 
   const styles = useMemo(() => ({
     width: '536px',
@@ -31,9 +29,6 @@ const Popup = props => {
 
 Popup.propTypes = {
   service: PropTypes.object.isRequired,
-  projects: PropTypes.arrayOf(PropTypes.object).isRequired,
-  lastProjectId: PropTypes.number,
-  lastTaskId: PropTypes.number,
   browser: PropTypes.object.isRequired,
   unauthorizedError: PropTypes.bool.isRequired
 }
