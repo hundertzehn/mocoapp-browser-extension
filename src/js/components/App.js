@@ -2,17 +2,19 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import ApiClient from "api/Client"
 import Form from "components/Form"
+import Calendar from "components/Calendar"
 import Spinner from "components/Spinner"
-import { observable, computed, toJS } from "mobx"
-import { observer, disposeOnUnmount } from "mobx-react"
+import { observable, computed } from "mobx"
+import { observer } from "mobx-react"
 import {
   findLastProject,
   findLastTask,
   groupedProjectOptions,
-  currentDate,
+  formatDate,
   secondsFromHours
 } from "utils"
-import logoUrl from 'images/logo.png'
+import { startOfWeek, endOfWeek } from "date-fns"
+import logoUrl from "images/logo.png"
 import { head } from "lodash"
 
 @observer
@@ -31,13 +33,14 @@ class App extends Component {
       apiKey: PropTypes.string,
       version: PropTypes.string
     })
-  };
+  }
 
   @observable projects = []
+  @observable activities = []
   @observable lastProjectId
   @observable lastTaskId
-  @observable changeset = {};
-  @observable formErrors = {};
+  @observable changeset = {}
+  @observable formErrors = {}
   @observable isLoading = true
 
   @computed get changesetWithDefaults() {
@@ -55,7 +58,7 @@ class App extends Component {
       remote_service: service.name,
       remote_id: service.id,
       remote_url: service.url,
-      date: currentDate(),
+      date: formatDate(new Date()),
       assignment_id: project?.value,
       task_id: task?.value,
       billable: task?.billable,
@@ -78,7 +81,8 @@ class App extends Component {
   }
 
   componentDidMount() {
-    this.fetchProjects()
+    Promise.all([this.fetchProjects(), this.fetchActivities()])
+      .then(() => this.isLoading = false)
     window.addEventListener("keydown", this.handleKeyDown)
   }
 
@@ -90,23 +94,31 @@ class App extends Component {
     this.#apiClient = new ApiClient(settings)
   }
 
-  fetchProjects = () => {
-    this.isLoading = true
+  fromDate = () => startOfWeek(new Date(), { weekStartsOn: 1 })
+  toDate = () => endOfWeek(new Date(), { weekStartsOn: 1 })
 
-    return this.#apiClient
+  fetchProjects = () =>
+    this.#apiClient
       .projects()
       .then(({ data }) => {
         this.projects = groupedProjectOptions(data.projects)
         this.lastProjectId = data.last_project_id
         this.lastTaskId = data.lastTaskId
       })
-      .catch(error => {
-        this.sendMessage({ type: 'closeForm' })
+      .catch(() => {
+        this.sendMessage({ type: "closeForm" })
       })
-      .finally(() => {
-        this.isLoading = false
+
+  fetchActivities = () => {
+    return this.#apiClient
+      .activities(this.fromDate(), this.toDate())
+      .then(({ data }) => {
+        this.activities = data
       })
-  };
+      .catch(() => {
+        this.sendMessage({ type: "closeForm" })
+      })
+  }
 
   createActivity = () => {
     this.isLoading = true
@@ -116,9 +128,10 @@ class App extends Component {
       .then(({ data }) => {
         this.changeset = {}
         this.formErrors = {}
-        this.sendMessage(
-          { type: 'activityCreated', payload: { hours: data.hours} }
-        )
+        this.sendMessage({
+          type: "activityCreated",
+          payload: { hours: data.hours }
+        })
       })
       .catch(error => {
         if (error.response?.status === 422) {
@@ -128,15 +141,15 @@ class App extends Component {
           this.unauthorizedError = true
         }
       })
-      .finally(() => this.isLoading = false)
+      .finally(() => (this.isLoading = false))
   }
 
   handleKeyDown = event => {
     event.stopPropagation()
     if (event.keyCode === 27) {
-      this.sendMessage({ type: 'closeForm' })
+      this.sendMessage({ type: "closeForm" })
     }
-  };
+  }
 
   handleChange = event => {
     const {
@@ -148,7 +161,11 @@ class App extends Component {
     if (name === "assignment_id") {
       this.changeset.task_id = null
     }
-  };
+  }
+
+  handleSelectDate = date => {
+    this.changeset.date = formatDate(date)
+  }
 
   handleSubmit = event => {
     event.preventDefault()
@@ -156,13 +173,12 @@ class App extends Component {
   }
 
   handleCancel = () => {
-    this.sendMessage({ type: 'closeForm' })
+    this.sendMessage({ type: "closeForm" })
   }
 
   sendMessage = action =>
-    chrome.tabs.query(
-      { active: true, currentWindow: true },
-      tabs => chrome.tabs.sendMessage(tabs[0].id, action)
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs =>
+      chrome.tabs.sendMessage(tabs[0].id, action)
     )
 
   render() {
@@ -170,15 +186,23 @@ class App extends Component {
       return <Spinner />
     }
 
-    const { service } = this.props;
-
     return (
       <>
         <div className="moco-bx-logo__container">
-          <img className="moco-bx-logo" src={chrome.extension.getURL(logoUrl)} />
+          <img
+            className="moco-bx-logo"
+            src={chrome.extension.getURL(logoUrl)}
+          />
           <h1>MOCO Zeiterfassung</h1>
         </div>
 
+        <Calendar
+          fromDate={this.fromDate()}
+          toDate={this.toDate()}
+          activities={this.activities}
+          selectedDate={new Date(this.changesetWithDefaults.date)}
+          onChange={this.handleSelectDate}
+        />
         <Form
           changeset={this.changesetWithDefaults}
           projects={this.projects}
