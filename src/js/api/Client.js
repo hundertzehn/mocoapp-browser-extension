@@ -1,4 +1,5 @@
 import axios from "axios"
+import { formatDate } from "utils"
 
 export default class Client {
   #client;
@@ -20,14 +21,17 @@ export default class Client {
     })
   }
 
-  login = () => this.#client.post("session", { api_key: this.#apiKey });
-
   projects = () => this.#client.get("projects");
+
+  activities = (fromDate, toDate) =>
+    this.#client.get("activities", {
+      params: { date: `${formatDate(fromDate)}:${formatDate(toDate)}` }
+    })
 
   bookedHours = service =>
     this.#client.get("activities/tags", {
       params: { selection: [service.id], remote_service: service.name }
-    });
+    })
 
   createActivity = activity => this.#client.post("activities", { activity });
 }

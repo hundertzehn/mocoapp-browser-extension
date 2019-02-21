@@ -73,8 +73,8 @@ export const trace = curry((tag, value) => {
   return value
 })
 
-export const currentDate = (locale = 'de') =>
-  format(new Date(), 'YYYY-MM-DD', { locale })
+export const formatDate = date =>
+  format(date, 'YYYY-MM-DD')
 
 export const extensionSettingsUrl = () =>
   `chrome://extensions/?id=${chrome.runtime.id}`

@@ -1,21 +1,12 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { Spring, config, animated } from 'react-spring/renderprops'
 import ApiClient from "api/Client"
 import Popup from "components/Popup"
-import InvalidConfigurationError from "components/InvalidConfigurationError"
-import Form from "components/Form"
 import Spinner from "components/Spinner"
-import { observable, computed, reaction } from "mobx"
+import { observable, reaction } from "mobx"
 import { observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
-import {
-  findLastProject,
-  findLastTask,
-  groupedProjectOptions,
-  currentDate,
-  secondsFromHours
-} from "utils"
-import { head } from "lodash"
 
 @observer
 class Bubble extends Component {
@@ -75,7 +66,7 @@ class Bubble extends Component {
   initializeApiClient = settings => {
     this.#apiClient = new ApiClient(settings)
   }
-  
+
   open = event => {
     if (event && event.target && event.target.classList.contains('moco-bx-popup')) {
       return this.close()
@@ -139,20 +130,30 @@ class Bubble extends Component {
     const { service, settings } = this.props
 
     return (
-      <div className="moco-bx-bubble" onClick={this.open} style={service.position}>
-        <img className="moco-bx-logo" src={chrome.extension.getURL(logoUrl)} />
-        {this.bookedHours > 0
-          ? <span className="moco-bx-badge">{this.bookedHours}h</span>
-          : null
-        }
+      <>
+        <Spring from={{ transform: 'scale(0.1)' }} to={{ transform: 'scale(1)' }} config={config.wobbly}>
+          {props => (
+            <animated.div
+              className="moco-bx-bubble"
+              style={{...service.position, ...props}}
+              onClick={this.open}
+            >
+              <img className="moco-bx-logo" src={chrome.extension.getURL(logoUrl)} />
+              {this.bookedHours > 0
+                ? <span className="moco-bx-badge">{this.bookedHours}h</span>
+                : null
+              }
+            </animated.div>
+          )}
+        </Spring>
         {this.isOpen && (
           <Popup
-            service={service}
-            settings={settings}
-            unauthorizedError={this.unauthorizedError}
+          service={service}
+          settings={settings}
+          unauthorizedError={this.unauthorizedError}
           />
         )}
-      </div>
+      </>
     )
   }
 }

@@ -24,6 +24,7 @@
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
     "react-select": "^2.3.0",
+    "react-spring": "^8.0.7",
     "route-parser": "^0.0.5"
   },
   "devDependencies": {
