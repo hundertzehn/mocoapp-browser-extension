@@ -21,7 +21,7 @@ const Calendar = ({ fromDate, toDate, selectedDate, activities, onChange }) => {
           date={date}
           hours={getHours(date)}
           onClick={onChange}
-          active={trace('dateL', formatDate(date)) === trace('dateR', formatDate(selectedDate))}
+          active={formatDate(date) === formatDate(selectedDate)}
         />
       ))}
     </div>

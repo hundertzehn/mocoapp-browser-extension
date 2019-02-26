@@ -53,7 +53,7 @@ export default class Select extends Component {
     options: PropTypes.array,
     hasError: PropTypes.bool,
     onChange: PropTypes.func.isRequired
-  };
+  }
 
   static findOptionByValue = (selectOptions, value) => {
     const options = flatMap(
@@ -62,16 +62,16 @@ export default class Select extends Component {
     )
 
     return options.find(pathEq("value", value)) || null
-  };
+  }
 
   handleChange = option => {
     const { name, onChange } = this.props
     const { value } = option
     onChange({ target: { name, value } })
-  };
+  }
 
   render() {
-    const { value, hasError, ...passThroughProps } = this.props
+    const { value, ...passThroughProps } = this.props
 
     return (
       <ReactSelect
