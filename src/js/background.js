@@ -13,7 +13,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 
   const service = matcher(tab.url)
 
-  if (service) {
+  if (service?.match?.id) {
     registeredTabIds.add(tabId)
     chrome.storage.sync.get(
       ["subdomain", "apiKey"],
