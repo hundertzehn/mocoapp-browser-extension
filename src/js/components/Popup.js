@@ -10,7 +10,7 @@ const Popup = props => {
   const styles = useMemo(
     () => ({
       width: "536px",
-      height: props.unauthorizedError ? "890px" : "470px"
+      height: props.unauthorizedError ? "890px" : "480px"
     }),
     [props.unauthorizedError]
   )
