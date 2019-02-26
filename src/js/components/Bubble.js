@@ -32,6 +32,7 @@ class Bubble extends Component {
   @observable isOpen = false;
   @observable bookedHours = 0;
   @observable unauthorizedError = false;
+  @observable animationCompleted = false;
 
   constructor(props) {
     super(props)
@@ -115,6 +116,10 @@ class Bubble extends Component {
     }
   };
 
+  handleAnimationCompleted = () => {
+    this.animationCompleted = true;
+  }
+
   hasInvalidConfiguration = () => {
     const { settings } = this.props
     return ["subdomain", "apiKey"].some(key => !settings[key])
@@ -131,7 +136,13 @@ class Bubble extends Component {
 
     return (
       <>
-        <Spring from={{ transform: 'scale(0.1)' }} to={{ transform: 'scale(1)' }} config={config.wobbly}>
+        <Spring
+          from={{ transform: 'scale(0.1)' }}
+          to={{ transform: 'scale(1)' }}
+          config={config.wobbly}
+          onRest={this.handleAnimationCompleted}
+          immediate={this.animationCompleted}
+        >
           {props => (
             <animated.div
               className="moco-bx-bubble"
