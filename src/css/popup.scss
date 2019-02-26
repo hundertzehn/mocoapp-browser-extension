@@ -2,15 +2,10 @@
 @import "spinner";
 
 html {
-  height: 100%;
-
   body {
-    margin: 0;
-    height: 100%;
+    margin: 5px;
 
     #moco-bx-root {
-      height: 100%;
-
       .moco-bx-logo__container {
         display: flex;
         margin-bottom: 2rem;
