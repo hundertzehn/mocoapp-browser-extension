@@ -13,7 +13,7 @@ export default class Client {
   #client;
   #apiKey;
 
-  constructor({ subdomain, apiKey, clientVersion }) {
+  constructor({ subdomain, apiKey, version }) {
     this.#apiKey = apiKey
     this.#client = axios.create({
       responseType: "json",
@@ -21,7 +21,7 @@ export default class Client {
       headers: {
         common: {
           "x-api-key": apiKey,
-          "x-client-version": clientVersion
+          "x-extension-version": version
         }
       }
     })

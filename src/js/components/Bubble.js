@@ -32,6 +32,7 @@ class Bubble extends Component {
   @observable isOpen = false;
   @observable bookedHours = 0;
   @observable unauthorizedError = false;
+  @observable upgradeRequiredError = false;
   @observable animationCompleted = false;
 
   constructor(props) {
@@ -69,9 +70,6 @@ class Bubble extends Component {
   }
 
   open = event => {
-    if (event && event.target && event.target.classList.contains('moco-bx-popup')) {
-      return this.close()
-    }
     this.isOpen = true
   };
 
@@ -95,15 +93,20 @@ class Bubble extends Component {
     const { service } = this.props
     this.isLoading = true
 
+    this.unauthorizedError = false
+    this.upgradeRequiredError = false
+
     this.#apiClient
       .bookedHours(service)
       .then(({ data }) => {
         this.bookedHours = parseFloat(data[0]?.hours) || 0
-        this.unauthorizedError = false
       })
       .catch(error => {
         if (error.response?.status === 401) {
           this.unauthorizedError = true
+        }
+        if (error.response?.status === 426) {
+          this.upgradeRequiredError = true
         }
       })
       .finally(() => (this.isLoading = false))
@@ -159,9 +162,11 @@ class Bubble extends Component {
         </Spring>
         {this.isOpen && (
           <Popup
-          service={service}
-          settings={settings}
-          unauthorizedError={this.unauthorizedError}
+            service={service}
+            settings={settings}
+            onRequestClose={this.close}
+            unauthorizedError={this.unauthorizedError}
+            upgradeRequiredError={this.upgradeRequiredError}
           />
         )}
       </>
