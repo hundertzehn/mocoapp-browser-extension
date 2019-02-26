@@ -1,5 +1,6 @@
-import Route from 'route-parser'
-import { isFunction, isUndefined, compose, toPairs, map, omit } from 'lodash/fp'
+import UrlPattern from 'url-pattern'
+import { isFunction, isUndefined, compose, toPairs, map, omit, values } from 'lodash/fp'
+import queryString from 'query-string'
 
 const createEvaluator = args => fnOrValue => {
   if (isUndefined(fnOrValue)) {
@@ -17,7 +18,7 @@ const parseServices = compose(
   map(([key, config]) => ({
     ...config,
     key,
-    routes: config.urlPatterns.map(pattern => new Route(pattern))
+    patterns: config.urlPatterns.map(pattern => new UrlPattern(pattern))
   })),
   toPairs
 )
@@ -27,14 +28,12 @@ export const createEnhancer = document => url => service => {
     return
   }
 
-  const routes = service.urlPatterns.map(pattern => new Route(pattern))
-  const route = routes.find(route => route.match(url))
-  const match = route.match(url)
+  const match = service.match
   const args = [document, service, match]
   const evaluate = createEvaluator(args)
 
   return {
-    ...omit(['route'], service),
+    ...omit(['patterns'], service),
     url,
     id: evaluate(service.id) || match.id,
     description: evaluate(service.description),
@@ -46,5 +45,29 @@ export const createEnhancer = document => url => service => {
 
 export const createMatcher = remoteServices => {
   const services = parseServices(remoteServices)
-  return url => services.find(service => service.routes.some(route => route.match(url)))
+  return serviceUrl => {
+    const { url, query } = queryString.parseUrl(serviceUrl)
+    const service = services.find(service => service.patterns.some(pattern => pattern.match(url)))
+    if (!service) {
+      return false
+    }
+    const pattern = service.patterns.find(pattern => pattern.match(url))
+    let match = pattern.match(url)
+    if (service.queryParams) {
+      const extractedQueryParams = extractQueryParams(service.queryParams, query)
+      match = { ...extractedQueryParams, ...match }
+    }
+    return {
+      ...service,
+      match
+    }
+  }
 }
+
+const extractQueryParams = (queryParams, query) => {
+  return toPairs(queryParams).reduce((acc, [key, param]) => {
+    acc[key] = query[param]
+    return acc
+  }, {})
+}
+
