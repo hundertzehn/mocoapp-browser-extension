@@ -1,4 +1,4 @@
-import { remoteServices } from "../data"
+import remoteServices from "../../src/js/remoteServices"
 import { createMatcher, createEnhancer } from "../../src/js/utils/urlMatcher"
 
 describe("utils", () => {
@@ -20,10 +20,10 @@ describe("utils", () => {
 
       it("matches query string", () => {
         const service = matcher(
-          "https://cloud.jira.com/browse?project=mocoapp&issue=1234"
+          "https://app.asana.com/0/inbox/123456/45678/122"
         )
-        expect(service.key).toEqual("jira-cloud")
-        expect(service.name).toEqual("jira")
+        expect(service.key).toEqual("asana")
+        expect(service.name).toEqual("asana")
       })
 
       it("does not match different host", () => {
@@ -44,9 +44,9 @@ describe("utils", () => {
         }
         const service = matcher(url)
         const enhancedService = createEnhancer(document)(url)(service)
-        expect(enhancedService.id).toEqual("hundertzehn-mocoapp-github-pr-123")
+        expect(enhancedService.id).toEqual("github-pr.hundertzehn.mocoapp.123")
         expect(enhancedService.description).toEqual(
-          "This is always the same text"
+          "hundertzehn/mocoapp/123 - [4321] Foo"
         )
         expect(enhancedService.projectId).toEqual("4321")
         expect(enhancedService.taskId).toBe(undefined)
