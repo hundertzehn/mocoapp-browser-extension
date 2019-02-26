@@ -1,6 +1,14 @@
 import axios from "axios"
 import { formatDate } from "utils"
 
+const baseURL = subdomain => {
+  if (process.env.NODE_ENV === 'production') {
+    return `https://${encodeURIComponent(subdomain)}.mocoapp.com/api/browser_extensions`
+  } else {
+    return `http://${encodeURIComponent(subdomain)}.mocoapp.localhost:3001/api/browser_extensions`
+  }
+}
+
 export default class Client {
   #client;
   #apiKey;
@@ -9,9 +17,7 @@ export default class Client {
     this.#apiKey = apiKey
     this.#client = axios.create({
       responseType: "json",
-      baseURL: `https://${encodeURIComponent(
-        subdomain
-      )}.mocoapp.com/api/browser_extensions`,
+      baseURL: baseURL(subdomain),
       headers: {
         common: {
           "x-api-key": apiKey,
