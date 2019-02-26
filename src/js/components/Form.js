@@ -28,7 +28,13 @@ class Form extends Component {
       .every(Boolean)
   };
 
-  // RENDER -------------------------------------------------------------------
+  handleTextareaKeyDown = event => {
+    const { onSubmit } = this.props
+
+    if (event.key === 'Enter') {
+      this.isValid() && onSubmit(event)
+    }
+  }
 
   render() {
     const { projects, changeset, errors, onChange, onSubmit } = this.props
@@ -84,6 +90,7 @@ class Form extends Component {
             onChange={onChange}
             value={changeset.description}
             placeholder="Beschreibung der Tätigkeit - mind. 3 Zeichen"
+            onKeyDown={this.handleTextareaKeyDown}
             rows={4}
           />
           {errors.description ? (
