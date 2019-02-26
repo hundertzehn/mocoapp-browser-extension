@@ -17,7 +17,7 @@ const parseServices = compose(
   map(([key, config]) => ({
     ...config,
     key,
-    route: new Route(config.urlPattern)
+    routes: config.urlPatterns.map(pattern => new Route(pattern))
   })),
   toPairs
 )
@@ -27,7 +27,8 @@ export const createEnhancer = document => url => service => {
     return
   }
 
-  const route = new Route(service.urlPattern)
+  const routes = service.urlPatterns.map(pattern => new Route(pattern))
+  const route = routes.find(route => route.match(url))
   const match = route.match(url)
   const args = [document, service, match]
   const evaluate = createEvaluator(args)
@@ -45,5 +46,5 @@ export const createEnhancer = document => url => service => {
 
 export const createMatcher = remoteServices => {
   const services = parseServices(remoteServices)
-  return url => services.find(service => service.route.match(url))
+  return url => services.find(service => service.routes.some(route => route.match(url)))
 }

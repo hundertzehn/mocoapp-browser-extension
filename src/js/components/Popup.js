@@ -17,7 +17,6 @@ const Popup = props => {
   )
 
   const handleKeyDown = event => {
-    event.stopPropagation()
     if (event.keyCode === 27) {
       props.onRequestClose()
     }

@@ -1,9 +1,19 @@
 export default {
+  "asana": {
+    name: "asana",
+    urlPatterns: [
+      "https://app.asana.com/0/:domainUserId/:id",
+      "https://app.asana.com/0/inbox/:domainUserId/:id(/*splat)",
+      "https://app.asana.com/0/search/:domainUserId/:id"
+    ],
+    description: document =>
+      document.querySelector('.TaskRow--focused textarea')?.textContent
+  },
   "github-pr": {
     name: "github",
-    urlPattern: "https://github.com/:org/:repo/pull/:id(/:tab)",
+    urlPatterns: ["https://github.com/:org/:repo/pull/:id(/:tab)"],
     id: (document, service, { org, repo, id }) =>
-      [org, repo, service.key, id].join("."),
+      [service.key, org, repo, id].join("."),
     description: (document, service, { org, repo, id }) =>
       `${org}/${repo}/${id} - ${document
         .querySelector(".js-issue-title")
@@ -20,7 +30,7 @@ export default {
 
   "github-issue": {
     name: "github",
-    urlPattern: "https://github.com/:org/:repo/issues/:id",
+    urlPatterns: ["https://github.com/:org/:repo/issues/:id"],
     id: (document, service, { org, repo, id }) =>
       [org, repo, "issue", id].join("."),
     description: (document, service, { org, repo, id }) =>
@@ -32,7 +42,7 @@ export default {
 
   "trello": {
     name: "trello",
-    urlPattern: "https://trello.com/c/:id/:title",
+    urlPatterns: ["https://trello.com/c/:id/:title"],
     description: (document, service, { title }) => title.split('-').slice(1).join(' '),
     position: { right: '2rem' },
   }

@@ -1,19 +1,3 @@
-export const remoteServices = {
-  'github-pr': {
-    name: 'github',
-    urlPattern: 'https://github.com/:org/:repo/pull/:id',
-    id: (document, service, { org, repo, id }) => [org, repo, service.key, id].join('-'),
-    description: 'This is always the same text',
-    projectId: (document) => {
-      const match = document.querySelector(".gh-header-title").textContent.trim().match(/\[(\d+)\]/)
-      return match && match[1]
-    }
-  },
-  'jira-cloud': {
-    name: 'jira',
-    urlPattern: 'https://cloud.jira.com/browse?project=:project&issue=:id'
-  }
-}
 export const projects = [
   {
     id: 944868981,

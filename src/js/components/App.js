@@ -81,8 +81,13 @@ class App extends Component {
   }
 
   componentDidMount() {
+    window.addEventListener("keydown", this.handleKeyDown)
     Promise.all([this.fetchProjects(), this.fetchActivities()])
       .then(() => this.isLoading = false)
+  }
+
+  componentWillUnmount() {
+    window.removeEventLIstener("keydown", this.handleKeyDown)
   }
 
   initializeApiClient = settings => {
@@ -162,6 +167,12 @@ class App extends Component {
 
   handleCancel = () => {
     this.sendMessage({ type: "closeForm" })
+  }
+
+  handleKeyDown = event => {
+    if (event.keyCode === 27) {
+      this.handleCancel()
+    }
   }
 
   sendMessage = action =>
