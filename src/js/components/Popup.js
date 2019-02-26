@@ -1,6 +1,7 @@
-import React, { useMemo } from "react"
+import React, { useMemo, useCallback, useEffect } from "react"
 import PropTypes from "prop-types"
-import InvalidConfigurationError from "components/InvalidConfigurationError"
+import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
+import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
 import queryString from "query-string"
 import { serializeProps } from "utils"
 
@@ -10,16 +11,38 @@ const Popup = props => {
   const styles = useMemo(
     () => ({
       width: "536px",
-      height: props.unauthorizedError ? "890px" : "480px"
+      height: props.unauthorizedError || props.upgradeRequiredError ? 'auto' : "480px"
     }),
-    [props.unauthorizedError]
+    [props.unauthorizedError, props.upgradeRequiredError]
   )
 
+  const handleKeyDown = event => {
+    event.stopPropagation()
+    if (event.keyCode === 27) {
+      props.onRequestClose()
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyDown)
+    return function cleanup() {
+      window.removeEventListener("keydown", handleKeyDown)
+    }
+  }, [])
+
+  const handleRequestClose = useCallback(event => {
+    if (event.target.classList.contains('moco-bx-popup')) {
+      props.onRequestClose()
+    }
+  }, [props.onRequestClose])
+
   return (
-    <div className="moco-bx-popup">
+    <div className="moco-bx-popup" onClick={handleRequestClose}>
       <div className="moco-bx-popup-content" style={styles}>
         {props.unauthorizedError ? (
           <InvalidConfigurationError />
+        ) : props.upgradeRequiredError ? (
+          <UpgradeRequiredError />
         ) : (
           <iframe
             src={chrome.extension.getURL(
@@ -36,7 +59,9 @@ const Popup = props => {
 
 Popup.propTypes = {
   service: PropTypes.object.isRequired,
-  unauthorizedError: PropTypes.bool.isRequired
+  unauthorizedError: PropTypes.bool.isRequired,
+  upgradeRequiredError: PropTypes.bool.isRequired,
+  onRequestClose: PropTypes.func.isRequired
 }
 
 export default Popup

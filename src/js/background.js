@@ -47,9 +47,12 @@ chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
 chrome.runtime.onMessage.addListener(({ type }) => {
   switch (type) {
     case "openOptions": {
-      chrome.tabs.create({
+      return chrome.tabs.create({
         url: `chrome://extensions/?options=${chrome.runtime.id}`
       })
+    }
+    case "openExtensions": {
+      return chrome.tabs.create({ url: `chrome://extensions` })
     }
   }
 })
