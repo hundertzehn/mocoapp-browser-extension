@@ -64,10 +64,25 @@ export default class Select extends Component {
     return options.find(pathEq("value", value)) || null
   }
 
+  constructor(props) {
+    super(props)
+    this.select = React.createRef()
+  }
+
   handleChange = option => {
     const { name, onChange } = this.props
     const { value } = option
     onChange({ target: { name, value } })
+  }
+
+  handleKeyDown = event => {
+    if (!this.select.current) {
+      return
+    }
+
+    if (!this.select.current.state.menuIsOpen && event.key === 'Enter') {
+      this.select.current.setState({ menuIsOpen: true })
+    }
   }
 
   render() {
@@ -76,8 +91,10 @@ export default class Select extends Component {
     return (
       <ReactSelect
         {...passThroughProps}
+        ref={this.select}
         value={Select.findOptionByValue(this.props.options, value)}
         onChange={this.handleChange}
+        onKeyDown={this.handleKeyDown}
         filterOption={filterOption}
         theme={customTheme}
         styles={customStyles(this.props)}
