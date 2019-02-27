@@ -104,7 +104,7 @@ module.exports = env => {
 
     config.plugins.push(
       new ZipPlugin({
-        filename: 'moco-browser-extension.zip',
+        filename: `moco-browser-extension-v${process.env.npm_package_version}.zip`,
         exclude: [/\.map$/]
       }),
       new BugsnagBuildReporterPlugin({
