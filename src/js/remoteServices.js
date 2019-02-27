@@ -65,6 +65,13 @@ export default {
     position: { right: '2rem' },
   },
 
+  "youtrack": {
+    name: "youtrack",
+    urlPatterns: ["https\\://:org.myjetbrains.com/youtrack/issue/:id"],
+    description: document =>
+      document.querySelector('yt-issue-body h1')?.textContent?.trim()
+  },
+
   "wunderlist": {
     name: "wunderlist",
     urlPatterns: ["https\\://www.wunderlist.com/webapp#/tasks/:id"],
