@@ -65,6 +65,13 @@ describe("utils", () => {
         expect(service.match.id).toEqual('TEST2-1')
       })
 
+      it("matches url with hash", () => {
+        let service = matcher("https://www.wunderlist.com/webapp#/tasks/4771178545")
+        expect(service.key).toEqual("wunderlist")
+        expect(service.name).toEqual("wunderlist")
+        expect(service.match.id).toEqual("4771178545")
+      })
+
       it("does not match different host", () => {
         const service = matcher(
           "https://trello.com/hundertzehn/mocoapp/pull/123"
