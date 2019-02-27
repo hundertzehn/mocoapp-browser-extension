@@ -23,7 +23,7 @@ const parseServices = compose(
   toPairs
 )
 
-export const createEnhancer = document => url => service => {
+export const createEnhancer = document => service => {
   if (!service) {
     return
   }
@@ -33,8 +33,7 @@ export const createEnhancer = document => url => service => {
   const evaluate = createEvaluator(args)
 
   return {
-    ...omit(['patterns'], service),
-    url,
+    ...service,
     id: evaluate(service.id) || match.id,
     description: evaluate(service.description),
     projectId: evaluate(service.projectId),
@@ -45,8 +44,8 @@ export const createEnhancer = document => url => service => {
 
 export const createMatcher = remoteServices => {
   const services = parseServices(remoteServices)
-  return serviceUrl => {
-    const { origin, pathname, hash, search } = new URL(serviceUrl)
+  return tabUrl => {
+    const { origin, pathname, hash, search } = new URL(tabUrl)
     const url = `${origin}${pathname}${hash}`
     const query = queryString.parse(search)
     const service = services.find(service => service.patterns.some(pattern => pattern.match(url)))
@@ -61,6 +60,8 @@ export const createMatcher = remoteServices => {
     }
     return {
       ...service,
+      url,
+      query,
       match
     }
   }

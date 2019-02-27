@@ -67,7 +67,7 @@ class Options extends Component {
             Profil/Integrationen.
           </div>
         </div>
-        <button>Save</button>
+        <button className='moco-bx-btn'>Save</button>
       </form>
     )
   }

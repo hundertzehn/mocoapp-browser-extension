@@ -1,3 +1,6 @@
+@import "variables";
+@import "button";
+
 #moco-bx-root {
   iframe {
     border: 0;
@@ -61,43 +64,21 @@
     background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
 
     .moco-bx-popup-content {
-      box-sizing: content-box;
       background-color: white;
-      width: 600px;
+      width: calc($popup-width + 6rem);
       height: 480px;
-      padding: 3rem;
       margin: 0 auto;
     }
   }
 
   #moco-bx-invalid-configuration-error {
+    padding: 2rem 3rem;
     img {
-      width: 536px;
+      width: $popup-width;
     }
   }
 
-  button {
-    display: inline-block;
-    padding: 6px 12px;
-    margin-bottom: 0;
-    font-weight: normal;
-    text-align: center;
-    white-space: nowrap;
-    color: white;
-    background-image: none;
-    background-color: #7dc332;
-    border-color: #7dc332;
-    border-radius: 0;
-    cursor: pointer;
-
-    &:hover:not(:disabled) {
-      background-color: #639a28;
-      border-color: #639a28;
-    }
-
-    &:disabled {
-      opacity: 0.65;
-      cursor: default;
-    }
+  #moco-bx-upgrade-required-error {
+    padding: 2rem 3rem;
   }
 }

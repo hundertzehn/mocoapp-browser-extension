@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Day from './Day'
-import { formatDate, trace } from 'utils'
+import { formatDate } from 'utils'
 import { eachDay } from 'date-fns'
 import { pathEq } from 'lodash/fp'
 

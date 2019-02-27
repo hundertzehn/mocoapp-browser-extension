@@ -14,7 +14,7 @@ import {
   secondsFromHours
 } from "utils"
 import { startOfWeek, endOfWeek } from "date-fns"
-import logoUrl from "images/logo.png"
+import Header from './shared/Header'
 import { head } from "lodash"
 
 @observer
@@ -27,12 +27,13 @@ class App extends Component {
       description: PropTypes.string,
       projectId: PropTypes.string,
       taskId: PropTypes.string
-    }).isRequired,
+    }),
     settings: PropTypes.shape({
       subdomain: PropTypes.string,
       apiKey: PropTypes.string,
       version: PropTypes.string
-    })
+    }),
+    isPopup: PropTypes.bool,
   }
 
   @observable projects = []
@@ -132,6 +133,9 @@ class App extends Component {
           type: "activityCreated",
           payload: { hours: data.hours }
         })
+        if (this.props.isPopup) {
+          window.close()
+        }
       })
       .catch(error => {
         if (error.response?.status === 422) {
@@ -175,26 +179,26 @@ class App extends Component {
     }
   }
 
-  sendMessage = action =>
-    chrome.tabs.query({ active: true, currentWindow: true }, tabs =>
-      chrome.tabs.sendMessage(tabs[0].id, action)
-    )
+  sendMessage = action => {
+    if (this.props.isPopup) {
+      chrome.runtime.sendMessage(action)
+    } else {
+      chrome.tabs.query({ active: true, currentWindow: true }, tabs =>
+        chrome.tabs.sendMessage(tabs[0].id, action)
+      )
+    }
+  }
 
   render() {
     if (this.isLoading) {
       return <Spinner />
     }
 
+    const { isPopup, isDisabled } = this.props
+
     return (
       <>
-        <div className="moco-bx-logo__container">
-          <img
-            className="moco-bx-logo"
-            src={chrome.extension.getURL(logoUrl)}
-          />
-          <h1>MOCO Zeiterfassung</h1>
-        </div>
-
+        <Header />
         <Calendar
           fromDate={this.fromDate()}
           toDate={this.toDate()}
@@ -208,7 +212,7 @@ class App extends Component {
           errors={this.formErrors}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
-          onCancel={this.handleCancel}
+          onCancel={isPopup ? null : this.handleCancel}
         />
       </>
     )

@@ -7,6 +7,7 @@
   "description": "MOCO Time Tracking Plugin",
   "icons": {
     "16": "src/images/logo.png",
+    "32": "src/images/logo.png",
     "48": "src/images/logo.png",
     "128": "src/images/logo.png"
   },
@@ -24,6 +25,10 @@
   "optional_permissions": ["*://*/"],
   "background": {
     "scripts": ["background.js"]
+  },
+  "browser_action": {
+    "default_popup": "popup.html",
+    "default_icon": "src/images/logo.png"
   },
   "content_scripts": [
     {
