@@ -8,12 +8,17 @@ import { ErrorBoundary } from 'utils/notifier'
 import '../css/content.scss'
 
 const matcher = createMatcher(remoteServices)
-const enhancer = createEnhancer(window.document)
 
-chrome.runtime.onMessage.addListener(({ type, payload }) => {
+chrome.runtime.onMessage.addListener(({ type, payload }, sender, sendResponse) => {
   switch (type) {
     case 'mountBubble': {
-      return mountBubble(payload)
+      const settings = payload
+      const service = pipe(matcher, createEnhancer(document))(window.location.href)
+      if (!service.id) {
+        return unmountBubble()
+      }
+      sendResponse(service)
+      return mountBubble({ service, settings })
     }
 
     case 'unmountBubble': {
@@ -22,16 +27,7 @@ chrome.runtime.onMessage.addListener(({ type, payload }) => {
   }
 })
 
-const mountBubble = (settings) => {
-  const service = pipe(
-    matcher,
-    enhancer(window.location.href)
-  )(window.location.href)
-
-  if (!service) {
-    return
-  }
-
+const mountBubble = ({ service, settings }) => {
   if (!document.getElementById('moco-bx-root')) {
     const domRoot = document.createElement('div')
     domRoot.setAttribute('id', 'moco-bx-root')
@@ -40,7 +36,7 @@ const mountBubble = (settings) => {
 
   ReactDOM.render(
     <ErrorBoundary>
-      <Bubble service={service} settings={settings} browser={chrome} />
+      <Bubble service={service} settings={settings} />
     </ErrorBoundary>,
     document.getElementById('moco-bx-root')
   )

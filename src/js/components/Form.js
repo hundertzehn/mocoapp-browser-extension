@@ -14,7 +14,7 @@ class Form extends Component {
     projects: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    onCancel: PropTypes.func.isRequired
+    onCancel: PropTypes.func
   };
 
   static defaultProps = {
@@ -37,7 +37,7 @@ class Form extends Component {
   }
 
   render() {
-    const { projects, changeset, errors, onChange, onSubmit } = this.props
+    const { projects, changeset, errors, onChange, onSubmit, onCancel } = this.props
     const project = Select.findOptionByValue(projects, changeset.assignment_id)
 
     return (
@@ -98,8 +98,8 @@ class Form extends Component {
           ) : null}
         </div>
 
-        <button disabled={!this.isValid()}>Speichern</button>
-        <button type="button" className="secondary" onClick={this.props.onCancel}>Abbrechen</button>
+        <button className='moco-bx-btn' disabled={!this.isValid()}>Speichern</button>
+        {onCancel && <button type="button" className="secondary moco-bx-btn" onClick={onCancel}>Abbrechen</button>}
       </form>
     )
   }

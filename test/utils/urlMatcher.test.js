@@ -89,7 +89,7 @@ describe("utils", () => {
             .mockReturnValue({ textContent: "[4321] Foo" })
         }
         const service = matcher(url)
-        const enhancedService = createEnhancer(document)(url)(service)
+        const enhancedService = createEnhancer(document)(service)
         expect(enhancedService.id).toEqual("github-pr.hundertzehn.mocoapp.123")
         expect(enhancedService.description).toEqual(
           "[4321] Foo"

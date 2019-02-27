@@ -100,7 +100,7 @@ module.exports = env => {
   }
 
   if (env.NODE_ENV === 'production') {
-    config.devtool = 'source-map'
+    config.devtool = undefined
 
     config.plugins.push(
       new ZipPlugin({

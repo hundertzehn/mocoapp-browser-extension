@@ -1,11 +1,15 @@
 @import "form";
 @import "spinner";
+@import "variables";
 
 html {
   body {
-    margin: 5px;
+    margin: 0px;
 
     #moco-bx-root {
+      padding: 2rem 3rem;
+      width: $popup-width;
+
       .moco-bx-logo__container {
         display: flex;
         margin-bottom: 2rem;

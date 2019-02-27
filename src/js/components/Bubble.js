@@ -1,12 +1,14 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { Spring, config, animated } from 'react-spring/renderprops'
+import { Spring, config, animated } from "react-spring/renderprops"
 import ApiClient from "api/Client"
 import Popup from "components/Popup"
 import Spinner from "components/Spinner"
 import { observable, reaction } from "mobx"
 import { observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
+
+const OSpring = observer(Spring)
 
 @observer
 class Bubble extends Component {
@@ -43,11 +45,14 @@ class Bubble extends Component {
   componentDidMount() {
     disposeOnUnmount(
       this,
-      reaction(() => this.props.settings, settings => {
-        this.close()
-        this.initializeApiClient(settings)
-        this.fetchBookedHours()
-      })
+      reaction(
+        () => this.props.settings,
+        settings => {
+          this.close()
+          this.initializeApiClient(settings)
+          this.fetchBookedHours()
+        }
+      )
     )
 
     disposeOnUnmount(
@@ -67,7 +72,7 @@ class Bubble extends Component {
 
   initializeApiClient = settings => {
     this.#apiClient = new ApiClient(settings)
-  }
+  };
 
   open = event => {
     this.isOpen = true
@@ -78,19 +83,23 @@ class Bubble extends Component {
   };
 
   receiveMessage = ({ type, payload }) => {
-    switch(type) {
-      case 'activityCreated': {
+    switch (type) {
+      case "activityCreated": {
         this.bookedHours += payload.hours
         return this.close()
       }
-      case 'closeForm': {
+      case "closeForm": {
         return this.close()
       }
     }
+  };
+
+  sendMessage = action => {
+    chrome.runtime.sendMessage(action)
   }
 
   fetchBookedHours = () => {
-    const { service } = this.props
+    const { service, settings } = this.props
     this.isLoading = true
 
     this.unauthorizedError = false
@@ -100,35 +109,31 @@ class Bubble extends Component {
       .bookedHours(service)
       .then(({ data }) => {
         this.bookedHours = parseFloat(data[0]?.hours) || 0
+        this.sendMessage({ type: 'enableBrowserAction', payload: { service, settings } })
       })
       .catch(error => {
         if (error.response?.status === 401) {
           this.unauthorizedError = true
+          this.sendMessage({ type: 'unauthorizedError' })
         }
         if (error.response?.status === 426) {
           this.upgradeRequiredError = true
+          this.sendMessage({ type: 'upgradeRequiredError' })
         }
       })
       .finally(() => (this.isLoading = false))
   };
 
   handleKeyDown = event => {
-    if (event.key === 'm' && (event.metaKey || event.ctrlKey)) {
+    if (event.key === "m" && (event.metaKey || event.ctrlKey)) {
       event.preventDefault()
       this.open()
     }
   };
 
   handleAnimationCompleted = () => {
-    this.animationCompleted = true;
-  }
-
-  hasInvalidConfiguration = () => {
-    const { settings } = this.props
-    return ["subdomain", "apiKey"].some(key => !settings[key])
+    this.animationCompleted = true
   };
-
-  // RENDER -------------------------------------------------------------------
 
   render() {
     if (this.isLoading) {
@@ -139,9 +144,9 @@ class Bubble extends Component {
 
     return (
       <>
-        <Spring
-          from={{ transform: 'scale(0.1)' }}
-          to={{ transform: 'scale(1)' }}
+        <OSpring
+          from={{ transform: "scale(0.1)" }}
+          to={{ transform: "scale(1)" }}
           config={config.wobbly}
           onRest={this.handleAnimationCompleted}
           immediate={this.animationCompleted}
@@ -149,17 +154,19 @@ class Bubble extends Component {
           {props => (
             <animated.div
               className="moco-bx-bubble"
-              style={{...service.position, ...props}}
+              style={{ ...service.position, ...props }}
               onClick={this.open}
             >
-              <img className="moco-bx-logo" src={chrome.extension.getURL(logoUrl)} />
-              {this.bookedHours > 0
-                ? <span className="moco-bx-badge">{this.bookedHours}h</span>
-                : null
-              }
+              <img
+                className="moco-bx-logo"
+                src={chrome.extension.getURL(logoUrl)}
+              />
+              {this.bookedHours > 0 ? (
+                <span className="moco-bx-badge">{this.bookedHours}h</span>
+              ) : null}
             </animated.div>
           )}
-        </Spring>
+        </OSpring>
         {this.isOpen && (
           <Popup
             service={service}

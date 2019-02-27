@@ -7,10 +7,10 @@ const UpgradeRequiredError = () => (
       Die installierte MOCO Browser-Erweiterung ist veraltet.
     </p>
     <p>
-      Bitte aktualisiere die MOCO Browser-Erweiterung auf den aktuellsten stand.
+      Bitte aktualisiere die MOCO Browser-Erweiterung auf den aktuellsten Stand.
     </p>
     <br />
-    <button onClick={() => chrome.runtime.sendMessage({ type: 'openExtensions' })}>
+    <button className='moco-bx-btn' onClick={() => chrome.runtime.sendMessage({ type: 'openExtensions' })}>
        Browser-Erweiterungen öffnen
     </button>
   </div>

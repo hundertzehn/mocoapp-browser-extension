@@ -8,7 +8,7 @@ const UpgradeRequiredError = () => (
       Einstellungen der MOCO Browser-Erweiterung ein. Deinen API-Key findest du
       in der MOCO App in deinem Profil im Register &quot;Integrationen&quot;.
     </p>
-    <button onClick={() => chrome.runtime.sendMessage({ type: 'openOptions' })}>
+    <button className='moco-bx-btn' onClick={() => chrome.runtime.sendMessage({ type: 'openOptions' })}>
       Einstellungen öffnen
     </button>
     <br />
