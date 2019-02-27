@@ -46,7 +46,9 @@ export const createEnhancer = document => url => service => {
 export const createMatcher = remoteServices => {
   const services = parseServices(remoteServices)
   return serviceUrl => {
-    const { url, query } = queryString.parseUrl(serviceUrl)
+    const { origin, pathname, hash, search } = new URL(serviceUrl)
+    const url = `${origin}${pathname}${hash}`
+    const query = queryString.parse(search)
     const service = services.find(service => service.patterns.some(pattern => pattern.match(url)))
     if (!service) {
       return false
