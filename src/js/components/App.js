@@ -13,6 +13,8 @@ import {
   formatDate,
   secondsFromHours
 } from "utils"
+import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
+import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
 import { startOfWeek, endOfWeek } from "date-fns"
 import Header from './shared/Header'
 import { head } from "lodash"
@@ -21,9 +23,9 @@ import { head } from "lodash"
 class App extends Component {
   static propTypes = {
     service: PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      url: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
+      id: PropTypes.string,
+      url: PropTypes.string,
+      name: PropTypes.string,
       description: PropTypes.string,
       projectId: PropTypes.string,
       taskId: PropTypes.string
@@ -33,7 +35,13 @@ class App extends Component {
       apiKey: PropTypes.string,
       version: PropTypes.string
     }),
-    isPopup: PropTypes.bool,
+    isBrowserAction: PropTypes.bool,
+  }
+
+  static defaultProps = {
+    service: {},
+    settings: {},
+    isBrowserAction: true
   }
 
   @observable projects = []
@@ -43,6 +51,8 @@ class App extends Component {
   @observable changeset = {}
   @observable formErrors = {}
   @observable isLoading = true
+  @observable unauthorizedError = false;
+  @observable upgradeRequiredError = false;
 
   @computed get changesetWithDefaults() {
     const { service } = this.props
@@ -78,25 +88,36 @@ class App extends Component {
 
   constructor(props) {
     super(props)
-    this.initializeApiClient(props.settings)
+    this.#apiClient = new ApiClient(this.props.settings)
   }
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
     Promise.all([this.fetchProjects(), this.fetchActivities()])
-      .then(() => this.isLoading = false)
+      .catch(error => {
+        if (error.response?.status === 401) {
+          this.unauthorizedError = true
+        } else if (error.response?.status === 426) {
+          this.upgradeRequiredError = true
+        }
+        this.sendMessage({ type: 'unmountBubble' })
+        this.sendMessage({ type: 'mountBubble', payload: this.props.settings })
+      })
+      .finally(() => this.isLoading = false)
   }
 
   componentWillUnmount() {
     window.removeEventLIstener("keydown", this.handleKeyDown)
   }
 
-  initializeApiClient = settings => {
-    this.#apiClient = new ApiClient(settings)
-  }
-
   fromDate = () => startOfWeek(new Date(), { weekStartsOn: 1 })
   toDate = () => endOfWeek(new Date(), { weekStartsOn: 1 })
+
+  closePopup = () => {
+    if (this.props.isBrowserAction) {
+      window.close()
+    }
+  }
 
   fetchProjects = () =>
     this.#apiClient
@@ -106,20 +127,13 @@ class App extends Component {
         this.lastProjectId = data.last_project_id
         this.lastTaskId = data.lastTaskId
       })
-      .catch(() => {
-        this.sendMessage({ type: "closeForm" })
-      })
 
-  fetchActivities = () => {
-    return this.#apiClient
+  fetchActivities = () =>
+    this.#apiClient
       .activities(this.fromDate(), this.toDate())
       .then(({ data }) => {
         this.activities = data
       })
-      .catch(() => {
-        this.sendMessage({ type: "closeForm" })
-      })
-  }
 
   createActivity = () => {
     this.isLoading = true
@@ -133,16 +147,11 @@ class App extends Component {
           type: "activityCreated",
           payload: { hours: data.hours }
         })
-        if (this.props.isPopup) {
-          window.close()
-        }
+        this.closePopup()
       })
       .catch(error => {
         if (error.response?.status === 422) {
           this.formErrors = error.response.data
-        }
-        if (error.response?.status === 401) {
-          this.unauthorizedError = true
         }
       })
       .finally(() => (this.isLoading = false))
@@ -180,7 +189,7 @@ class App extends Component {
   }
 
   sendMessage = action => {
-    if (this.props.isPopup) {
+    if (this.props.isBrowserAction) {
       chrome.runtime.sendMessage(action)
     } else {
       chrome.tabs.query({ active: true, currentWindow: true }, tabs =>
@@ -194,7 +203,15 @@ class App extends Component {
       return <Spinner />
     }
 
-    const { isPopup, isDisabled } = this.props
+    const { isBrowserAction, isDisabled } = this.props
+
+    if (this.unauthorizedError) {
+      return <InvalidConfigurationError isBrowserAction={isBrowserAction} />
+    }
+
+    if (this.upgradeRequiredError) {
+      return <UpgradeRequiredError />
+    }
 
     return (
       <>
@@ -212,7 +229,7 @@ class App extends Component {
           errors={this.formErrors}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
-          onCancel={isPopup ? null : this.handleCancel}
+          onCancel={isBrowserAction ? null : this.handleCancel}
         />
       </>
     )

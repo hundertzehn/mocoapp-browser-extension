@@ -1,7 +1,7 @@
 import React from 'react'
 import configurationSettingsUrl from 'images/configurationSettings.png'
 
-const InvalidConfigurationError = ({ isPopup }) => (
+const InvalidConfigurationError = ({ isBrowserAction }) => (
   <div id='moco-bx-invalid-configuration-error'>
     <h2>Konfiguration ungültig</h2>
     <p>
@@ -12,7 +12,7 @@ const InvalidConfigurationError = ({ isPopup }) => (
     <button className='moco-bx-btn' onClick={() => chrome.runtime.sendMessage({ type: 'openOptions' })}>
       Einstellungen öffnen
     </button>
-    {!isPopup && (
+    {!isBrowserAction && (
       <>
         <br />
         <br />

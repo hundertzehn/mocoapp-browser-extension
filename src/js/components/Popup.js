@@ -7,6 +7,7 @@ import { serializeProps } from "utils"
 
 const Popup = props => {
   const serializedProps = serializeProps(["service", "settings"])(props)
+  console.log(props.unauthorizedError, props.upgradeRequiredError)
 
   const styles = useMemo(
     () => ({
@@ -39,13 +40,13 @@ const Popup = props => {
     <div className="moco-bx-popup" onClick={handleRequestClose}>
       <div className="moco-bx-popup-content" style={styles}>
         {props.unauthorizedError ? (
-          <InvalidConfigurationError />
+          <InvalidConfigurationError isBrowserAction={false} />
         ) : props.upgradeRequiredError ? (
           <UpgradeRequiredError />
         ) : (
           <iframe
             src={chrome.extension.getURL(
-              `popup.html?${queryString.stringify(serializedProps)}`
+              `popup.html?isBrowserAction=false&${queryString.stringify(serializedProps)}`
             )}
             width={styles.width}
             height={styles.height}

@@ -1,73 +1,79 @@
-import queryString from 'query-string'
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
-import { serializeProps } from "utils"
-import logoUrl from '../images/logo.png'
-import logoDisabledUrl from '../images/logo-disabled.png'
+import { updateBrowserAction, updateBrowserActionForTab } from 'utils/browserAction'
+import { forEach } from 'lodash/fp'
 
-const matcher = createMatcher(remoteServices)
 const { version } = chrome.runtime.getManifest()
 const registeredTabIds = new Set()
+const matcher = createMatcher(remoteServices)
 
-const enableBrowserAction = (tabId, service, settings) => {
-  const serializedProps = serializeProps(["service", "settings"])({ service, settings })
-  chrome.browserAction.setIcon({
-    path: logoUrl,
-    tabId
-  })
-  chrome.browserAction.setPopup({
-    popup: `popup.html?isPopup=true&${queryString.stringify(serializedProps)}`
+function tabHandler(tab, settings) {
+  chrome.storage.sync.get(
+    ["subdomain", "apiKey"],
+    settings => {
+      settings = { ...settings, version }
+      const service = matcher(tab.url)
+      if (service?.match?.id) {
+        // the timeout is a hack to ensure the frontend is fully rendered
+        setTimeout(
+          () => {
+            chrome.tabs.sendMessage(
+              tab.id,
+              { type: "mountBubble", payload: settings },
+              service => updateBrowserActionForTab(chrome)(tab.id, settings, service)
+            )
+          },
+          800
+        )
+      } else {
+        updateBrowserActionForTab(chrome)(tab.id, settings)
+        chrome.tabs.sendMessage(tab.id, { type: "unmountBubble" })
+      }
   })
 }
 
-const disableBrowserAction = (tabId, reason = 'isDisabled') => {
-  chrome.browserAction.setIcon({
-    path: logoDisabledUrl,
-    tabId
-  })
-  chrome.browserAction.setPopup({ popup: `popup.html?isPopup=true&${reason}=true` })
+function tabsHandler() {
+  chrome.storage.sync.get(
+    ["subdomain", "apiKey"],
+    settings => {
+      settings = { ...settings, version }
+      chrome.tabs.getAllInWindow(
+        null,
+        forEach(tab => tabHandler(tab, settings))
+      )
+    }
+  )
 }
+
+function settingsChangedHandler(settings) {
+  console.log('SETTINGS-CHANGED', settings)
+  settings = { ...settings, version }
+  updateBrowserAction(chrome)(settings)
+  tabsHandler()
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.get(["subdomain", "apiKey"], settings => settingsChangedHandler(settings))
+  chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
+    if (areaName === "sync" && (apiKey || subdomain)) {
+      chrome.storage.sync.get(["subdomain", "apiKey"], settingsChangedHandler)
+    }
+  })
+})
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  // run only after the page is fully loaded
-  if (changeInfo.status != "complete") {
-    return
-  }
-
-  disableBrowserAction(tabId)
-
-  const service = matcher(tab.url)
-  if (service?.match?.id) {
-    registeredTabIds.add(tabId)
+  if (changeInfo.status === "complete") {
     chrome.storage.sync.get(
       ["subdomain", "apiKey"],
-      ({ subdomain, apiKey }) => {
-        const settings = { subdomain, apiKey, version }
-        // this is a hack to ensure the frontend is fully rendered
-        setTimeout(() => chrome.tabs.sendMessage(tabId, { type: "mountBubble", payload: settings }), 800)
+      settings => {
+        settings = { ...settings, version }
+        tabHandler(tab, settings)
       }
     )
-  } else {
-    registeredTabIds.delete(tabId)
-    chrome.tabs.sendMessage(tabId, { type: "unmountBubble" })
   }
 })
 
 chrome.tabs.onRemoved.addListener(tabId => registeredTabIds.delete(tabId))
-
-chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
-  if (areaName === "sync" && (apiKey || subdomain)) {
-    chrome.storage.sync.get(
-      ["subdomain", "apiKey"],
-      ({ subdomain, apiKey }) => {
-        const payload = { subdomain, apiKey, version }
-        for (let tabId of registeredTabIds.values()) {
-          chrome.tabs.sendMessage(tabId, { type: "mountBubble", payload })
-        }
-      }
-    )
-  }
-})
 
 chrome.runtime.onMessage.addListener(action => {
   switch (action.type) {
@@ -85,28 +91,6 @@ chrome.runtime.onMessage.addListener(action => {
       return chrome.tabs.query({ active: true, currentWindow: true }, tabs =>
         chrome.tabs.sendMessage(tabs[0].id, action)
       )
-    }
-
-    case "enableBrowserAction": {
-      const { service, settings } = action.payload
-      for (let tabId of registeredTabIds.values()) {
-        enableBrowserAction(tabId, service, settings)
-      }
-      return
-    }
-
-    case "upgradeRequiredError": {
-      for (let tabId of registeredTabIds.values()) {
-        disableBrowserAction(tabId, "upgradeRequiredError")
-      }
-      return
-    }
-
-    case "unauthorizedError": {
-      for (let tabId of registeredTabIds.values()) {
-        disableBrowserAction(tabId, "unauthorizedError")
-      }
-      return
     }
   }
 })
