@@ -27,6 +27,8 @@ export default class Client {
     })
   }
 
+  login = () => this.#client.post("session", { api_key: this.#apiKey })
+
   projects = () => this.#client.get("projects");
 
   activities = (fromDate, toDate) =>

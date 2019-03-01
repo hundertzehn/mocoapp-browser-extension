@@ -50,7 +50,7 @@ export const createMatcher = remoteServices => {
     const query = queryString.parse(search)
     const service = services.find(service => service.patterns.some(pattern => pattern.match(url)))
     if (!service) {
-      return false
+      return undefined
     }
     const pattern = service.patterns.find(pattern => pattern.match(url))
     let match = pattern.match(url)

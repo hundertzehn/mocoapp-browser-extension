@@ -5,10 +5,8 @@ import ApiClient from "api/Client"
 import Popup from "components/Popup"
 import Spinner from "components/Spinner"
 import { observable, reaction } from "mobx"
-import { observer, disposeOnUnmount } from "mobx-react"
+import { Observer, observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
-
-const OSpring = observer(Spring)
 
 @observer
 class Bubble extends Component {
@@ -28,6 +26,11 @@ class Bubble extends Component {
     })
   };
 
+  static defaultProps = {
+    service: {},
+    settings: {}
+  }
+
   #apiClient;
 
   @observable isLoading = false;
@@ -39,7 +42,7 @@ class Bubble extends Component {
 
   constructor(props) {
     super(props)
-    this.initializeApiClient(props.settings)
+    this.#apiClient = new ApiClient(this.props.settings)
   }
 
   componentDidMount() {
@@ -49,18 +52,17 @@ class Bubble extends Component {
         () => this.props.settings,
         settings => {
           this.close()
-          this.initializeApiClient(settings)
+          this.#apiClient = new ApiClient(settings)
           this.fetchBookedHours()
+        },
+        {
+          fireImmediately: true
         }
       )
     )
 
-    disposeOnUnmount(
-      this,
-      reaction(() => this.props.service, this.fetchBookedHours, {
-        fireImmediately: true
-      })
-    )
+    disposeOnUnmount(this, reaction(() => this.props.service, this.fetchBookedHours))
+
     chrome.runtime.onMessage.addListener(this.receiveMessage)
     window.addEventListener("keydown", this.handleKeyDown, true)
   }
@@ -69,10 +71,6 @@ class Bubble extends Component {
     chrome.runtime.onMessage.removeListener(this.receiveMessage)
     window.removeEventListener("keydown", this.handleKeyDown)
   }
-
-  initializeApiClient = settings => {
-    this.#apiClient = new ApiClient(settings)
-  };
 
   open = event => {
     this.isOpen = true
@@ -94,14 +92,10 @@ class Bubble extends Component {
     }
   };
 
-  sendMessage = action => {
-    chrome.runtime.sendMessage(action)
-  }
-
   fetchBookedHours = () => {
+    console.log('FETCH BOOKED HOURS')
     const { service, settings } = this.props
     this.isLoading = true
-
     this.unauthorizedError = false
     this.upgradeRequiredError = false
 
@@ -109,16 +103,13 @@ class Bubble extends Component {
       .bookedHours(service)
       .then(({ data }) => {
         this.bookedHours = parseFloat(data[0]?.hours) || 0
-        this.sendMessage({ type: 'enableBrowserAction', payload: { service, settings } })
       })
       .catch(error => {
+        console.log("BUBBLE_ERROR", error)
         if (error.response?.status === 401) {
           this.unauthorizedError = true
-          this.sendMessage({ type: 'unauthorizedError' })
-        }
-        if (error.response?.status === 426) {
+        } else if (error.response?.status === 426) {
           this.upgradeRequiredError = true
-          this.sendMessage({ type: 'upgradeRequiredError' })
         }
       })
       .finally(() => (this.isLoading = false))
@@ -141,10 +132,11 @@ class Bubble extends Component {
     }
 
     const { service, settings } = this.props
+    console.log('errors', this.unauthorizedError, this.upgradeRequiredError);
 
     return (
       <>
-        <OSpring
+        <Spring
           from={{ transform: "scale(0.1)" }}
           to={{ transform: "scale(1)" }}
           config={config.wobbly}
@@ -161,12 +153,14 @@ class Bubble extends Component {
                 className="moco-bx-logo"
                 src={chrome.extension.getURL(logoUrl)}
               />
-              {this.bookedHours > 0 ? (
-                <span className="moco-bx-badge">{this.bookedHours}h</span>
-              ) : null}
+              <Observer>{
+                () => this.bookedHours > 0 ? (
+                  <span className="moco-bx-badge">{this.bookedHours}h</span>
+                ) : null}
+              </Observer>
             </animated.div>
           )}
-        </OSpring>
+        </Spring>
         {this.isOpen && (
           <Popup
             service={service}
