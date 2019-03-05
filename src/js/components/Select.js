@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import { toJS } from 'mobx'
 import ReactSelect, { createFilter } from "react-select"
 import {
   values,
@@ -12,6 +13,10 @@ import {
   flatMap,
   pathEq
 } from "lodash/fp"
+import { trace } from 'utils'
+
+const hasOptionGroups = options => 
+  options.some(option => Boolean(option.options))
 
 const customTheme = theme => ({
   ...theme,
@@ -19,7 +24,14 @@ const customTheme = theme => ({
   spacing: {
     ...theme.spacing,
     baseUnit: 2,
-    controlHeight: 34
+    controlHeight: 32
+  },
+  colors: {
+    ...theme.colors,
+    primary: "#38b5eb",
+    primary75: "#38b5eb",
+    primary50: "#38b5eb",
+    primary25: "#38b5eb",
   }
 })
 
@@ -28,12 +40,23 @@ const customStyles = props => ({
     ...base,
     borderColor: props.hasError ? "#FB3A2F" : base.borderColor
   }),
+  valueContainer: base => ({
+    ...base,
+    height: "32px",
+    padding: "6px 12px",
+  }),
   groupHeading: (base, _state) => ({
     ...base,
     color: "black",
     textTransform: "none",
     fontWeight: "bold",
-    fontSize: "100%"
+    fontSize: "100%",
+    padding: "2px 7px 4px",
+  }),
+  option: (base, state) => ({
+    ...base,
+    padding: hasOptionGroups(state.options) ? "3px 7px 4px 20px" : "3px 7px 4px",
+    color: state.isFocused || state.isSelected ? 'white' : 'hsl(0, 0%, 20%)'
   })
 })
 

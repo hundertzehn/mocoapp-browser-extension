@@ -42,21 +42,18 @@ class Form extends Component {
     return (
       <form onSubmit={onSubmit}>
         <div
-          className={cn("form-group", { "has-error": errors.assignment_id })}
+          className={cn("form-group", { "has-error": errors.assignment_id || errors.task_id})}
         >
           <Select
+            className="moco-bx-select"
             name="assignment_id"
             options={projects}
             value={changeset.assignment_id}
             hasError={!!errors.assignment_id}
             onChange={onChange}
           />
-          {errors.assignment_id ? (
-            <div className="form-error">{errors.assignment_id.join("; ")}</div>
-          ) : null}
-        </div>
-        <div className={cn("form-group", { "has-error": errors.task_id })}>
           <Select
+            className="moco-bx-select"
             name="task_id"
             options={project?.tasks || []}
             value={changeset.task_id}
@@ -64,6 +61,9 @@ class Form extends Component {
             hasError={!!errors.task_id}
             noOptionsMessage={() => "Zuerst Projekt wählen"}
           />
+          {errors.assignment_id ? (
+            <div className="form-error">{errors.assignment_id.join("; ")}</div>
+          ) : null}
           {errors.task_id ? (
             <div className="form-error">{errors.task_id.join("; ")}</div>
           ) : null}

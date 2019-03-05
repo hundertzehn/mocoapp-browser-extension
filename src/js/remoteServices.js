@@ -7,7 +7,7 @@ export default {
       "https\\://app.asana.com/0/search/:domainUserId/:id"
     ],
     description: document =>
-      document.querySelector('.TaskRow--focused textarea')?.textContent
+      document.querySelector(".TaskRow--focused textarea")?.textContent
   },
 
   "github-pr": {
@@ -24,7 +24,7 @@ export default {
         ?.match(/^\[(\d+)\]/)
       return match && match[1]
     },
-    position: { right: '2rem' },
+    position: { right: "2rem" },
   },
 
   "github-issue": {
@@ -34,7 +34,7 @@ export default {
       [service.key, org, repo, id].join("."),
     description: (document, service, { org, repo, id }) =>
       document.querySelector(".js-issue-title")?.textContent?.trim(),
-    position: { right: '2rem' },
+    position: { right: "2rem" },
   },
 
   "jira": {
@@ -45,15 +45,17 @@ export default {
       "https\\://:org.atlassian.net/jira/software/projects/:project/boards/:board"
     ],
     queryParams: {
-      id: 'selectedIssue',
-      project: 'projectKey'
+      id: "selectedIssue",
+      project: "projectKey"
     },
     description: (document, service, { id }) => {
-      const title = (document.querySelector('#jira-frontend') || document.querySelector('div[role="dialog"]'))
-        ?.querySelector('h1')
-        ?.textContent
-        ?.trim()
-      return `[${id}] ${title ? title : ''}`
+      const title =
+        (document.querySelector("#jira-frontend") || document.querySelector("div[role=dialog]"))
+          ?.querySelector("h1")
+          ?.textContent
+          ?.trim()
+        || document.querySelector(".ghx-selected .ghx-summary")?.textContent()?.trim()
+      return `[${id}] ${title ? title : ""}`
     }
   },
 
@@ -61,21 +63,21 @@ export default {
     name: "trello",
     urlPatterns: ["https\\://trello.com/c/:id/:title"],
     description: (document, service, { title }) =>
-      document.querySelector('.js-title-helper')?.textContent?.trim(),
-    position: { right: '2rem' },
+      document.querySelector(".js-title-helper")?.textContent?.trim(),
+    position: { right: "2rem" },
   },
 
   "youtrack": {
     name: "youtrack",
     urlPatterns: ["https\\://:org.myjetbrains.com/youtrack/issue/:id"],
     description: document =>
-      document.querySelector('yt-issue-body h1')?.textContent?.trim()
+      document.querySelector("yt-issue-body h1")?.textContent?.trim()
   },
 
   "wunderlist": {
     name: "wunderlist",
     urlPatterns: ["https\\://www.wunderlist.com/webapp#/tasks/:id"],
     description: document =>
-      document.querySelector('.taskItem.selected .taskItem-titleWrapper-title')?.textContent?.trim()
+      document.querySelector(".taskItem.selected .taskItem-titleWrapper-title")?.textContent?.trim()
   }
 }

@@ -7,7 +7,6 @@ const Header = () => (
       className="moco-bx-logo"
       src={chrome.extension.getURL(logoUrl)}
     />
-    <h1>MOCO Zeiterfassung</h1>
   </div>
 )
 

@@ -35,7 +35,7 @@ export const findLastTask = id =>
 
 function taskOptions (tasks) {
   return tasks.map(({ id, name, billable }) => ({
-    label: name,
+    label: billable ? name : `(${name})`,
     value: id,
     billable
   }))
@@ -44,7 +44,7 @@ function taskOptions (tasks) {
 export function projectOptions (projects) {
   return projects.map(project => ({
     value: project.id,
-    label: project.name,
+    label: project.intern ? `(${project.name})` : project.name,
     customerName: project.customer_name,
     tasks: taskOptions(project.tasks)
   }))
