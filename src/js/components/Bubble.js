@@ -152,7 +152,7 @@ class Bubble extends Component {
               />
               <Observer>{
                 () => this.bookedHours > 0 ? (
-                  <span className="moco-bx-badge">{this.bookedHours}h</span>
+                  <span className="moco-bx-badge">{this.bookedHours}</span>
                 ) : null}
               </Observer>
             </animated.div>

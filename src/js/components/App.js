@@ -134,9 +134,7 @@ class App extends Component {
   fetchActivities = () =>
     this.#apiClient
       .activities(this.fromDate(), this.toDate())
-      .then(({ data }) => {
-        this.activities = data
-      })
+      .then(({ data }) => this.activities = data)
 
   createActivity = () => {
     this.isLoading = true
@@ -203,6 +201,7 @@ class App extends Component {
 
   render() {
     const { isBrowserAction, isDisabled } = this.props
+
     if (this.isLoading) {
       const spinnerStyle = isBrowserAction ? { marginTop: '40px', marginBottom: '60px' } : {}
       return <Spinner style={spinnerStyle} />

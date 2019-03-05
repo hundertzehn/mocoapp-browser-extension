@@ -19,7 +19,7 @@ const Day = ({ date, hours, active, onClick }) => {
       )}
       onClick={handleClick}
     >
-      <span className='moxo-bx-calendar__day-of-week'>
+      <span className='moco-bx-calendar__day-of-week'>
         {format(date, 'dd', { locale: deLocale })}
       </span>
       <span className='moco-bx-calendar__hours'>{hours > 0 ? hours : null}</span>

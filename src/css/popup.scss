@@ -8,19 +8,19 @@ html {
     margin: 0px;
 
     #moco-bx-root {
-      padding: 2rem 3rem;
-      width: $popup-width;
+      padding: 3rem 6rem;
 
       .moco-bx-logo__container {
         display: flex;
-        margin-bottom: 2rem;
+        justify-content: center;
+        margin-bottom: 3rem;
         text-align: center;
 
         img.moco-bx-logo {
           flex: 0 0 48px;
           width: 48px;
           height: 48px;
-          margin-right: 1rem;
+
         }
 
         h1 {
@@ -32,6 +32,7 @@ html {
       .moco-bx-calendar {
         display: flex;
         justify-content: space-between;
+        width: 324px;
         margin-bottom: 3rem;
 
         .moco-bx-calendar__day {
@@ -39,18 +40,23 @@ html {
           flex-flow: column nowrap;
           align-items: center;
 
-          flex: 0 0 48px;
-          width: 48px;
-          height: 60px;
+          flex: 0 0 42px;
+          width: 42px;
           cursor: pointer;
+
+          .moco-bx-calendar__day-of-week {
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: hsl(0, 0%, 60%);
+          }
 
           .moco-bx-calendar__hours {
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 48px;
-            height: 48px;
-            flex: 0 0 48px;
+            width: 42px;
+            height: 42px;
+            flex: 0 0 42px;
             color: white;
             background-color: #eee;
 

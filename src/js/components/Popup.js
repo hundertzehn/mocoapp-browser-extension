@@ -15,7 +15,7 @@ const Popup = props => {
   const styles = useMemo(
     () => ({
       width: "516px",
-      height: props.errorType ? "auto" : "527px"
+      height: props.errorType ? "auto" : "558px"
     }),
     [props.errorType]
   )

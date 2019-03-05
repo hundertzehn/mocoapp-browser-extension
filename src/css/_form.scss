@@ -63,12 +63,17 @@ input {
   }
 }
 
+.moco-bx-select + .moco-bx-select {
+  margin-top: 3px;
+}
+
 input[name="hours"] {
-  width: 33%;
+  width: 48px;
 }
 
 textarea[name="description"] {
+  box-sizing: border-box;
+  width: 100%;
   resize: none;
-  width: calc(100% - 1rem - 2px);
 }
 

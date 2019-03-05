@@ -36,7 +36,7 @@ const mountBubble = ({ service, settings }) => {
 
   ReactDOM.render(
     <ErrorBoundary>
-      <Bubble service={service} settings={settings} />
+      <Bubble key={service.id} service={service} settings={settings} />
     </ErrorBoundary>,
     document.getElementById('moco-bx-root')
   )
