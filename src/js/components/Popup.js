@@ -1,20 +1,23 @@
 import React, { useMemo, useCallback, useEffect } from "react"
 import PropTypes from "prop-types"
+import queryString from "query-string"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
-import queryString from "query-string"
-import { serializeProps } from "utils"
+import {
+  ERROR_UNAUTHORIZED,
+  ERROR_UPGRADE_REQUIRED,
+  serializeProps
+} from "utils"
 
 const Popup = props => {
-  const serializedProps = serializeProps(["service", "settings"])(props)
-  console.log(props.unauthorizedError, props.upgradeRequiredError)
+  const serializedProps = serializeProps(["service", "settings", "errorType"])(props)
 
   const styles = useMemo(
     () => ({
       width: "516px",
-      height: props.unauthorizedError || props.upgradeRequiredError ? "auto" : "527px"
+      height: props.errorType ? "auto" : "527px"
     }),
-    [props.unauthorizedError, props.upgradeRequiredError]
+    [props.errorType]
   )
 
   const handleKeyDown = event => {
@@ -39,9 +42,9 @@ const Popup = props => {
   return (
     <div className="moco-bx-popup" onClick={handleRequestClose}>
       <div className="moco-bx-popup-content" style={styles}>
-        {props.unauthorizedError ? (
+        {props.errorType === ERROR_UNAUTHORIZED ? (
           <InvalidConfigurationError isBrowserAction={false} />
-        ) : props.upgradeRequiredError ? (
+        ) : props.errorType === ERROR_UPGRADE_REQUIRED ? (
           <UpgradeRequiredError />
         ) : (
           <iframe
@@ -58,9 +61,9 @@ const Popup = props => {
 }
 
 Popup.propTypes = {
+  settings: PropTypes.object.isRequired,
   service: PropTypes.object.isRequired,
-  unauthorizedError: PropTypes.bool.isRequired,
-  upgradeRequiredError: PropTypes.bool.isRequired,
+  errorType: PropTypes.string,
   onRequestClose: PropTypes.func.isRequired
 }
 

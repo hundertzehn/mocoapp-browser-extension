@@ -18,6 +18,9 @@ const SECONDS_PER_MINUTE = 60
 
 const nilToArray = input => input || []
 
+export const ERROR_UNAUTHORIZED = 'unauthorized'
+export const ERROR_UPGRADE_REQUIRED = 'upgrade-required'
+
 export const findLastProject = id =>
   compose(
     find(pathEq('value', Number(id))),

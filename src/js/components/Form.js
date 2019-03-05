@@ -14,7 +14,6 @@ class Form extends Component {
     projects: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
-    onCancel: PropTypes.func
   };
 
   static defaultProps = {
@@ -37,7 +36,7 @@ class Form extends Component {
   }
 
   render() {
-    const { projects, changeset, errors, onChange, onSubmit, onCancel } = this.props
+    const { projects, changeset, errors, onChange, onSubmit } = this.props
     const project = Select.findOptionByValue(projects, changeset.assignment_id)
 
     return (
@@ -79,7 +78,6 @@ class Form extends Component {
             autoComplete="off"
             autoFocus
           />
-          &nbsp;&nbsp;<span className="text-muted">Leer lassen, um Timer zu starten</span>
           {errors.hours ? (
             <div className="form-error">{errors.hours.join("; ")}</div>
           ) : null}
@@ -90,16 +88,16 @@ class Form extends Component {
             onChange={onChange}
             value={changeset.description}
             placeholder="Beschreibung der Tätigkeit - mind. 3 Zeichen"
+            maxLength={255}
+            rows={3}
             onKeyDown={this.handleTextareaKeyDown}
-            rows={4}
           />
           {errors.description ? (
             <div className="form-error">{errors.description.join("; ")}</div>
           ) : null}
         </div>
 
-        <button className='moco-bx-btn' disabled={!this.isValid()}>Speichern</button>
-        {onCancel && <button type="button" className="secondary moco-bx-btn" onClick={onCancel}>Abbrechen</button>}
+        <button className='moco-bx-btn' disabled={!this.isValid()}>OK</button>
       </form>
     )
   }

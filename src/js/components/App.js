@@ -7,6 +7,8 @@ import Spinner from "components/Spinner"
 import { observable, computed } from "mobx"
 import { observer } from "mobx-react"
 import {
+  ERROR_UNAUTHORIZED,
+  ERROR_UPGRADE_REQUIRED,
   findLastProject,
   findLastTask,
   groupedProjectOptions,
@@ -51,8 +53,7 @@ class App extends Component {
   @observable changeset = {}
   @observable formErrors = {}
   @observable isLoading = true
-  @observable unauthorizedError = false;
-  @observable upgradeRequiredError = false;
+  @observable errorType = null
 
   @computed get changesetWithDefaults() {
     const { service } = this.props
@@ -96,12 +97,14 @@ class App extends Component {
     Promise.all([this.fetchProjects(), this.fetchActivities()])
       .catch(error => {
         if (error.response?.status === 401) {
-          this.unauthorizedError = true
+          this.errorType = ERROR_UNAUTHORIZED
         } else if (error.response?.status === 426) {
-          this.upgradeRequiredError = true
+          this.errorType = ERROR_UPGRADE_REQUIRED
         }
-        this.sendMessage({ type: 'unmountBubble' })
-        this.sendMessage({ type: 'mountBubble', payload: this.props.settings })
+        if (!this.props.isBrowserAction) {
+          this.sendMessage({ type: 'unmountBubble' })
+          this.sendMessage({ type: 'mountBubble', payload: this.props.settings })
+        }
       })
       .finally(() => this.isLoading = false)
   }
@@ -199,17 +202,17 @@ class App extends Component {
   }
 
   render() {
+    const { isBrowserAction, isDisabled } = this.props
     if (this.isLoading) {
-      return <Spinner />
+      const spinnerStyle = isBrowserAction ? { marginTop: '40px', marginBottom: '60px' } : {}
+      return <Spinner style={spinnerStyle} />
     }
 
-    const { isBrowserAction, isDisabled } = this.props
-
-    if (this.unauthorizedError) {
+    if (this.errorType === ERROR_UNAUTHORIZED) {
       return <InvalidConfigurationError isBrowserAction={isBrowserAction} />
     }
 
-    if (this.upgradeRequiredError) {
+    if (this.errorType === ERROR_UPGRADE_REQUIRED) {
       return <UpgradeRequiredError />
     }
 
@@ -229,7 +232,6 @@ class App extends Component {
           errors={this.formErrors}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
-          onCancel={isBrowserAction ? null : this.handleCancel}
         />
       </>
     )
