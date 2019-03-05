@@ -5,7 +5,6 @@ import { createMatcher, createEnhancer } from 'utils/urlMatcher'
 import remoteServices from './remoteServices'
 import { pipe } from 'lodash/fp'
 import { ErrorBoundary } from 'utils/notifier'
-import { errorHandler } from 'utils/browserAction'
 import '../css/content.scss'
 
 const matcher = createMatcher(remoteServices)
@@ -13,7 +12,6 @@ const matcher = createMatcher(remoteServices)
 chrome.runtime.onMessage.addListener(({ type, payload }, sender, sendResponse) => {
   switch (type) {
     case 'mountBubble': {
-      console.log('MOUNT-BUBBLE')
       const settings = payload
       const service = pipe(matcher, createEnhancer(document))(window.location.href)
       if (!service.id) {

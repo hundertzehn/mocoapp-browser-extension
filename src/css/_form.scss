@@ -2,6 +2,7 @@
 
 input {
   border-radius: 0;
+  height: 20px;
 }
 
 .form-group {
@@ -15,7 +16,7 @@ input {
   }
 
   input, textarea {
-    padding: 0.5rem;
+    padding: 6px 12px;
     background-color: white;
     border-color: #cccccc;
     width: 100%;
@@ -49,7 +50,7 @@ input {
     }
 
     .input-group-addon {
-      padding: 0.25rem 0.5rem;
+      padding: 6px 12px;
       font-weight: normal;
       color: #555555;
       text-align: center;

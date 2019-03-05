@@ -4,6 +4,7 @@ import { Spring, config, animated } from "react-spring/renderprops"
 import ApiClient from "api/Client"
 import Popup from "components/Popup"
 import Spinner from "components/Spinner"
+import { ERROR_UNAUTHORIZED, ERROR_UPGRADE_REQUIRED } from "utils"
 import { observable, reaction } from "mobx"
 import { Observer, observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
@@ -36,8 +37,7 @@ class Bubble extends Component {
   @observable isLoading = false;
   @observable isOpen = false;
   @observable bookedHours = 0;
-  @observable unauthorizedError = false;
-  @observable upgradeRequiredError = false;
+  @observable errorType = null;
   @observable animationCompleted = false;
 
   constructor(props) {
@@ -72,7 +72,7 @@ class Bubble extends Component {
     window.removeEventListener("keydown", this.handleKeyDown)
   }
 
-  open = event => {
+  open = _event => {
     this.isOpen = true
   };
 
@@ -96,8 +96,7 @@ class Bubble extends Component {
     console.log('FETCH BOOKED HOURS')
     const { service, settings } = this.props
     this.isLoading = true
-    this.unauthorizedError = false
-    this.upgradeRequiredError = false
+    this.errorType = null
 
     this.#apiClient
       .bookedHours(service)
@@ -105,11 +104,10 @@ class Bubble extends Component {
         this.bookedHours = parseFloat(data[0]?.hours) || 0
       })
       .catch(error => {
-        console.log("BUBBLE_ERROR", error)
         if (error.response?.status === 401) {
-          this.unauthorizedError = true
+          this.errorType = ERROR_UNAUTHORIZED
         } else if (error.response?.status === 426) {
-          this.upgradeRequiredError = true
+          this.errorType = ERROR_UPGRADE_REQUIRED
         }
       })
       .finally(() => (this.isLoading = false))
@@ -132,7 +130,6 @@ class Bubble extends Component {
     }
 
     const { service, settings } = this.props
-    console.log('errors', this.unauthorizedError, this.upgradeRequiredError);
 
     return (
       <>
@@ -165,9 +162,8 @@ class Bubble extends Component {
           <Popup
             service={service}
             settings={settings}
+            errorType={this.errorType}
             onRequestClose={this.close}
-            unauthorizedError={this.unauthorizedError}
-            upgradeRequiredError={this.upgradeRequiredError}
           />
         )}
       </>

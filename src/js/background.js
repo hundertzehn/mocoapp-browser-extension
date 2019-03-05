@@ -48,11 +48,19 @@ function tabsHandler() {
 function settingsChangedHandler(settings) {
   console.log('SETTINGS-CHANGED', settings)
   settings = { ...settings, version }
-  updateBrowserAction(chrome)(settings)
   tabsHandler()
 }
 
 chrome.runtime.onInstalled.addListener(() => {
+  chrome.storage.sync.get(["subdomain", "apiKey"], settings => settingsChangedHandler(settings))
+  chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
+    if (areaName === "sync" && (apiKey || subdomain)) {
+      chrome.storage.sync.get(["subdomain", "apiKey"], settingsChangedHandler)
+    }
+  })
+})
+
+chrome.runtime.onStartup.addListener(() => {
   chrome.storage.sync.get(["subdomain", "apiKey"], settings => settingsChangedHandler(settings))
   chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {

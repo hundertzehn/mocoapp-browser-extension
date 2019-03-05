@@ -53,7 +53,7 @@ export default {
         ?.querySelector('h1')
         ?.textContent
         ?.trim()
-      return `[${id}]` + (title ? ` ${title}` : '')
+      return `[${id}] ${title ? title : ''}`
     }
   },
 
