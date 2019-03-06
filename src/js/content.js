@@ -1,36 +1,42 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import Bubble from './components/Bubble'
-import { createMatcher, createEnhancer } from 'utils/urlMatcher'
-import remoteServices from './remoteServices'
-import { pipe } from 'lodash/fp'
-import { ErrorBoundary } from 'utils/notifier'
-import '../css/content.scss'
+import React from "react"
+import ReactDOM from "react-dom"
+import Bubble from "./components/Bubble"
+import { createMatcher, createEnhancer } from "utils/urlMatcher"
+import remoteServices from "./remoteServices"
+import { pipe } from "lodash/fp"
+import { ErrorBoundary } from "utils/notifier"
+import { onRuntimeMessage } from "utils/browser"
+import "../css/content.scss"
 
 const matcher = createMatcher(remoteServices)
 
-chrome.runtime.onMessage.addListener(({ type, payload }, sender, sendResponse) => {
+onRuntimeMessage(({ type, payload }) => {
   switch (type) {
-    case 'mountBubble': {
+    case "mountBubble": {
       const settings = payload
-      const service = pipe(matcher, createEnhancer(document))(window.location.href)
+      const service = pipe(
+        matcher,
+        createEnhancer(document)
+      )(window.location.href)
       if (!service.id) {
-        return unmountBubble()
+        unmountBubble()
+        return Promise.resolve()
       }
-      sendResponse(service)
-      return mountBubble({ service, settings })
+      mountBubble({ service, settings })
+      return Promise.resolve(service)
     }
 
-    case 'unmountBubble': {
-      return unmountBubble()
+    case "unmountBubble": {
+      unmountBubble()
+      return Promise.resolve()
     }
   }
 })
 
 const mountBubble = ({ service, settings }) => {
-  if (!document.getElementById('moco-bx-root')) {
-    const domRoot = document.createElement('div')
-    domRoot.setAttribute('id', 'moco-bx-root')
+  if (!document.getElementById("moco-bx-root")) {
+    const domRoot = document.createElement("div")
+    domRoot.setAttribute("id", "moco-bx-root")
     document.body.appendChild(domRoot)
   }
 
@@ -38,12 +44,12 @@ const mountBubble = ({ service, settings }) => {
     <ErrorBoundary>
       <Bubble key={service.id} service={service} settings={settings} />
     </ErrorBoundary>,
-    document.getElementById('moco-bx-root')
+    document.getElementById("moco-bx-root")
   )
 }
 
 const unmountBubble = () => {
-  const domRoot = document.getElementById('moco-bx-root')
+  const domRoot = document.getElementById("moco-bx-root")
 
   if (domRoot) {
     ReactDOM.unmountComponentAtNode(domRoot)

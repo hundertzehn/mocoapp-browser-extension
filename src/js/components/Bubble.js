@@ -34,7 +34,7 @@ class Bubble extends Component {
   static defaultProps = {
     service: {},
     settings: {}
-  }
+  };
 
   #apiClient;
 
@@ -65,7 +65,10 @@ class Bubble extends Component {
       )
     )
 
-    disposeOnUnmount(this, reaction(() => this.props.service, this.fetchBookedHours))
+    disposeOnUnmount(
+      this,
+      reaction(() => this.props.service, this.fetchBookedHours)
+    )
 
     chrome.runtime.onMessage.addListener(this.receiveMessage)
     window.addEventListener("keydown", this.handleKeyDown, true)
@@ -155,10 +158,12 @@ class Bubble extends Component {
                 className="moco-bx-logo"
                 src={chrome.extension.getURL(logoUrl)}
               />
-              <Observer>{
-                () => this.bookedHours > 0 ? (
-                  <span className="moco-bx-badge">{this.bookedHours}</span>
-                ) : null}
+              <Observer>
+                {() =>
+                  this.bookedHours > 0 ? (
+                    <span className="moco-bx-badge">{this.bookedHours}</span>
+                  ) : null
+                }
               </Observer>
             </animated.div>
           )}

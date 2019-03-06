@@ -8,7 +8,8 @@
     "jest/globals": true
   },
   "globals": {
-    "chrome": false
+    "chrome": false,
+    "browser": false
   },
   "plugins": ["jest"],
   "parser": "babel-eslint",
