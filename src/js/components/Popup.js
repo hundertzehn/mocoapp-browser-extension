@@ -14,8 +14,12 @@ const Popup = props => {
 
   const styles = useMemo(
     () => ({
-      width: "516px",
-      height: props.errorType ? "auto" : "558px"
+      width: "580px",
+      height: props.errorType === ERROR_UNAUTHORIZED
+        ? "957px"
+        : props.errorType === ERROR_UPGRADE_REQUIRED
+        ? "275"
+        : "558px"
     }),
     [props.errorType]
   )
@@ -42,19 +46,13 @@ const Popup = props => {
   return (
     <div className="moco-bx-popup" onClick={handleRequestClose}>
       <div className="moco-bx-popup-content" style={styles}>
-        {props.errorType === ERROR_UNAUTHORIZED ? (
-          <InvalidConfigurationError isBrowserAction={false} />
-        ) : props.errorType === ERROR_UPGRADE_REQUIRED ? (
-          <UpgradeRequiredError />
-        ) : (
-          <iframe
-            src={chrome.extension.getURL(
-              `popup.html?isBrowserAction=false&${queryString.stringify(serializedProps)}`
-            )}
-            width={styles.width}
-            height={styles.height}
-          />
-        )}
+        <iframe
+          src={chrome.extension.getURL(
+            `popup.html?isBrowserAction=false&${queryString.stringify(serializedProps)}`
+          )}
+          width={styles.width}
+          height={styles.height}
+        />
       </div>
     </div>
   )

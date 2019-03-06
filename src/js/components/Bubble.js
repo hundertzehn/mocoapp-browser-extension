@@ -4,7 +4,11 @@ import { Spring, config, animated } from "react-spring/renderprops"
 import ApiClient from "api/Client"
 import Popup from "components/Popup"
 import Spinner from "components/Spinner"
-import { ERROR_UNAUTHORIZED, ERROR_UPGRADE_REQUIRED } from "utils"
+import {
+  ERROR_UNAUTHORIZED,
+  ERROR_UPGRADE_REQUIRED,
+  ERROR_UNKNOWN
+} from "utils"
 import { observable, reaction } from "mobx"
 import { Observer, observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
@@ -93,7 +97,6 @@ class Bubble extends Component {
   };
 
   fetchBookedHours = () => {
-    console.log('FETCH BOOKED HOURS')
     const { service, settings } = this.props
     this.isLoading = true
     this.errorType = null
@@ -108,6 +111,8 @@ class Bubble extends Component {
           this.errorType = ERROR_UNAUTHORIZED
         } else if (error.response?.status === 426) {
           this.errorType = ERROR_UPGRADE_REQUIRED
+        } else {
+          this.errorType = ERROR_UNKNOWN
         }
       })
       .finally(() => (this.isLoading = false))

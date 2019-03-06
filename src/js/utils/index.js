@@ -20,6 +20,7 @@ const nilToArray = input => input || []
 
 export const ERROR_UNAUTHORIZED = 'unauthorized'
 export const ERROR_UPGRADE_REQUIRED = 'upgrade-required'
+export const ERROR_UNKNOWN = 'unknown'
 
 export const findLastProject = id =>
   compose(

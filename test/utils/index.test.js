@@ -37,7 +37,7 @@ describe("utils", () => {
       const project = findLastProject(944837106)(options)
       const task = findLastTask(2506050)(project)
       expect(task.value).toEqual(2506050)
-      expect(task.label).toEqual("Calls")
+      expect(task.label).toEqual("(Calls)")
     })
 
     it("returns undefined if task is not found", () => {

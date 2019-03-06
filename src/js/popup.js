@@ -9,7 +9,7 @@ import { ErrorBoundary } from 'utils/notifier'
 import { isEmpty } from 'lodash'
 import '../css/popup.scss'
 
-const parsedProps = parseProps(['service', 'settings', 'isBrowserAction'])(
+const parsedProps = parseProps(['service', 'settings', 'errorType', 'isBrowserAction'])(
   queryString.parse(location.search)
 )
 

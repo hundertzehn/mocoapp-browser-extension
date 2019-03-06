@@ -9,6 +9,7 @@ import { observer } from "mobx-react"
 import {
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
+  ERROR_UNKNOWN,
   findLastProject,
   findLastTask,
   groupedProjectOptions,
@@ -100,10 +101,8 @@ class App extends Component {
           this.errorType = ERROR_UNAUTHORIZED
         } else if (error.response?.status === 426) {
           this.errorType = ERROR_UPGRADE_REQUIRED
-        }
-        if (!this.props.isBrowserAction) {
-          this.sendMessage({ type: 'unmountBubble' })
-          this.sendMessage({ type: 'mountBubble', payload: this.props.settings })
+        } else {
+          this.errorType = ERROR_UNKNOWN
         }
       })
       .finally(() => this.isLoading = false)
@@ -216,7 +215,7 @@ class App extends Component {
     }
 
     return (
-      <>
+      <div className="moco-bx-app-container">
         <Header />
         <Calendar
           fromDate={this.fromDate()}
@@ -232,7 +231,7 @@ class App extends Component {
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
         />
-      </>
+      </div>
     )
   }
 }
