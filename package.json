@@ -4,8 +4,10 @@
   "version": "1.0.4",
   "main": "bundle.js",
   "scripts": {
-    "start": "node_modules/.bin/webpack --watch --env.NODE_ENV development",
-    "build": "node_modules/.bin/webpack -p --env.NODE_ENV production",
+    "start:chrome": "node_modules/.bin/webpack --config webpack.chrome.config.js --watch --env.NODE_ENV development",
+    "start:firefox": "node_modules/.bin/webpack --config webpack.firefox.config.js --watch --env.NODE_ENV development",
+    "build:chrome": "node_modules/.bin/webpack -p --config webpack.chrome.config.js --env.NODE_ENV production",
+    "build:firefox": "node_modules/.bin/webpack -p --config webpack.firefox.config.js --env.NODE_ENV production",
     "test": "node_modules/.bin/jest",
     "test:watch": "node_modules/.bin/jest --watch",
     "release": "copyfiles main.css main.min.js background.min.js manifest.json popup.html options.html node_modules/jquery/dist/jquery.min.js node_modules/select2/select2.js src/images/* release"
@@ -49,6 +51,7 @@
     "jest": "^24.1.0",
     "mini-css-extract-plugin": "^0.5.0",
     "node-sass": "^4.11.0",
+    "prettier": "^1.16.4",
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.1",
     "webpack": "^4.15.0",

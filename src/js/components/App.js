@@ -19,8 +19,9 @@ import {
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
 import { startOfWeek, endOfWeek } from "date-fns"
-import Header from './shared/Header'
+import Header from "./shared/Header"
 import { head } from "lodash"
+import { sendMessageToRuntime } from "utils/browser"
 
 @observer
 class App extends Component {
@@ -38,23 +39,23 @@ class App extends Component {
       apiKey: PropTypes.string,
       version: PropTypes.string
     }),
-    isBrowserAction: PropTypes.bool,
-  }
+    isBrowserAction: PropTypes.bool
+  };
 
   static defaultProps = {
     service: {},
     settings: {},
     isBrowserAction: true
-  }
+  };
 
-  @observable projects = []
-  @observable activities = []
-  @observable lastProjectId
-  @observable lastTaskId
-  @observable changeset = {}
-  @observable formErrors = {}
-  @observable isLoading = true
-  @observable errorType = null
+  @observable projects = [];
+  @observable activities = [];
+  @observable lastProjectId;
+  @observable lastTaskId;
+  @observable changeset = {};
+  @observable formErrors = {};
+  @observable isLoading = true;
+  @observable errorType = null;
 
   @computed get changesetWithDefaults() {
     const { service } = this.props
@@ -86,7 +87,7 @@ class App extends Component {
     }
   }
 
-  #apiClient
+  #apiClient;
 
   constructor(props) {
     super(props)
@@ -105,35 +106,33 @@ class App extends Component {
           this.errorType = ERROR_UNKNOWN
         }
       })
-      .finally(() => this.isLoading = false)
+      .finally(() => (this.isLoading = false))
   }
 
   componentWillUnmount() {
     window.removeEventLIstener("keydown", this.handleKeyDown)
   }
 
-  fromDate = () => startOfWeek(new Date(), { weekStartsOn: 1 })
-  toDate = () => endOfWeek(new Date(), { weekStartsOn: 1 })
+  fromDate = () => startOfWeek(new Date(), { weekStartsOn: 1 });
+  toDate = () => endOfWeek(new Date(), { weekStartsOn: 1 });
 
   closePopup = () => {
     if (this.props.isBrowserAction) {
       window.close()
     }
-  }
+  };
 
   fetchProjects = () =>
-    this.#apiClient
-      .projects()
-      .then(({ data }) => {
-        this.projects = groupedProjectOptions(data.projects)
-        this.lastProjectId = data.last_project_id
-        this.lastTaskId = data.lastTaskId
-      })
+    this.#apiClient.projects().then(({ data }) => {
+      this.projects = groupedProjectOptions(data.projects)
+      this.lastProjectId = data.last_project_id
+      this.lastTaskId = data.lastTaskId
+    });
 
   fetchActivities = () =>
     this.#apiClient
       .activities(this.fromDate(), this.toDate())
-      .then(({ data }) => this.activities = data)
+      .then(({ data }) => (this.activities = data));
 
   createActivity = () => {
     this.isLoading = true
@@ -155,7 +154,7 @@ class App extends Component {
         }
       })
       .finally(() => (this.isLoading = false))
-  }
+  };
 
   handleChange = event => {
     const {
@@ -167,42 +166,38 @@ class App extends Component {
     if (name === "assignment_id") {
       this.changeset.task_id = null
     }
-  }
+  };
 
   handleSelectDate = date => {
     this.changeset.date = formatDate(date)
-  }
+  };
 
   handleSubmit = event => {
     event.preventDefault()
     this.createActivity()
-  }
+  };
 
   handleCancel = () => {
     this.sendMessage({ type: "closeForm" })
-  }
+  };
 
   handleKeyDown = event => {
     if (event.keyCode === 27) {
       this.handleCancel()
     }
-  }
+  };
 
   sendMessage = action => {
-    if (this.props.isBrowserAction) {
-      chrome.runtime.sendMessage(action)
-    } else {
-      chrome.tabs.query({ active: true, currentWindow: true }, tabs =>
-        chrome.tabs.sendMessage(tabs[0].id, action)
-      )
-    }
-  }
+    sendMessageToRuntime(action)
+  };
 
   render() {
-    const { isBrowserAction, isDisabled } = this.props
+    const { isBrowserAction } = this.props
 
     if (this.isLoading) {
-      const spinnerStyle = isBrowserAction ? { marginTop: '40px', marginBottom: '60px' } : {}
+      const spinnerStyle = isBrowserAction
+        ? { marginTop: "40px", marginBottom: "60px" }
+        : {}
       return <Spinner style={spinnerStyle} />
     }
 
