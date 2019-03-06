@@ -64,19 +64,18 @@
 
     .moco-bx-popup-content {
       background-color: white;
-      height: 480px;
       margin: 0 auto;
     }
   }
 
-  #moco-bx-invalid-configuration-error {
-    padding: 2rem 3rem;
+  .moco-bx-error-container {
+    width: 468px;
+    padding: 2rem 4rem 3rem;
     img {
       width: 100%;
     }
-  }
-
-  #moco-bx-upgrade-required-error {
-    padding: 2rem 3rem;
+    button {
+      margin-top: 1.5rem;
+    }
   }
 }

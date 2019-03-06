@@ -4,7 +4,6 @@ import { updateBrowserAction, updateBrowserActionForTab } from 'utils/browserAct
 import { forEach } from 'lodash/fp'
 
 const { version } = chrome.runtime.getManifest()
-const registeredTabIds = new Set()
 const matcher = createMatcher(remoteServices)
 
 function tabHandler(tab, settings) {
@@ -46,7 +45,6 @@ function tabsHandler() {
 }
 
 function settingsChangedHandler(settings) {
-  console.log('SETTINGS-CHANGED', settings)
   settings = { ...settings, version }
   tabsHandler()
 }
@@ -80,8 +78,6 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     )
   }
 })
-
-chrome.tabs.onRemoved.addListener(tabId => registeredTabIds.delete(tabId))
 
 chrome.runtime.onMessage.addListener(action => {
   switch (action.type) {

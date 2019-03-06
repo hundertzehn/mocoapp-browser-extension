@@ -2,11 +2,11 @@ import React from 'react'
 import configurationSettingsUrl from 'images/configurationSettings.png'
 
 const InvalidConfigurationError = ({ isBrowserAction }) => (
-  <div id='moco-bx-invalid-configuration-error'>
-    <h2>Konfiguration ungültig</h2>
+  <div className='moco-bx-error-container'>
+    <h1>Konfiguration ungültig</h1>
     <p>
       Bitte trage deine Internetadresse und deinen API-Schlüssel in den
-      Einstellungen der MOCO Browser-Erweiterung ein. Deinen API-Key findest du
+      Einstellungen der MOCO Browser-Erweiterung ein. Deinen API-Schlüssel findest du
       in der MOCO App in deinem Profil im Register &quot;Integrationen&quot;.
     </p>
     <button className='moco-bx-btn' onClick={() => chrome.runtime.sendMessage({ type: 'openOptions' })}>
