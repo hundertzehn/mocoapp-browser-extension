@@ -40,35 +40,37 @@ class Options extends Component {
     if (this.loading) return null
 
     return (
-      <form onSubmit={this.onSubmit}>
-        <h2>Einstellungen</h2>
-        <div className="form-group">
-          <label>Internetadresse</label>
-          <div className="input-group">
+      <div className="moco-bx-options">
+        <form onSubmit={this.onSubmit}>
+          <h2>Einstellungen</h2>
+          <div className="form-group">
+            <label>Internetadresse</label>
+            <div className="input-group">
+              <input
+                type="text"
+                name="subdomain"
+                value={this.subdomain}
+                onChange={this.onChange}
+              />
+              <span className="input-group-addon">.mocoapp.com</span>
+            </div>
+          </div>
+          <div className="form-group">
+            <label>API Key</label>
             <input
               type="text"
-              name="subdomain"
-              value={this.subdomain}
+              name="apiKey"
+              value={this.apiKey}
               onChange={this.onChange}
             />
-            <span className="input-group-addon">.mocoapp.com</span>
+            <div className="text-muted" style={{ marginTop: '0.5rem' }}>
+              Deinen API-Schlüssel findest du in der MOCO-App unter
+              Profil/Integrationen.
+            </div>
           </div>
-        </div>
-        <div className="form-group">
-          <label>API Key</label>
-          <input
-            type="text"
-            name="apiKey"
-            value={this.apiKey}
-            onChange={this.onChange}
-          />
-          <div className="text-muted" style={{ marginTop: '0.5rem' }}>
-            Deinen API-Schlüssel findest du in der MOCO-App unter
-            Profil/Integrationen.
-          </div>
-        </div>
-        <button className='moco-bx-btn'>Save</button>
-      </form>
+          <button className='moco-bx-btn'>Save</button>
+        </form>
+      </div>
     )
   }
 }

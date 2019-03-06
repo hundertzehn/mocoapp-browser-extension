@@ -22,7 +22,7 @@ const Day = ({ date, hours, active, onClick }) => {
       <span className='moco-bx-calendar__day-of-week'>
         {format(date, 'dd', { locale: deLocale })}
       </span>
-      <span className='moco-bx-calendar__hours'>{hours > 0 ? hours : null}</span>
+      <span className='moco-bx-calendar__hours'>{hours > 0 ? hours.toFixed(1) : null}</span>
     </div>
   )
 }

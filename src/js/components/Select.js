@@ -13,7 +13,6 @@ import {
   flatMap,
   pathEq
 } from "lodash/fp"
-import { trace } from 'utils'
 
 const hasOptionGroups = options => 
   options.some(option => Boolean(option.options))
@@ -29,9 +28,9 @@ const customTheme = theme => ({
   colors: {
     ...theme.colors,
     primary: "#38b5eb",
-    primary75: "#38b5eb",
-    primary50: "#38b5eb",
-    primary25: "#38b5eb",
+    primary75: "rgba(56, 181, 235, 0.75)",
+    primary50: "rgba(56, 181, 235, 0.5)",
+    primary25: "rgba(56, 181, 235, 0.25)",
   }
 })
 
@@ -56,7 +55,7 @@ const customStyles = props => ({
   option: (base, state) => ({
     ...base,
     padding: hasOptionGroups(state.options) ? "3px 7px 4px 20px" : "3px 7px 4px",
-    color: state.isFocused || state.isSelected ? 'white' : 'hsl(0, 0%, 20%)'
+    color: state.isSelected ? 'white' : 'hsl(0, 0%, 20%)'
   })
 })
 

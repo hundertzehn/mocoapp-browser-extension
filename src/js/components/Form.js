@@ -47,6 +47,7 @@ class Form extends Component {
           <Select
             className="moco-bx-select"
             name="assignment_id"
+            placeholder="Auswählen..."
             options={projects}
             value={changeset.assignment_id}
             hasError={!!errors.assignment_id}
@@ -55,6 +56,7 @@ class Form extends Component {
           <Select
             className="moco-bx-select"
             name="task_id"
+            placeholder="Auswählen..."
             options={project?.tasks || []}
             value={changeset.task_id}
             onChange={onChange}

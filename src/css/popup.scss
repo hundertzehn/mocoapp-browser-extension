@@ -8,7 +8,10 @@ html {
     margin: 0px;
 
     #moco-bx-root {
+      min-width: 516px;
+
       .moco-bx-app-container {
+        width: 324px;
         padding: 3rem 6rem;
 
         .moco-bx-logo__container {
@@ -33,7 +36,6 @@ html {
         .moco-bx-calendar {
           display: flex;
           justify-content: space-between;
-          width: 324px;
           margin-bottom: 3rem;
 
           .moco-bx-calendar__day {
@@ -86,7 +88,7 @@ html {
       }
 
       .moco-bx-error-container {
-        width: 484px;
+        width: 420px;
         padding: 2rem 3rem 3rem;
 
         img {

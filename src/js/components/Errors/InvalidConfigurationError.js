@@ -3,7 +3,7 @@ import configurationSettingsUrl from 'images/configurationSettings.png'
 
 const InvalidConfigurationError = ({ isBrowserAction }) => (
   <div className='moco-bx-error-container'>
-    <h1>Konfiguration ungültig</h1>
+    <h1>Einstellungen aktualisieren</h1>
     <p>
       Bitte trage deine Internetadresse und deinen API-Schlüssel in den
       Einstellungen der MOCO Browser-Erweiterung ein. Deinen API-Schlüssel findest du
