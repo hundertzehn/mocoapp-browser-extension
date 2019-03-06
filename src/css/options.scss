@@ -1,4 +1,11 @@
 @import "form";
 
 #moco-bx-root {
+  .moco-bx-options {
+    padding: 0.5rem 2rem 1rem;
+    input {
+      padding: 8px 12px;
+      height: 29px;
+    }
+  }
 }

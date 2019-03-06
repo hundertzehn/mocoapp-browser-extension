@@ -1,7 +1,7 @@
 {
   "name": "moco-browser-extensions",
   "description": "Browser plugin for MOCO",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "main": "bundle.js",
   "scripts": {
     "start": "node_modules/.bin/webpack --watch --env.NODE_ENV development",
