@@ -2,10 +2,14 @@ import axios from "axios"
 import { formatDate } from "utils"
 
 const baseURL = subdomain => {
-  if (process.env.NODE_ENV === 'production') {
-    return `https://${encodeURIComponent(subdomain)}.mocoapp.com/api/browser_extensions`
+  if (process.env.NODE_ENV === "production") {
+    return `https://${encodeURIComponent(
+      subdomain
+    )}.mocoapp.com/api/browser_extensions`
   } else {
-    return `http://${encodeURIComponent(subdomain)}.mocoapp.localhost:3001/api/browser_extensions`
+    return `http://${encodeURIComponent(
+      subdomain
+    )}.mocoapp.localhost:3001/api/browser_extensions`
   }
 }
 
@@ -27,19 +31,19 @@ export default class Client {
     })
   }
 
-  login = () => this.#client.post("session", { api_key: this.#apiKey })
+  login = () => this.#client.post("session", { api_key: this.#apiKey });
 
   projects = () => this.#client.get("projects");
 
   activities = (fromDate, toDate) =>
     this.#client.get("activities", {
       params: { date: `${formatDate(fromDate)}:${formatDate(toDate)}` }
-    })
+    });
 
   bookedHours = service =>
     this.#client.get("activities/tags", {
       params: { selection: [service.id], remote_service: service.name }
-    })
+    });
 
   createActivity = activity => this.#client.post("activities", { activity });
 }
