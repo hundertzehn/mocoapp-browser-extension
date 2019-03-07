@@ -91,6 +91,12 @@ chrome.runtime.onMessage.addListener(action => {
       return chrome.tabs.create({ url })
     }
 
+    case "closeForm": {
+      return queryTabs({ active: true, currentWindow: true }).then(tabs =>
+        sendMessageToTab(tabs[0], action)
+      )
+    }
+
     case "activityCreated": {
       return queryTabs({ active: true, currentWindow: true }).then(tabs =>
         sendMessageToTab(tabs[0], action)
