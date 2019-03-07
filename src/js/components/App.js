@@ -183,6 +183,7 @@ class App extends Component {
 
   handleKeyDown = event => {
     if (event.keyCode === 27) {
+      event.stopPropagation()
       this.handleCancel()
     }
   };
