@@ -100,7 +100,7 @@ class Bubble extends Component {
   };
 
   fetchBookedHours = () => {
-    const { service, settings } = this.props
+    const { service } = this.props
     this.isLoading = true
     this.errorType = null
 
