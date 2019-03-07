@@ -15,6 +15,7 @@
     "page": "options.html"
   },
   "permissions": [
+    "https://*.mocoapp.com/*",
     "storage",
     "tabs"
   ],
