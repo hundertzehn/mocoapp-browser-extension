@@ -10,17 +10,17 @@ import {
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
   ERROR_UNKNOWN,
-  findLastProject,
-  findLastTask,
+  findProject,
+  findTask,
   groupedProjectOptions,
-  formatDate,
-  secondsFromHours
+  formatDate
 } from "utils"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
 import { startOfWeek, endOfWeek } from "date-fns"
 import Header from "./shared/Header"
 import { head } from "lodash"
+import TimeInputParser from "utils/TimeInputParser"
 import { sendMessageToRuntime } from "utils/browser"
 
 @observer
@@ -61,11 +61,11 @@ class App extends Component {
     const { service } = this.props
 
     const project =
-      findLastProject(service.projectId || this.lastProjectId)(this.projects) ||
+      findProject(service.projectId || this.lastProjectId)(this.projects) ||
       head(this.projects)
 
     const task =
-      findLastTask(service.taskId || this.lastTaskId)(project) ||
+      findTask(service.taskId || this.lastTaskId)(project) ||
       head(project?.tasks)
 
     const defaults = {
@@ -77,7 +77,9 @@ class App extends Component {
       task_id: task?.value,
       billable: task?.billable,
       hours: "",
-      seconds: secondsFromHours(this.changeset.hours),
+      seconds:
+        this.changeset.hours &&
+        new TimeInputParser(this.changeset.hours).parseSeconds(),
       description: service.description
     }
 
@@ -97,6 +99,9 @@ class App extends Component {
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
     Promise.all([this.fetchProjects(), this.fetchActivities()])
+      .then(() => {
+        console.log(toJS(this.activities))
+      })
       .catch(error => {
         if (error.response?.status === 401) {
           this.errorType = ERROR_UNAUTHORIZED
@@ -164,7 +169,8 @@ class App extends Component {
     this.changeset[name] = value
 
     if (name === "assignment_id") {
-      this.changeset.task_id = null
+      const project = findProject(value)(this.projects)
+      this.changeset.task_id = head(project?.tasks).value || null
     }
   };
 

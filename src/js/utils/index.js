@@ -10,31 +10,31 @@ import {
   find,
   curry,
   pick
-} from 'lodash/fp'
-import { format } from 'date-fns'
+} from "lodash/fp"
+import { format } from "date-fns"
 
 const SECONDS_PER_HOUR = 3600
 const SECONDS_PER_MINUTE = 60
 
 const nilToArray = input => input || []
 
-export const ERROR_UNAUTHORIZED = 'unauthorized'
-export const ERROR_UPGRADE_REQUIRED = 'upgrade-required'
-export const ERROR_UNKNOWN = 'unknown'
+export const ERROR_UNAUTHORIZED = "unauthorized"
+export const ERROR_UPGRADE_REQUIRED = "upgrade-required"
+export const ERROR_UNKNOWN = "unknown"
 
-export const findLastProject = id =>
+export const findProject = id =>
   compose(
-    find(pathEq('value', Number(id))),
-    flatMap(get('options'))
+    find(pathEq("value", Number(id))),
+    flatMap(get("options"))
   )
 
-export const findLastTask = id =>
+export const findTask = id =>
   compose(
-    find(pathEq('value', Number(id))),
-    get('tasks')
+    find(pathEq("value", Number(id))),
+    get("tasks")
   )
 
-function taskOptions (tasks) {
+function taskOptions(tasks) {
   return tasks.map(({ id, name, billable }) => ({
     label: billable ? name : `(${name})`,
     value: id,
@@ -42,7 +42,7 @@ function taskOptions (tasks) {
   }))
 }
 
-export function projectOptions (projects) {
+export function projectOptions(projects) {
   return projects.map(project => ({
     value: project.id,
     label: project.intern ? `(${project.name})` : project.name,
@@ -57,19 +57,21 @@ export const groupedProjectOptions = compose(
     options: projectOptions(projects)
   })),
   toPairs,
-  groupBy('customer_name'),
+  groupBy("customer_name"),
   nilToArray
 )
 
-export const serializeProps = attrs => compose(
-  mapValues(JSON.stringify),
-  pick(attrs)
-)
+export const serializeProps = attrs =>
+  compose(
+    mapValues(JSON.stringify),
+    pick(attrs)
+  )
 
-export const parseProps = attrs => compose(
-  mapValues(JSON.parse),
-  pick(attrs)
-)
+export const parseProps = attrs =>
+  compose(
+    mapValues(JSON.parse),
+    pick(attrs)
+  )
 
 export const trace = curry((tag, value) => {
   // eslint-disable-next-line no-console
@@ -77,23 +79,7 @@ export const trace = curry((tag, value) => {
   return value
 })
 
-export const formatDate = date =>
-  format(date, 'YYYY-MM-DD')
+export const formatDate = date => format(date, "YYYY-MM-DD")
 
 export const extensionSettingsUrl = () =>
   `chrome://extensions/?id=${chrome.runtime.id}`
-
-export const secondsFromHours = hours => {
-  if (!hours) {
-    return 0
-  }
-
-  let number = Number(hours)
-
-  if (!isNaN(number)) {
-    return number * SECONDS_PER_HOUR
-  }
-
-  const parts = hours.split(':', 2).map(part => parseInt(part, 10) || 0)
-  return parts[0] * SECONDS_PER_HOUR + (parts[1] || 0) * SECONDS_PER_MINUTE
-}
