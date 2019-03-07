@@ -1,5 +1,6 @@
 const path = require("path")
 const webpack = require("webpack")
+const CleanWebpackPlugin = require("clean-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ZipPlugin = require("zip-webpack-plugin")
@@ -14,6 +15,7 @@ module.exports = env => {
       options: "./src/js/options.js"
     },
     output: {
+      path: path.join(__dirname, `build/${env.browser}`),
       filename: "[name].js"
     },
     module: {
@@ -52,6 +54,7 @@ module.exports = env => {
       ]
     },
     plugins: [
+      new CleanWebpackPlugin([`build/${env.browser}`]),
       new webpack.DefinePlugin({
         "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV)
       }),
@@ -84,16 +87,16 @@ module.exports = env => {
     config.devtool = undefined
 
     config.plugins.push(
-      new ZipPlugin({
-        filename: `moco-browser-extension-v${
-          process.env.npm_package_version
-        }.zip`,
-        exclude: [/\.map$/]
-      }),
       new BugsnagBuildReporterPlugin({
         apiKey: "da6caac4af70af3e4683454b40fe5ef5",
         appVersion: process.env.npm_package_version,
         releaseStage: "production"
+      }),
+      new ZipPlugin({
+        filename: `moco-bx-${env.browser}-v${
+          process.env.npm_package_version
+        }.zip`,
+        exclude: [/\.map$/]
       })
     )
   }
