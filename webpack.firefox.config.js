@@ -1,5 +1,3 @@
-const path = require("path")
-const CleanWebpackPlugin = require("clean-webpack-plugin")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
 const { compact } = require("lodash/fp")
 
@@ -8,13 +6,7 @@ const baseConfig = require("./webpack.base.config")
 module.exports = env => {
   const config = baseConfig(env)
 
-  config.output = {
-    ...config.output,
-    path: path.join(__dirname, "build/firefox")
-  }
-
-  config.plugins.push(
-    new CleanWebpackPlugin(["build/firefox"]),
+  config.plugins.unshift(
     new CopyWebpackPlugin([
       {
         from: "src/manifest.json",
