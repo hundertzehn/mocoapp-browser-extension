@@ -1,99 +1,99 @@
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
-import { updateBrowserAction, updateBrowserActionForTab } from 'utils/browserAction'
-import { forEach } from 'lodash/fp'
+import {
+  isChrome,
+  queryTabs,
+  updateBrowserActionForTab,
+  sendMessageToTab,
+  getStorage
+} from "utils/browser"
+import { forEach } from "lodash/fp"
 
 const { version } = chrome.runtime.getManifest()
 const matcher = createMatcher(remoteServices)
 
 function tabHandler(tab, settings) {
-  chrome.storage.sync.get(
-    ["subdomain", "apiKey"],
-    settings => {
-      settings = { ...settings, version }
-      const service = matcher(tab.url)
-      if (service?.match?.id) {
-        // the timeout is a hack to ensure the frontend is fully rendered
-        setTimeout(
-          () => {
-            chrome.tabs.sendMessage(
-              tab.id,
-              { type: "mountBubble", payload: settings },
-              service => updateBrowserActionForTab(chrome)(tab.id, settings, service)
-            )
-          },
-          800
-        )
-      } else {
-        updateBrowserActionForTab(chrome)(tab.id, settings)
-        chrome.tabs.sendMessage(tab.id, { type: "unmountBubble" })
-      }
-  })
+  const service = matcher(tab.url)
+  if (service?.match?.id) {
+    // the timeout is a hack to ensure the frontend is fully rendered
+    setTimeout(
+      () =>
+        sendMessageToTab(tab, { type: "mountBubble", payload: settings }).then(
+          service => {
+            updateBrowserActionForTab(tab, settings, service)
+          }
+        ),
+      800
+    )
+  } else {
+    updateBrowserActionForTab(tab, settings)
+    sendMessageToTab(tab, { type: "unmountBubble" })
+  }
 }
 
-function tabsHandler() {
-  chrome.storage.sync.get(
-    ["subdomain", "apiKey"],
-    settings => {
-      settings = { ...settings, version }
-      chrome.tabs.getAllInWindow(
-        null,
-        forEach(tab => tabHandler(tab, settings))
-      )
-    }
+function tabsHandler(settings) {
+  queryTabs({ currentWindow: true }).then(
+    forEach(tab => tabHandler(tab, settings))
   )
 }
 
 function settingsChangedHandler(settings) {
   settings = { ...settings, version }
-  tabsHandler()
+  tabsHandler(settings)
 }
 
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.get(["subdomain", "apiKey"], settings => settingsChangedHandler(settings))
+  getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
   chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {
-      chrome.storage.sync.get(["subdomain", "apiKey"], settingsChangedHandler)
+      getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
     }
   })
 })
 
 chrome.runtime.onStartup.addListener(() => {
-  chrome.storage.sync.get(["subdomain", "apiKey"], settings => settingsChangedHandler(settings))
+  getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
   chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {
-      chrome.storage.sync.get(["subdomain", "apiKey"], settingsChangedHandler)
+      getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
     }
   })
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (changeInfo.status === "complete") {
-    chrome.storage.sync.get(
-      ["subdomain", "apiKey"],
-      settings => {
-        settings = { ...settings, version }
-        tabHandler(tab, settings)
-      }
-    )
+    getStorage(["subdomain", "apiKey"]).then(settings => {
+      settings = { ...settings, version }
+      tabHandler(tab, settings)
+    })
   }
 })
 
 chrome.runtime.onMessage.addListener(action => {
   switch (action.type) {
     case "openOptions": {
-      return chrome.tabs.create({
-        url: `chrome://extensions/?options=${chrome.runtime.id}`
-      })
+      let url
+      if (isChrome()) {
+        url = `chrome://extensions/?options=${chrome.runtime.id}`
+      } else {
+        url = browser.runtime.getURL("options.html")
+      }
+      return chrome.tabs.create({ url })
     }
 
     case "openExtensions": {
-      return chrome.tabs.create({ url: "chrome://extensions" })
+      let url
+      if (isChrome()) {
+        url = "chrome://extensions"
+      } else {
+        url = "about:addons"
+      }
+      return chrome.tabs.create({ url })
     }
 
     case "activityCreated": {
-      return chrome.tabs.query({ active: true, currentWindow: true }, tabs =>
-        chrome.tabs.sendMessage(tabs[0].id, action)
+      return queryTabs({ active: true, currentWindow: true }).then(tabs =>
+        sendMessageToTab(tabs[0], action)
       )
     }
   }

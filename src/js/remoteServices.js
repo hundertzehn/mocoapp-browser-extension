@@ -1,5 +1,5 @@
 export default {
-  "asana": {
+  asana: {
     name: "asana",
     urlPatterns: [
       "https\\://app.asana.com/0/:domainUserId/:id",
@@ -24,7 +24,7 @@ export default {
         ?.match(/^\[(\d+)\]/)
       return match && match[1]
     },
-    position: { right: "2rem" },
+    position: { right: "2rem" }
   },
 
   "github-issue": {
@@ -34,10 +34,10 @@ export default {
       [service.key, org, repo, id].join("."),
     description: (document, service, { org, repo, id }) =>
       document.querySelector(".js-issue-title")?.textContent?.trim(),
-    position: { right: "2rem" },
+    position: { right: "2rem" }
   },
 
-  "jira": {
+  jira: {
     name: "jira",
     urlPatterns: [
       "https\\://:org.atlassian.net/secure/RapidBoard.jspa",
@@ -50,34 +50,40 @@ export default {
     },
     description: (document, service, { id }) => {
       const title =
-        (document.querySelector("#jira-frontend") || document.querySelector("div[role=dialog]"))
+        (
+          document.querySelector("#jira-frontend") ||
+          document.querySelector("div[role=dialog]")
+        )
           ?.querySelector("h1")
-          ?.textContent
-          ?.trim()
-        || document.querySelector(".ghx-selected .ghx-summary")?.textContent()?.trim()
+          ?.textContent?.trim() ||
+        document
+          .querySelector(".ghx-selected .ghx-summary")
+          ?.textContent?.trim()
       return `[${id}] ${title ? title : ""}`
     }
   },
 
-  "trello": {
+  trello: {
     name: "trello",
     urlPatterns: ["https\\://trello.com/c/:id/:title"],
     description: (document, service, { title }) =>
-      document.querySelector(".js-title-helper")?.textContent?.trim(),
-    position: { right: "2rem" },
+      document.querySelector(".js-title-helper")?.textContent?.trim() || title,
+    position: { right: "2rem" }
   },
 
-  "youtrack": {
+  youtrack: {
     name: "youtrack",
     urlPatterns: ["https\\://:org.myjetbrains.com/youtrack/issue/:id"],
     description: document =>
       document.querySelector("yt-issue-body h1")?.textContent?.trim()
   },
 
-  "wunderlist": {
+  wunderlist: {
     name: "wunderlist",
     urlPatterns: ["https\\://www.wunderlist.com/webapp#/tasks/:id"],
     description: document =>
-      document.querySelector(".taskItem.selected .taskItem-titleWrapper-title")?.textContent?.trim()
+      document
+        .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
+        ?.textContent?.trim()
   }
 }

@@ -12,17 +12,13 @@
     "128": "src/images/logo.png"
   },
   "options_ui": {
-    "page": "options.html",
-    "chrome_style": true
+    "page": "options.html"
   },
   "permissions": [
     "https://*.mocoapp.com/*",
-    "background",
     "storage",
-    "tabs",
-    "https://*/"
+    "tabs"
   ],
-  "optional_permissions": ["*://*/"],
   "background": {
     "scripts": ["background.js"]
   },
