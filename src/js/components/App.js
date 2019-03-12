@@ -197,22 +197,24 @@ class App extends Component {
         {props => (
           <animated.div className="moco-bx-app-container" style={props}>
             <Header />
-            <Calendar
-              fromDate={this.fromDate()}
-              toDate={this.toDate()}
-              activities={this.activities}
-              selectedDate={new Date(this.changesetWithDefaults.date)}
-              onChange={this.handleSelectDate}
-            />
             <Observer>
               {() => (
-                <Form
-                  changeset={this.changesetWithDefaults}
-                  projects={this.projects}
-                  errors={this.formErrors}
-                  onChange={this.handleChange}
-                  onSubmit={this.handleSubmit}
-                />
+                <>
+                  <Calendar
+                    fromDate={this.fromDate()}
+                    toDate={this.toDate()}
+                    activities={this.activities}
+                    selectedDate={new Date(this.changesetWithDefaults.date)}
+                    onChange={this.handleSelectDate}
+                  />
+                  <Form
+                    changeset={this.changesetWithDefaults}
+                    projects={this.projects}
+                    errors={this.formErrors}
+                    onChange={this.handleChange}
+                    onSubmit={this.handleSubmit}
+                  />
+                </>
               )}
             </Observer>
           </animated.div>
