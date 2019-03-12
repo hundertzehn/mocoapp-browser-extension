@@ -165,7 +165,7 @@ class Bubble extends Component {
               <Observer>
                 {() =>
                   this.bookedHours > 0 ? (
-                    <span className="moco-bx-badge">
+                    <span className="moco-bx-booked-hours">
                       {this.bookedHours.toFixed(1)}
                     </span>
                   ) : null
