@@ -8,7 +8,8 @@ import ApiClient from "api/Client"
 class Options extends Component {
   @observable subdomain = "";
   @observable apiKey = "";
-  @observable hasError = false;
+  @observable errorMessage = null;
+  @observable isSuccess = false;
 
   componentDidMount() {
     getStorage(["subdomain", "apiKey"]).then(({ subdomain, apiKey }) => {
@@ -22,8 +23,9 @@ class Options extends Component {
   };
 
   handleSubmit = _event => {
+    this.isSuccess = false
+    this.errorMessage = null
     setStorage({ subdomain: this.subdomain, apiKey: this.apiKey }).then(() => {
-      this.hasError = false
       const { version } = chrome.runtime.getManifest()
       const apiClient = new ApiClient({
         subdomain: this.subdomain,
@@ -32,8 +34,15 @@ class Options extends Component {
       })
       apiClient
         .login()
-        .then(() => window.close())
-        .catch(() => (this.hasError = true))
+        .then(() => {
+          this.isSuccess = true
+          window.close()
+        })
+        .catch(error => {
+          this.errorMessage =
+            error.response?.data?.message ||
+            "Anmeldung fehlgeschlagen, Internetadresse überprüfen"
+        })
     })
   };
 
@@ -47,10 +56,11 @@ class Options extends Component {
     return (
       <div className="moco-bx-options">
         <h2>Einstellungen</h2>
-        {this.hasError && (
-          <div className="text-danger">
-            Fehler: eine Anmeldung ist mit diesen Einstellungen fehlgeschlagen
-          </div>
+        {this.errorMessage && (
+          <div className="text-danger">{this.errorMessage}</div>
+        )}
+        {this.isSuccess && (
+          <div className="text-success">Anmeldung erfolgreich</div>
         )}
         <div className="form-group">
           <label>Internetadresse</label>
@@ -75,8 +85,7 @@ class Options extends Component {
             onChange={this.onChange}
           />
           <div className="text-muted" style={{ marginTop: "0.5rem" }}>
-            Deinen API-Schlüssel findest du in der MOCO-App unter
-            Profil/Integrationen.
+            Den API-Schlüssel finden Sie im Profil unter Integrationen
           </div>
         </div>
         <button className="moco-bx-btn" onClick={this.handleSubmit}>
