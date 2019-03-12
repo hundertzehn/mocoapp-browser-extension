@@ -9,9 +9,13 @@ import { ErrorBoundary } from "utils/notifier"
 import { isEmpty } from "lodash"
 import "../css/popup.scss"
 
-const parsedProps = parseProps(["service", "settings", "errorType"])(
-  queryString.parse(location.search)
-)
+const parsedProps = parseProps([
+  "service",
+  "settings",
+  "lastProjectId",
+  "lastTaskId",
+  "errorType"
+])(queryString.parse(location.search))
 
 ReactDOM.render(
   <ErrorBoundary>

@@ -31,7 +31,12 @@ export default class Client {
     })
   }
 
-  login = () => this.#client.post("session", { api_key: this.#apiKey });
+  login = service =>
+    this.#client.post("session", {
+      api_key: this.#apiKey,
+      remote_service: service?.name,
+      remote_id: service?.id
+    });
 
   projects = () => this.#client.get("projects");
 

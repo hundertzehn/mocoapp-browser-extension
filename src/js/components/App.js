@@ -38,7 +38,10 @@ class App extends Component {
       subdomain: PropTypes.string,
       apiKey: PropTypes.string,
       version: PropTypes.string
-    })
+    }),
+    lastProjectId: PropTypes.number,
+    lastTaskId: PropTypes.number,
+    errorType: PropTypes.string
   };
 
   static defaultProps = {
@@ -53,17 +56,17 @@ class App extends Component {
   @observable changeset = {};
   @observable formErrors = {};
   @observable isLoading = true;
-  @observable errorType = null;
 
   @computed get changesetWithDefaults() {
-    const { service } = this.props
+    const { service, lastProjectId, lastTaskId } = this.props
 
     const project =
-      findProject(service.projectId || this.lastProjectId)(this.projects) ||
-      head(this.projects)
+      findProject(service.projectId || lastProjectId || this.lastProjectId)(
+        this.projects
+      ) || head(this.projects)
 
     const task =
-      findTask(service.taskId || this.lastTaskId)(project) ||
+      findTask(service.taskId || lastTaskId || this.lastTaskId)(project) ||
       head(project?.tasks)
 
     const defaults = {
@@ -97,15 +100,7 @@ class App extends Component {
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
     Promise.all([this.fetchProjects(), this.fetchActivities()])
-      .catch(error => {
-        if (error.response?.status === 401) {
-          this.errorType = ERROR_UNAUTHORIZED
-        } else if (error.response?.status === 426) {
-          this.errorType = ERROR_UPGRADE_REQUIRED
-        } else {
-          this.errorType = ERROR_UNKNOWN
-        }
-      })
+      .catch(console.error)
       .finally(() => (this.isLoading = false))
   }
 
@@ -183,11 +178,11 @@ class App extends Component {
       return <Spinner />
     }
 
-    if (this.errorType === ERROR_UNAUTHORIZED) {
+    if (this.props.errorType === ERROR_UNAUTHORIZED) {
       return <InvalidConfigurationError />
     }
 
-    if (this.errorType === ERROR_UPGRADE_REQUIRED) {
+    if (this.props.errorType === ERROR_UPGRADE_REQUIRED) {
       return <UpgradeRequiredError />
     }
 
