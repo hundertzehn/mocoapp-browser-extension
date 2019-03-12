@@ -141,7 +141,7 @@ class Bubble extends Component {
       return <Spinner />
     }
 
-    const { service, settings } = this.props
+    const { service } = this.props
 
     return (
       <>
@@ -165,7 +165,9 @@ class Bubble extends Component {
               <Observer>
                 {() =>
                   this.bookedHours > 0 ? (
-                    <span className="moco-bx-badge">{this.bookedHours}</span>
+                    <span className="moco-bx-badge">
+                      {this.bookedHours.toFixed(1)}
+                    </span>
                   ) : null
                 }
               </Observer>

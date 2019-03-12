@@ -1,28 +1,49 @@
-import React, { forwardRef, useMemo, useCallback, useEffect } from "react"
+import React, {
+  forwardRef,
+  useMemo,
+  useCallback,
+  useEffect,
+  useState
+} from "react"
 import PropTypes from "prop-types"
 import queryString from "query-string"
+import ApiClient from "api/Client"
 import {
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
+  ERROR_UNKNOWN,
   serializeProps
 } from "utils"
 
 const Popup = forwardRef((props, ref) => {
-  const serializedProps = serializeProps(["service", "settings", "errorType"])(
-    props
-  )
+  const [lastProjectId, setLastProjectId] = useState(null)
+  const [lastTaskId, setLastTaskId] = useState(null)
+  const [errorType, setErrorType] = useState(null)
+
+  const serializedProps = serializeProps([
+    "service",
+    "settings",
+    "lastProjectId",
+    "lastTaskId",
+    "errorType"
+  ])({
+    ...props,
+    lastProjectId,
+    lastTaskId,
+    errorType
+  })
 
   const styles = useMemo(
     () => ({
       width: "516px",
       height:
-        props.errorType === ERROR_UNAUTHORIZED
+        errorType === ERROR_UNAUTHORIZED
           ? "888px"
-          : props.errorType === ERROR_UPGRADE_REQUIRED
+          : errorType === ERROR_UPGRADE_REQUIRED
           ? "275"
           : "558px"
     }),
-    [props.errorType]
+    [errorType]
   )
 
   const handleKeyDown = event => {
@@ -30,6 +51,25 @@ const Popup = forwardRef((props, ref) => {
       props.onRequestClose()
     }
   }
+
+  useEffect(() => {
+    const apiClient = new ApiClient(props.settings)
+    apiClient
+      .login(props.service)
+      .then(({ data }) => {
+        setLastProjectId(data.last_project_id)
+        setLastTaskId(data.last_task_id)
+      })
+      .catch(error => {
+        if (error.response?.status === 401) {
+          setErrorType(ERROR_UNAUTHORIZED)
+        } else if (error.response?.status === 426) {
+          setErrorType(ERROR_UPGRADE_REQUIRED)
+        } else {
+          setErrorType(ERROR_UNKNOWN)
+        }
+      })
+  })
 
   useEffect(() => {
     window.addEventListener("keydown", handleKeyDown)
