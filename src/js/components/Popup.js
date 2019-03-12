@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback, useEffect } from "react"
+import React, { forwardRef, useMemo, useCallback, useEffect } from "react"
 import PropTypes from "prop-types"
 import queryString from "query-string"
 import {
@@ -7,7 +7,7 @@ import {
   serializeProps
 } from "utils"
 
-const Popup = props => {
+const Popup = forwardRef((props, ref) => {
   const serializedProps = serializeProps(["service", "settings", "errorType"])(
     props
   )
@@ -48,7 +48,7 @@ const Popup = props => {
   )
 
   return (
-    <div className="moco-bx-popup" onClick={handleRequestClose}>
+    <div ref={ref} className="moco-bx-popup" onClick={handleRequestClose}>
       <div className="moco-bx-popup-content" style={styles}>
         <iframe
           src={chrome.extension.getURL(
@@ -62,11 +62,11 @@ const Popup = props => {
       </div>
     </div>
   )
-}
+})
 
 Popup.propTypes = {
   settings: PropTypes.object.isRequired,
-  service: PropTypes.object.isRequired,
+  service: PropTypes.object,
   errorType: PropTypes.string,
   onRequestClose: PropTypes.func.isRequired
 }

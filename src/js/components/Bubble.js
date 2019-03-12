@@ -12,6 +12,7 @@ import {
 import { observable, reaction } from "mobx"
 import { Observer, observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
+import { isNull } from "lodash/fp"
 
 @observer
 class Bubble extends Component {
@@ -23,7 +24,7 @@ class Bubble extends Component {
       description: PropTypes.string,
       projectId: PropTypes.string,
       taskId: PropTypes.string
-    }).isRequired,
+    }),
     settings: PropTypes.shape({
       subdomain: PropTypes.string,
       apiKey: PropTypes.string,
@@ -55,7 +56,7 @@ class Bubble extends Component {
       reaction(
         () => this.props.settings,
         settings => {
-          this.close()
+          this.closeModal()
           this.#apiClient = new ApiClient(settings)
           this.fetchBookedHours()
         },
@@ -79,22 +80,25 @@ class Bubble extends Component {
     window.removeEventListener("keydown", this.handleKeyDown)
   }
 
-  open = _event => {
-    this.isOpen = true
+  toggleModal = _event => {
+    this.isOpen = !this.isOpen
   };
 
-  close = _event => {
-    this.isOpen = false
-  };
+  closeModal = () => (this.isOpen = false);
 
   receiveMessage = ({ type, payload }) => {
     switch (type) {
       case "activityCreated": {
         this.bookedHours += payload.hours
-        return this.close()
+        return this.closeModal()
       }
-      case "closeForm": {
-        return this.close()
+
+      case "toggleModal": {
+        return this.toggleModal()
+      }
+
+      case "closeModal": {
+        return this.closeModal()
       }
     }
   };
@@ -152,7 +156,7 @@ class Bubble extends Component {
             <animated.div
               className="moco-bx-bubble"
               style={{ ...service.position, ...props }}
-              onClick={this.open}
+              onClick={this.toggleModal}
             >
               <img
                 className="moco-bx-logo"
@@ -168,17 +172,25 @@ class Bubble extends Component {
             </animated.div>
           )}
         </Spring>
-        {this.isOpen && (
-          <Popup
-            service={service}
-            settings={settings}
-            errorType={this.errorType}
-            onRequestClose={this.close}
-          />
-        )}
+        {this.renderPopup()}
       </>
     )
   }
+
+  renderPopup = () => {
+    const { service, settings } = this.props
+
+    if (this.isOpen) {
+      return (
+        <Popup
+          service={service}
+          settings={settings}
+          errorType={this.errorType}
+          onRequestClose={this.closeModal}
+        />
+      )
+    }
+  };
 }
 
 export default Bubble

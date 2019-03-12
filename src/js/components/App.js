@@ -38,14 +38,12 @@ class App extends Component {
       subdomain: PropTypes.string,
       apiKey: PropTypes.string,
       version: PropTypes.string
-    }),
-    isBrowserAction: PropTypes.bool
+    })
   };
 
   static defaultProps = {
     service: {},
-    settings: {},
-    isBrowserAction: true
+    settings: {}
   };
 
   @observable projects = [];
@@ -99,9 +97,6 @@ class App extends Component {
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
     Promise.all([this.fetchProjects(), this.fetchActivities()])
-      .then(() => {
-        console.log(toJS(this.activities))
-      })
       .catch(error => {
         if (error.response?.status === 401) {
           this.errorType = ERROR_UNAUTHORIZED
@@ -120,12 +115,6 @@ class App extends Component {
 
   fromDate = () => startOfWeek(new Date(), { weekStartsOn: 1 });
   toDate = () => endOfWeek(new Date(), { weekStartsOn: 1 });
-
-  closePopup = () => {
-    if (this.props.isBrowserAction) {
-      window.close()
-    }
-  };
 
   fetchProjects = () =>
     this.#apiClient.projects().then(({ data }) => {
@@ -147,11 +136,10 @@ class App extends Component {
       .then(({ data }) => {
         this.changeset = {}
         this.formErrors = {}
-        this.sendMessage({
+        sendMessageToRuntime({
           type: "activityCreated",
           payload: { hours: data.hours }
         })
-        this.closePopup()
       })
       .catch(error => {
         if (error.response?.status === 422) {
@@ -183,33 +171,20 @@ class App extends Component {
     this.createActivity()
   };
 
-  handleCancel = () => {
-    this.sendMessage({ type: "closeForm" })
-  };
-
   handleKeyDown = event => {
     if (event.keyCode === 27) {
       event.stopPropagation()
-      this.handleCancel()
+      sendMessageToRuntime({ type: "closeModal" })
     }
-  };
-
-  sendMessage = action => {
-    sendMessageToRuntime(action)
   };
 
   render() {
-    const { isBrowserAction } = this.props
-
     if (this.isLoading) {
-      const spinnerStyle = isBrowserAction
-        ? { marginTop: "40px", marginBottom: "60px" }
-        : {}
-      return <Spinner style={spinnerStyle} />
+      return <Spinner />
     }
 
     if (this.errorType === ERROR_UNAUTHORIZED) {
-      return <InvalidConfigurationError isBrowserAction={isBrowserAction} />
+      return <InvalidConfigurationError />
     }
 
     if (this.errorType === ERROR_UPGRADE_REQUIRED) {
