@@ -17,16 +17,10 @@ function tabHandler(tab, settings) {
   if (service?.match?.id) {
     // the timeout is a hack to ensure the frontend is fully rendered
     setTimeout(
-      () =>
-        sendMessageToTab(tab, { type: "mountBubble", payload: settings }).then(
-          service => {
-            updateBrowserActionForTab(tab, settings, service)
-          }
-        ),
+      () => sendMessageToTab(tab, { type: "mountBubble", payload: settings }),
       800
     )
   } else {
-    updateBrowserActionForTab(tab, settings)
     sendMessageToTab(tab, { type: "unmountBubble" })
   }
 }
@@ -69,6 +63,13 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 })
 
+chrome.browserAction.onClicked.addListener(tab => {
+  getStorage(["subdomain", "apiKey"]).then(settings => {
+    settings = { ...settings, version }
+    sendMessageToTab(tab, { type: "toggleModal", payload: settings })
+  })
+})
+
 chrome.runtime.onMessage.addListener(action => {
   switch (action.type) {
     case "openOptions": {
@@ -91,7 +92,7 @@ chrome.runtime.onMessage.addListener(action => {
       return chrome.tabs.create({ url })
     }
 
-    case "closeForm": {
+    case "closeModal": {
       return queryTabs({ active: true, currentWindow: true }).then(tabs =>
         sendMessageToTab(tabs[0], action)
       )

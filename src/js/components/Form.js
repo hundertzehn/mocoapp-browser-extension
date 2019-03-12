@@ -13,7 +13,7 @@ class Form extends Component {
     errors: PropTypes.object,
     projects: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
   };
 
   static defaultProps = {
@@ -30,10 +30,10 @@ class Form extends Component {
   handleTextareaKeyDown = event => {
     const { onSubmit } = this.props
 
-    if (event.key === 'Enter') {
+    if (event.key === "Enter") {
       this.isValid() && onSubmit(event)
     }
-  }
+  };
 
   render() {
     const { projects, changeset, errors, onChange, onSubmit } = this.props
@@ -42,7 +42,9 @@ class Form extends Component {
     return (
       <form onSubmit={onSubmit}>
         <div
-          className={cn("form-group", { "has-error": errors.assignment_id || errors.task_id})}
+          className={cn("form-group", {
+            "has-error": errors.assignment_id || errors.task_id
+          })}
         >
           <Select
             className="moco-bx-select"
@@ -99,7 +101,9 @@ class Form extends Component {
           ) : null}
         </div>
 
-        <button className='moco-bx-btn' disabled={!this.isValid()}>OK</button>
+        <button className="moco-bx-btn" disabled={!this.isValid()}>
+          OK
+        </button>
       </form>
     )
   }
