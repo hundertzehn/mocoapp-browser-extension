@@ -72,6 +72,7 @@ input[name="hours"] {
 }
 
 textarea[name="description"] {
+  font-family: inherit;
   box-sizing: border-box;
   width: 100%;
   resize: none;

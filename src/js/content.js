@@ -1,12 +1,13 @@
 import React, { createRef } from "react"
 import ReactDOM from "react-dom"
+import { Transition, animated, config } from "react-spring/renderprops"
 import Bubble from "./components/Bubble"
 import Popup from "components/Popup"
 import { createMatcher, createEnhancer } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
 import { pipe } from "lodash/fp"
 import { ErrorBoundary } from "utils/notifier"
-import { onRuntimeMessage, sendMessageToRuntime } from "utils/browser"
+import { onRuntimeMessage } from "utils/browser"
 import "../css/content.scss"
 
 const bubbleRef = createRef()
@@ -25,15 +26,15 @@ onRuntimeMessage(({ type, payload }) => {
       const settings = payload
       const service = findService()
       if (!service?.id) {
-        unmountAtRoot()
+        updateBubble()
       } else {
-        mountBubble({ service, settings })
+        updateBubble(service, settings)
       }
       return
     }
 
     case "unmountBubble": {
-      return unmountAtRoot()
+      return updateBubble()
     }
 
     case "toggleModal": {
@@ -41,7 +42,7 @@ onRuntimeMessage(({ type, payload }) => {
         return
       }
       if (popupRef.current) {
-        unmountAtRoot()
+        unmountPopup()
       } else {
         mountPopup(payload)
       }
@@ -51,53 +52,70 @@ onRuntimeMessage(({ type, payload }) => {
     case "closeModal":
     case "activityCreated": {
       if (!bubbleRef.current) {
-        unmountAtRoot()
+        unmountPopup()
       }
       return
     }
   }
 })
 
+const updateBubble = (service, settings) => {
+  if (!document.getElementById("moco-bx-root")) {
+    const domRoot = document.createElement("div")
+    domRoot.setAttribute("id", "moco-bx-root")
+    document.body.appendChild(domRoot)
+  }
+
+  ReactDOM.render(
+    <ErrorBoundary>
+      <Transition
+        native
+        items={service}
+        from={{ transform: "scale(0.1)" }}
+        enter={{ transform: "scale(1)" }}
+        leave={{ transform: "scale(0.1)" }}
+        config={config.wobbly}
+      >
+        {service =>
+          service &&
+          // eslint-disable-next-line react/display-name
+          (props => (
+            <animated.div
+              className="moco-bx-bubble"
+              style={{ ...props, ...service.position }}
+            >
+              <Bubble
+                key={service.url}
+                ref={bubbleRef}
+                service={service}
+                settings={settings}
+              />
+            </animated.div>
+          ))
+        }
+      </Transition>
+    </ErrorBoundary>,
+    document.getElementById("moco-bx-root")
+  )
+}
+
 const mountPopup = settings => {
-  if (!document.getElementById("moco-bx-root")) {
+  if (!document.getElementById("moco-bx-popup-root")) {
     const domRoot = document.createElement("div")
-    domRoot.setAttribute("id", "moco-bx-root")
-    document.body.appendChild(domRoot)
-  }
-  ReactDOM.render(
-    <ErrorBoundary>
-      <Popup
-        ref={popupRef}
-        settings={settings}
-        onRequestClose={unmountAtRoot}
-      />
-    </ErrorBoundary>,
-    document.getElementById("moco-bx-root")
-  )
-}
-
-const mountBubble = ({ service, settings }) => {
-  if (!document.getElementById("moco-bx-root")) {
-    const domRoot = document.createElement("div")
-    domRoot.setAttribute("id", "moco-bx-root")
+    domRoot.setAttribute("id", "moco-bx-popup-root")
     document.body.appendChild(domRoot)
   }
 
   ReactDOM.render(
     <ErrorBoundary>
-      <Bubble
-        key={service.url}
-        ref={bubbleRef}
-        service={service}
-        settings={settings}
-      />
+      <Popup ref={popupRef} settings={settings} onRequestClose={unmountPopup} />
     </ErrorBoundary>,
-    document.getElementById("moco-bx-root")
+    document.getElementById("moco-bx-popup-root")
   )
 }
 
-const unmountAtRoot = () => {
-  const domRoot = document.getElementById("moco-bx-root")
+const unmountPopup = () => {
+  const domRoot = document.getElementById("moco-bx-popup-root")
 
   if (domRoot) {
     ReactDOM.unmountComponentAtNode(domRoot)

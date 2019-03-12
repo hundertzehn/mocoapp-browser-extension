@@ -5,15 +5,16 @@ import Form from "components/Form"
 import Calendar from "components/Calendar"
 import Spinner from "components/Spinner"
 import { observable, computed } from "mobx"
-import { observer } from "mobx-react"
+import { Observer, observer } from "mobx-react"
+import { Spring, animated, config } from "react-spring/renderprops"
 import {
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
-  ERROR_UNKNOWN,
   findProject,
   findTask,
   groupedProjectOptions,
-  formatDate
+  formatDate,
+  noop
 } from "utils"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
@@ -100,7 +101,7 @@ class App extends Component {
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
     Promise.all([this.fetchProjects(), this.fetchActivities()])
-      .catch(console.error)
+      .catch(noop)
       .finally(() => (this.isLoading = false))
   }
 
@@ -187,23 +188,36 @@ class App extends Component {
     }
 
     return (
-      <div className="moco-bx-app-container">
-        <Header />
-        <Calendar
-          fromDate={this.fromDate()}
-          toDate={this.toDate()}
-          activities={this.activities}
-          selectedDate={new Date(this.changesetWithDefaults.date)}
-          onChange={this.handleSelectDate}
-        />
-        <Form
-          changeset={this.changesetWithDefaults}
-          projects={this.projects}
-          errors={this.formErrors}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-        />
-      </div>
+      <Spring
+        from={{ opacity: 0 }}
+        to={{ opacity: 1 }}
+        config={config.stiff}
+        native
+      >
+        {props => (
+          <animated.div className="moco-bx-app-container" style={props}>
+            <Header />
+            <Calendar
+              fromDate={this.fromDate()}
+              toDate={this.toDate()}
+              activities={this.activities}
+              selectedDate={new Date(this.changesetWithDefaults.date)}
+              onChange={this.handleSelectDate}
+            />
+            <Observer>
+              {() => (
+                <Form
+                  changeset={this.changesetWithDefaults}
+                  projects={this.projects}
+                  errors={this.formErrors}
+                  onChange={this.handleChange}
+                  onSubmit={this.handleSubmit}
+                />
+              )}
+            </Observer>
+          </animated.div>
+        )}
+      </Spring>
     )
   }
 }

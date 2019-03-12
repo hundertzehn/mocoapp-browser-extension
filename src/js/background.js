@@ -24,15 +24,16 @@ function tabHandler(tab, settings) {
   }
 }
 
-function tabsHandler(settings) {
-  queryTabs({ currentWindow: true }).then(
-    forEach(tab => tabHandler(tab, settings))
-  )
+function tabsHandler(callback) {
+  queryTabs({ currentWindow: true }).then(forEach(callback))
 }
 
 function settingsChangedHandler(settings) {
   settings = { ...settings, version }
-  tabsHandler(settings)
+  tabsHandler(tab => {
+    tabHandler(tab, settings)
+    sendMessageToTab(tab, { type: "closeModal" })
+  })
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -82,13 +83,10 @@ chrome.runtime.onMessage.addListener(action => {
     }
 
     case "openExtensions": {
-      let url
       if (isChrome()) {
-        url = "chrome://extensions"
-      } else {
-        url = "about:addons"
+        chrome.tabs.create({ url: "chrome://extensions" })
       }
-      return chrome.tabs.create({ url })
+      return
     }
 
     case "closeModal": {
