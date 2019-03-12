@@ -1,7 +1,7 @@
 @import "variables";
 @import "button";
 
-#moco-bx-root {
+#moco-bx-root, #moco-bx-popup-root {
   font-family: system-ui, sans-serif;
 
   iframe {
@@ -13,6 +13,7 @@
   }
 
   .moco-bx-bubble {
+    box-sizing: content-box;
     position: fixed;
     bottom: 2rem;
     z-index: 1000;
@@ -26,23 +27,27 @@
 
     cursor: pointer;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
+    .moco-bx-bubble-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      height: 100%;
 
-    img.moco-bx-logo {
-      width: 30px;
-      height: 30px;
-    }
+      img.moco-bx-logo {
+        width: 30px;
+        height: 30px;
+      }
 
-    .moco-bx-booked-hours {
-      display: inline-block;
-      font-size: 13px;
-      font-weight: 700;
-      line-height: 1;
-      color: black;
-      text-align: center;
+      .moco-bx-booked-hours {
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1;
+        color: black;
+        text-align: center;
+        padding: 5px 0 7px;
+      }
     }
   }
 

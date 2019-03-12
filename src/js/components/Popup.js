@@ -1,12 +1,8 @@
-import React, {
-  forwardRef,
-  useMemo,
-  useCallback,
-  useEffect,
-  useState
-} from "react"
+import React, { Component } from "react"
 import PropTypes from "prop-types"
 import queryString from "query-string"
+import { observable } from "mobx"
+import { observer } from "mobx-react"
 import ApiClient from "api/Client"
 import {
   ERROR_UNAUTHORIZED,
@@ -15,100 +11,92 @@ import {
   serializeProps
 } from "utils"
 
-const Popup = forwardRef((props, ref) => {
-  const [lastProjectId, setLastProjectId] = useState(null)
-  const [lastTaskId, setLastTaskId] = useState(null)
-  const [errorType, setErrorType] = useState(null)
+@observer
+class Popup extends Component {
+  static propTypes = {
+    settings: PropTypes.object,
+    service: PropTypes.object,
+    errorType: PropTypes.string,
+    onRequestClose: PropTypes.func.isRequired
+  };
 
-  const serializedProps = serializeProps([
-    "service",
-    "settings",
-    "lastProjectId",
-    "lastTaskId",
-    "errorType"
-  ])({
-    ...props,
-    lastProjectId,
-    lastTaskId,
-    errorType
-  })
+  @observable isLoading = true;
+  @observable errorType = null;
+  @observable lastProjectId;
+  @observable lastTaskId;
 
-  const styles = useMemo(
-    () => ({
-      width: "516px",
-      height:
-        errorType === ERROR_UNAUTHORIZED
-          ? "888px"
-          : errorType === ERROR_UPGRADE_REQUIRED
-          ? "275"
-          : "558px"
-    }),
-    [errorType]
-  )
-
-  const handleKeyDown = event => {
-    if (event.keyCode === 27) {
-      props.onRequestClose()
-    }
-  }
-
-  useEffect(() => {
-    const apiClient = new ApiClient(props.settings)
+  componentDidMount() {
+    const { service, settings } = this.props
+    const apiClient = new ApiClient(settings)
     apiClient
-      .login(props.service)
+      .login(service)
       .then(({ data }) => {
-        setLastProjectId(data.last_project_id)
-        setLastTaskId(data.last_task_id)
+        this.errorType = null
+        this.lastProjectId = data.last_project_id
+        this.lastTaskId = data.last_task_id
       })
       .catch(error => {
         if (error.response?.status === 401) {
-          setErrorType(ERROR_UNAUTHORIZED)
+          this.errorType = ERROR_UNAUTHORIZED
         } else if (error.response?.status === 426) {
-          setErrorType(ERROR_UPGRADE_REQUIRED)
+          this.errorType = ERROR_UPGRADE_REQUIRED
         } else {
-          setErrorType(ERROR_UNKNOWN)
+          this.errorType = ERROR_UNKNOWN
         }
       })
-  })
+      .finally(() => (this.isLoading = false))
+  }
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyDown)
-    return function cleanup() {
-      window.removeEventListener("keydown", handleKeyDown)
+  getStyles = () => ({
+    width: "516px",
+    height:
+      this.errorType === ERROR_UNAUTHORIZED
+        ? "888px"
+        : this.errorType === ERROR_UPGRADE_REQUIRED
+        ? "275px"
+        : "558px"
+  });
+
+  handleRequestClose = event => {
+    if (event.target.classList.contains("moco-bx-popup")) {
+      this.props.onRequestClose()
     }
-  }, [])
+  };
 
-  const handleRequestClose = useCallback(
-    event => {
-      if (event.target.classList.contains("moco-bx-popup")) {
-        props.onRequestClose()
-      }
-    },
-    [props.onRequestClose]
-  )
+  render() {
+    if (this.isLoading) {
+      return null
+    }
 
-  return (
-    <div ref={ref} className="moco-bx-popup" onClick={handleRequestClose}>
-      <div className="moco-bx-popup-content" style={styles}>
-        <iframe
-          src={chrome.extension.getURL(
-            `popup.html?isBrowserAction=false&${queryString.stringify(
-              serializedProps
-            )}`
-          )}
-          width={styles.width}
-          height={styles.height}
-        />
+    const serializedProps = serializeProps([
+      "service",
+      "settings",
+      "lastProjectId",
+      "lastTaskId",
+      "errorType"
+    ])({
+      ...this.props,
+      lastProjectId: this.lastProjectId,
+      lastTaskId: this.lastTaskId,
+      errorType: this.errorType
+    })
+
+    const styles = this.getStyles()
+
+    return (
+      <div className="moco-bx-popup" onClick={this.handleRequestClose}>
+        <div className="moco-bx-popup-content" style={styles}>
+          <iframe
+            src={chrome.extension.getURL(
+              `popup.html?${queryString.stringify(serializedProps)}`
+            )}
+            width={styles.width}
+            height={styles.height}
+          />
+        </div>
       </div>
-    </div>
-  )
-})
-
-Popup.propTypes = {
-  settings: PropTypes.object.isRequired,
-  service: PropTypes.object,
-  errorType: PropTypes.string,
-  onRequestClose: PropTypes.func.isRequired
+    )
+  }
 }
 
 export default Popup
