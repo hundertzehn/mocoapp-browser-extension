@@ -3,7 +3,6 @@ import remoteServices from "./remoteServices"
 import {
   isChrome,
   queryTabs,
-  updateBrowserActionForTab,
   sendMessageToTab,
   getStorage
 } from "utils/browser"

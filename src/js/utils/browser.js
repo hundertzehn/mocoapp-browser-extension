@@ -4,19 +4,6 @@ import { serializeProps } from "utils"
 export const isChrome = () => typeof browser === "undefined" && chrome
 export const isFirefox = () => typeof browser !== "undefined" && chrome
 
-export const updateBrowserActionForTab = (tab, settings, service = {}) => {
-  const serializedProps = serializeProps(["service", "settings"])({
-    service,
-    settings
-  })
-  chrome.browserAction.setPopup({
-    popup: `popup.html?isBrowserAction=true&${queryString.stringify(
-      serializedProps
-    )}`,
-    tabId: tab.id
-  })
-}
-
 export const getStorage = keys => {
   if (isChrome()) {
     return new Promise(resolve => {
