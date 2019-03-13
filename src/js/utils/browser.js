@@ -1,6 +1,3 @@
-import queryString from "query-string"
-import { serializeProps } from "utils"
-
 export const isChrome = () => typeof browser === "undefined" && chrome
 export const isFirefox = () => typeof browser !== "undefined" && chrome
 
@@ -33,32 +30,13 @@ export const queryTabs = queryInfo => {
 }
 
 export const sendMessageToTab = (tab, action) => {
-  if (isChrome()) {
-    return new Promise(resolve =>
-      chrome.tabs.sendMessage(tab.id, action, resolve)
-    )
-  } else {
-    return browser.tabs.sendMessage(tab.id, action)
-  }
+  chrome.tabs.sendMessage(tab.id, action)
 }
 
 export const sendMessageToRuntime = action => {
-  if (isChrome()) {
-    return new Promise(resolve => chrome.runtime.sendMessage(action, resolve))
-  } else {
-    return browser.runtime.sendMessage(action)
-  }
+  chrome.runtime.sendMessage(action)
 }
 
 export const onRuntimeMessage = handler => {
-  if (isChrome()) {
-    chrome.runtime.onMessage.addListener((action, _sender, sendMessage) => {
-      handler(action)?.then(response => {
-        sendMessage(response)
-      })
-      return true
-    })
-  } else {
-    browser.runtime.onMessage.addListener(handler)
-  }
+  chrome.runtime.onMessage.addListener(handler)
 }

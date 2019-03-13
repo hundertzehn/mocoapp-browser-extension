@@ -34,7 +34,8 @@ onRuntimeMessage(({ type, payload }) => {
     }
 
     case "unmountBubble": {
-      return updateBubble()
+      updateBubble()
+      return
     }
 
     case "toggleModal": {

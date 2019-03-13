@@ -11,7 +11,15 @@ import {
 import { observable, reaction } from "mobx"
 import { observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
-import { isEqual } from "lodash/fp"
+import { isEqual, isNil } from "lodash/fp"
+
+const equals = (prev, next) => {
+  if (isNil(next)) {
+    return true
+  }
+
+  return isEqual(prev, next)
+}
 
 @observer
 class Bubble extends Component {
@@ -37,39 +45,28 @@ class Bubble extends Component {
   @observable bookedHours = 0;
   @observable errorType = null;
 
-  constructor(props) {
-    super(props)
-    this.#apiClient = new ApiClient(this.props.settings)
-  }
-
   componentDidMount() {
+    this.#apiClient = new ApiClient(this.props.settings)
+    this.fetchBookedHours()
+
     disposeOnUnmount(
       this,
       reaction(
         () => this.props.settings,
         settings => {
-          if (settings) {
-            this.closeModal()
-            this.#apiClient = new ApiClient(settings)
-            this.fetchBookedHours()
-          }
+          this.closeModal()
+          this.#apiClient = new ApiClient(settings)
+          this.fetchBookedHours()
         },
-        {
-          fireImmediately: true,
-          equals: isEqual
-        }
+        { equals }
       )
     )
 
     disposeOnUnmount(
       this,
-      reaction(
-        () => this.props.service,
-        service => service && this.fetchBookedHours(),
-        {
-          equals: isEqual
-        }
-      )
+      reaction(() => this.props.service, () => this.fetchBookedHours(), {
+        equals
+      })
     )
 
     chrome.runtime.onMessage.addListener(this.receiveMessage)
