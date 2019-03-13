@@ -124,7 +124,7 @@ class Bubble extends Component {
   handleKeyDown = event => {
     if (event.key === "m" && (event.metaKey || event.ctrlKey)) {
       event.preventDefault()
-      this.open()
+      this.toggleModal()
     }
   };
 
