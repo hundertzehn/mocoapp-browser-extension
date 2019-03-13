@@ -24,15 +24,15 @@ function tabHandler(tab, settings) {
   }
 }
 
-function tabsHandler(callback) {
+function forEachTabInCurrentWindow(callback) {
   queryTabs({ currentWindow: true }).then(forEach(callback))
 }
 
 function settingsChangedHandler(settings) {
   settings = { ...settings, version }
-  tabsHandler(tab => {
-    tabHandler(tab, settings)
+  forEachTabInCurrentWindow(tab => {
     sendMessageToTab(tab, { type: "closeModal" })
+    tabHandler(tab, settings)
   })
 }
 

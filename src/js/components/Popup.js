@@ -25,6 +25,11 @@ class Popup extends Component {
   @observable lastProjectId;
   @observable lastTaskId;
 
+  constructor(props) {
+    super(props)
+    this.errorType = props.errorType
+  }
+
   componentDidMount() {
     const { service, settings } = this.props
     const apiClient = new ApiClient(settings)
