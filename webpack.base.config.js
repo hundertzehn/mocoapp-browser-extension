@@ -4,10 +4,7 @@ const CleanWebpackPlugin = require("clean-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ZipPlugin = require("zip-webpack-plugin")
-const {
-  BugsnagBuildReporterPlugin,
-  BugsnagSourceMapUploaderPlugin
-} = require("webpack-bugsnag-plugins")
+const { BugsnagBuildReporterPlugin } = require("webpack-bugsnag-plugins")
 
 module.exports = env => {
   const config = {
@@ -19,7 +16,7 @@ module.exports = env => {
     },
     output: {
       path: path.join(__dirname, `build/${env.browser}`),
-      filename: "[name].js"
+      filename: "[name].[hash].js"
     },
     module: {
       rules: [
@@ -87,17 +84,13 @@ module.exports = env => {
   }
 
   if (env.NODE_ENV === "production") {
-    config.devtool = undefined
+    config.devtool = "source-maps"
 
     config.plugins.push(
       new BugsnagBuildReporterPlugin({
         apiKey: "da6caac4af70af3e4683454b40fe5ef5",
         appVersion: process.env.npm_package_version,
         releaseStage: "production"
-      }),
-      new BugsnagSourceMapUploaderPlugin({
-        apiKey: "da6caac4af70af3e4683454b40fe5ef5",
-        appVersion: process.env.npm_package_version
       }),
       new ZipPlugin({
         filename: `moco-bx-${env.browser}-v${

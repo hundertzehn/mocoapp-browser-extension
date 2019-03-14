@@ -6,8 +6,11 @@ const { version: appVersion } = chrome.runtime.getManifest()
 
 const bugsnagClient = bugsnag({
   apiKey: "da6caac4af70af3e4683454b40fe5ef5",
-  appVersion
+  appVersion,
+  releaseStage: process.env.NODE_ENV,
+  notifyReleaseStages: ["production"]
 })
+
 bugsnagClient.use(bugsnagReact, React)
 
 export default bugsnagClient
