@@ -32,5 +32,14 @@
       "css": ["content.css"]
     }
   ],
+  "commands": {
+    "moco-bx-toggle": {
+      "description": "MOCO-Zeiterfassung ein- und ausblenden",
+      "suggested_key": {
+        "default": "Ctrl+M",
+        "mac": "Command+M"
+      }
+    }
+  },
   "web_accessible_resources": ["src/images/*", "popup.html"]
 }

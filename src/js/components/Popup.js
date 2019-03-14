@@ -7,7 +7,6 @@ import ApiClient from "api/Client"
 import {
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
-  ERROR_UNKNOWN,
   serializeProps
 } from "utils"
 
@@ -46,7 +45,7 @@ class Popup extends Component {
         } else if (error.response?.status === 426) {
           this.errorType = ERROR_UPGRADE_REQUIRED
         } else {
-          this.errorType = ERROR_UNKNOWN
+          this.errorType = ERROR_UNAUTHORIZED
         }
       })
       .finally(() => (this.isLoading = false))

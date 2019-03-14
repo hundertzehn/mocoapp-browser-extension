@@ -102,12 +102,12 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
-    Promise.all([
-      this.fetchProjects(),
-      this.fetchActivities(),
-      this.fetchSchedules()
-    ])
-      .catch(error => bugsnagClient.notify(error))
+    const fetches = this.props.errorType
+      ? []
+      : [this.fetchProjects(), this.fetchActivities(), this.fetchSchedules()]
+
+    Promise.all(fetches)
+      .catch(() => null)
       .finally(() => (this.isLoading = false))
   }
 

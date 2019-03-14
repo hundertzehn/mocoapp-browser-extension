@@ -102,3 +102,14 @@ chrome.runtime.onMessage.addListener(action => {
     }
   }
 })
+
+chrome.commands.onCommand.addListener(command => {
+  if (command === "moco-bx-toggle") {
+    getStorage(["subdomain", "apiKey"]).then(settings => {
+      settings = { ...settings, version }
+      queryTabs({ active: true, currentWindow: true }).then(tabs => {
+        sendMessageToTab(tabs[0], { type: "toggleModal", payload: settings })
+      })
+    })
+  }
+})
