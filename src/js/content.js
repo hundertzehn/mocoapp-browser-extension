@@ -25,10 +25,10 @@ onRuntimeMessage(({ type, payload }) => {
     case "mountBubble": {
       const settings = payload
       const service = findService()
-      if (!service?.id) {
-        updateBubble()
+      if (service) {
+        updateBubble(settings, service)
       } else {
-        updateBubble(service, settings)
+        updateBubble()
       }
       return
     }
@@ -39,29 +39,23 @@ onRuntimeMessage(({ type, payload }) => {
     }
 
     case "toggleModal": {
-      if (bubbleRef.current) {
-        // message will be handled in the Bubble component
-        return
-      }
       if (popupRef.current) {
         unmountPopup()
       } else {
-        mountPopup(payload)
+        const service = findService()
+        mountPopup(payload, service)
       }
       return
     }
 
     case "closeModal":
     case "activityCreated": {
-      if (!bubbleRef.current) {
-        unmountPopup()
-      }
-      return
+      return unmountPopup()
     }
   }
 })
 
-const updateBubble = (service, settings) => {
+const updateBubble = (settings, service) => {
   if (!document.getElementById("moco-bx-root")) {
     const domRoot = document.createElement("div")
     domRoot.setAttribute("id", "moco-bx-root")
@@ -101,7 +95,7 @@ const updateBubble = (service, settings) => {
   )
 }
 
-const mountPopup = settings => {
+const mountPopup = (settings, service) => {
   if (!document.getElementById("moco-bx-popup-root")) {
     const domRoot = document.createElement("div")
     domRoot.setAttribute("id", "moco-bx-popup-root")
@@ -110,7 +104,12 @@ const mountPopup = settings => {
 
   ReactDOM.render(
     <ErrorBoundary>
-      <Popup ref={popupRef} settings={settings} onRequestClose={unmountPopup} />
+      <Popup
+        ref={popupRef}
+        settings={settings}
+        service={service}
+        onRequestClose={unmountPopup}
+      />
     </ErrorBoundary>,
     document.getElementById("moco-bx-popup-root")
   )

@@ -89,6 +89,12 @@ chrome.runtime.onMessage.addListener(action => {
       return
     }
 
+    case "toggleModal": {
+      return queryTabs({ active: true, currentWindow: true }).then(tabs => {
+        sendMessageToTab(tabs[0], action)
+      })
+    }
+
     case "closeModal": {
       return queryTabs({ active: true, currentWindow: true }).then(tabs =>
         sendMessageToTab(tabs[0], action)

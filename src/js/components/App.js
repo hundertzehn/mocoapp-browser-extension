@@ -23,7 +23,6 @@ import { head } from "lodash"
 import { weekStartsOn } from "utils"
 import TimeInputParser from "utils/TimeInputParser"
 import { sendMessageToRuntime } from "utils/browser"
-import bugsnagClient from "utils/notifier"
 
 @observer
 class App extends Component {
@@ -101,7 +100,6 @@ class App extends Component {
   }
 
   componentDidMount() {
-    window.addEventListener("keydown", this.handleKeyDown)
     const fetches = this.props.errorType
       ? []
       : [this.fetchProjects(), this.fetchActivities(), this.fetchSchedules()]
@@ -109,10 +107,12 @@ class App extends Component {
     Promise.all(fetches)
       .catch(() => null)
       .finally(() => (this.isLoading = false))
+
+    window.addEventListener("keydown", this.handleKeyDown)
   }
 
   componentWillUnmount() {
-    window.removeEventLIstener("keydown", this.handleKeyDown)
+    window.removeEventListener("keydown", this.handleKeyDown)
   }
 
   fromDate = () => startOfWeek(new Date(), { weekStartsOn });
@@ -201,10 +201,10 @@ class App extends Component {
 
     return (
       <Spring
+        native
         from={{ opacity: 0 }}
         to={{ opacity: 1 }}
         config={config.stiff}
-        native
       >
         {props => (
           <animated.div className="moco-bx-app-container" style={props}>

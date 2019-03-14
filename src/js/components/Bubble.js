@@ -1,11 +1,10 @@
 import React, { Component } from "react"
-import ReactDOM from "react-dom"
 import PropTypes from "prop-types"
 import ApiClient from "api/Client"
-import Popup from "components/Popup"
 import { ERROR_UNAUTHORIZED, ERROR_UPGRADE_REQUIRED } from "utils"
 import { observable, reaction } from "mobx"
 import { observer, disposeOnUnmount } from "mobx-react"
+import { sendMessageToRuntime } from "utils/browser"
 import logoUrl from "images/logo.png"
 import { isEqual, isNil } from "lodash/fp"
 
@@ -37,7 +36,6 @@ class Bubble extends Component {
 
   #apiClient;
 
-  @observable isOpen = false;
   @observable bookedHours = 0;
   @observable errorType = null;
 
@@ -50,7 +48,6 @@ class Bubble extends Component {
       reaction(
         () => this.props.settings,
         settings => {
-          this.closeModal()
           this.#apiClient = new ApiClient(settings)
           this.fetchBookedHours()
         },
@@ -73,25 +70,15 @@ class Bubble extends Component {
   }
 
   toggleModal = _event => {
-    this.isOpen = !this.isOpen
+    sendMessageToRuntime({
+      type: "toggleModal",
+      payload: this.props.settings
+    })
   };
 
-  closeModal = () => (this.isOpen = false);
-
   receiveMessage = ({ type, payload }) => {
-    switch (type) {
-      case "activityCreated": {
-        this.bookedHours += payload.hours
-        return this.closeModal()
-      }
-
-      case "toggleModal": {
-        return this.toggleModal()
-      }
-
-      case "closeModal": {
-        return this.closeModal()
-      }
+    if (type === "activityCreated") {
+      this.bookedHours += payload.hours
     }
   };
 
@@ -129,26 +116,9 @@ class Bubble extends Component {
             </span>
           ) : null}
         </div>
-        {this.renderPopup()}
       </>
     )
   }
-
-  renderPopup = () => {
-    const { service, settings } = this.props
-
-    if (this.isOpen) {
-      return ReactDOM.createPortal(
-        <Popup
-          service={service}
-          settings={settings}
-          errorType={this.errorType}
-          onRequestClose={this.closeModal}
-        />,
-        document.getElementById("moco-bx-root")
-      )
-    }
-  };
 }
 
 export default Bubble
