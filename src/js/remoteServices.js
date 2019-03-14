@@ -68,7 +68,7 @@ export default {
     urlPatterns: ["https\\://trello.com/c/:id/:title"],
     description: (document, service, { title }) =>
       document.querySelector(".js-title-helper")?.textContent?.trim() || title,
-    position: { right: "2rem" }
+    position: { right: "calc(2rem + 4px)" }
   },
 
   youtrack: {
