@@ -79,9 +79,8 @@ export const trace = curry((tag, value) => {
   return value
 })
 
+export const weekStartsOn = 1
 export const formatDate = date => format(date, "YYYY-MM-DD")
 
 export const extensionSettingsUrl = () =>
   `chrome://extensions/?id=${chrome.runtime.id}`
-
-export const noop = () => null

@@ -13,16 +13,17 @@ import {
   findProject,
   findTask,
   groupedProjectOptions,
-  formatDate,
-  noop
+  formatDate
 } from "utils"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
 import { startOfWeek, endOfWeek } from "date-fns"
 import Header from "./shared/Header"
 import { head } from "lodash"
+import { weekStartsOn } from "utils"
 import TimeInputParser from "utils/TimeInputParser"
 import { sendMessageToRuntime } from "utils/browser"
+import bugsnagClient from "utils/notifier"
 
 @observer
 class App extends Component {
@@ -52,6 +53,7 @@ class App extends Component {
 
   @observable projects = [];
   @observable activities = [];
+  @observable schedules = [];
   @observable lastProjectId;
   @observable lastTaskId;
   @observable changeset = {};
@@ -100,8 +102,12 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
-    Promise.all([this.fetchProjects(), this.fetchActivities()])
-      .catch(noop)
+    Promise.all([
+      this.fetchProjects(),
+      this.fetchActivities(),
+      this.fetchSchedules()
+    ])
+      .catch(error => bugsnagClient.notify(error))
       .finally(() => (this.isLoading = false))
   }
 
@@ -109,8 +115,8 @@ class App extends Component {
     window.removeEventLIstener("keydown", this.handleKeyDown)
   }
 
-  fromDate = () => startOfWeek(new Date(), { weekStartsOn: 1 });
-  toDate = () => endOfWeek(new Date(), { weekStartsOn: 1 });
+  fromDate = () => startOfWeek(new Date(), { weekStartsOn });
+  toDate = () => endOfWeek(new Date(), { weekStartsOn });
 
   fetchProjects = () =>
     this.#apiClient.projects().then(({ data }) => {
@@ -123,6 +129,12 @@ class App extends Component {
     this.#apiClient
       .activities(this.fromDate(), this.toDate())
       .then(({ data }) => (this.activities = data));
+
+  fetchSchedules = () => {
+    this.#apiClient
+      .schedules(this.fromDate(), this.toDate())
+      .then(({ data }) => (this.schedules = data))
+  };
 
   createActivity = () => {
     this.isLoading = true
@@ -204,6 +216,7 @@ class App extends Component {
                     fromDate={this.fromDate()}
                     toDate={this.toDate()}
                     activities={this.activities}
+                    schedules={this.schedules}
                     selectedDate={new Date(this.changesetWithDefaults.date)}
                     onChange={this.handleSelectDate}
                   />
