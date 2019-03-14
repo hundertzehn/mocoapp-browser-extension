@@ -3,11 +3,7 @@ import ReactDOM from "react-dom"
 import PropTypes from "prop-types"
 import ApiClient from "api/Client"
 import Popup from "components/Popup"
-import {
-  ERROR_UNAUTHORIZED,
-  ERROR_UPGRADE_REQUIRED,
-  ERROR_UNKNOWN
-} from "utils"
+import { ERROR_UNAUTHORIZED, ERROR_UPGRADE_REQUIRED } from "utils"
 import { observable, reaction } from "mobx"
 import { observer, disposeOnUnmount } from "mobx-react"
 import logoUrl from "images/logo.png"
@@ -70,12 +66,10 @@ class Bubble extends Component {
     )
 
     chrome.runtime.onMessage.addListener(this.receiveMessage)
-    window.addEventListener("keydown", this.handleKeyDown, true)
   }
 
   componentWillUnmount() {
     chrome.runtime.onMessage.removeListener(this.receiveMessage)
-    window.removeEventListener("keydown", this.handleKeyDown)
   }
 
   toggleModal = _event => {
@@ -116,16 +110,9 @@ class Bubble extends Component {
         } else if (error.response?.status === 426) {
           this.errorType = ERROR_UPGRADE_REQUIRED
         } else {
-          this.errorType = ERROR_UNKNOWN
+          this.errorType = ERROR_UNAUTHORIZED
         }
       })
-  };
-
-  handleKeyDown = event => {
-    if (event.key === "m" && (event.metaKey || event.ctrlKey)) {
-      event.preventDefault()
-      this.toggleModal()
-    }
   };
 
   render() {

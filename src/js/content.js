@@ -40,6 +40,7 @@ onRuntimeMessage(({ type, payload }) => {
 
     case "toggleModal": {
       if (bubbleRef.current) {
+        // message will be handled in the Bubble component
         return
       }
       if (popupRef.current) {
