@@ -20,7 +20,7 @@
     "tabs"
   ],
   "background": {
-    "scripts": ["background.[hash].js"]
+    "scripts": ["background.[version].js"]
   },
   "browser_action": {
     "default_icon": "src/images/logo.png"
@@ -28,12 +28,12 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.[hash].js"],
+      "js": ["content.[version].js"],
       "css": ["content.css"]
     }
   ],
   "commands": {
-    "moco-bx-toggle": {
+    "_execute_browser_action": {
       "description": "MOCO-Zeiterfassung ein- und ausblenden",
       "suggested_key": {
         "default": "Ctrl+M",

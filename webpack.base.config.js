@@ -16,7 +16,7 @@ module.exports = env => {
     },
     output: {
       path: path.join(__dirname, `build/${env.browser}`),
-      filename: "[name].[hash].js"
+      filename: `[name].${process.env.npm_package_version}.js`
     },
     module: {
       rules: [
