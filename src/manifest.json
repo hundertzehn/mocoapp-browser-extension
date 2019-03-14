@@ -20,7 +20,7 @@
     "tabs"
   ],
   "background": {
-    "scripts": ["background.js"]
+    "scripts": ["background.[hash].js"]
   },
   "browser_action": {
     "default_icon": "src/images/logo.png"
@@ -28,7 +28,7 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["content.js"],
+      "js": ["content.[hash].js"],
       "css": ["content.css"]
     }
   ],
