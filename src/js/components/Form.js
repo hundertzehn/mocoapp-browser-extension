@@ -31,6 +31,7 @@ class Form extends Component {
     const { onSubmit } = this.props
 
     if (event.key === "Enter") {
+      event.preventDefault()
       this.isValid() && onSubmit(event)
     }
   };
