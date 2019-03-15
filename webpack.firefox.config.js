@@ -33,16 +33,6 @@ module.exports = env => {
               browser_specific_settings: {
                 gecko: { id: "browser-extension@mocoapp.com" }
               },
-              commands: {
-                ...manifest.commands,
-                _execute_browser_action: {
-                  ...manifest.commands._execute_browser_action,
-                  suggested_key: {
-                    default: "Ctrl+Shift+M",
-                    mac: "Command+Shift+M"
-                  }
-                }
-              },
               description: process.env.npm_package_description,
               version: process.env.npm_package_version
             })
