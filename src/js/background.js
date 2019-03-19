@@ -16,7 +16,7 @@ import {
   groupedProjectOptions,
   weekStartsOn
 } from "utils"
-import { get, head, forEach } from "lodash/fp"
+import { get, head, forEach, isNil } from "lodash/fp"
 
 const getStartOfWeek = () => startOfWeek(new Date(), { weekStartsOn })
 const getEndOfWeek = () => endOfWeek(new Date(), { weekStartsOn })
@@ -147,7 +147,11 @@ const openPopup = (tab, service) => {
     })
 }
 
-const togglePopup = tab => ({ isOpen, service }) => {
+const togglePopup = tab => ({ isOpen, service } = {}) => {
+  if (isNil(isOpen)) {
+    return
+  }
+
   if (isOpen) {
     sendMessageToTab(tab, { type: "closePopup" })
   } else {
