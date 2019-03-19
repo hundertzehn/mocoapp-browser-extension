@@ -23,6 +23,7 @@ input {
     font-size: 100%;
     border-style: solid;
     border-width: 1px;
+    min-height: 20px;
   }
 
   .text-muted {
@@ -40,16 +41,15 @@ input {
   }
 
   .input-group {
-    position: relative;
-    display: table;
-    border-collapse: separate;
+    display: flex;
+    flex-flow: row nowrap;
 
     input {
-      position: relative;
-      display: table-cell;
+      flex: 1 1;
     }
 
     .input-group-addon {
+      flex: 0 0 auto;
       padding: 6px 12px;
       font-weight: normal;
       color: #555555;
@@ -57,8 +57,7 @@ input {
       background-color: #eeeeee;
       border: 1px solid #cccccc;
       border-left: none;
-      display: table-cell;
-      width: 1%;
+      line-height: 18px;
     }
   }
 }
@@ -69,6 +68,12 @@ input {
 
 input[name="hours"] {
   width: 48px;
+  outline: 0 !important;
+
+  &:focus {
+    border: 1px solid #38b5eb;
+    box-shadow: 0 0 0 1px #38b5eb;
+  }
 }
 
 textarea[name="description"] {
@@ -76,5 +81,11 @@ textarea[name="description"] {
   box-sizing: border-box;
   width: 100%;
   resize: none;
+  outline: 0 !important;
+
+  &:focus {
+    border: 1px solid #38b5eb;
+    box-shadow: 0 0 0 1px #38b5eb;
+  }
 }
 
