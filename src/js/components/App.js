@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import ApiClient from "api/Client"
 import Form from "components/Form"
 import Calendar from "components/Calendar"
 import Spinner from "components/Spinner"
@@ -12,17 +11,16 @@ import {
   ERROR_UPGRADE_REQUIRED,
   findProject,
   findTask,
-  groupedProjectOptions,
   formatDate
 } from "utils"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
-import { startOfWeek, endOfWeek } from "date-fns"
+import { parse } from "date-fns"
 import Header from "./shared/Header"
 import { head } from "lodash"
-import { weekStartsOn } from "utils"
 import TimeInputParser from "utils/TimeInputParser"
 import { sendMessageToRuntime } from "utils/browser"
+import { registerMessageHandler } from "utils/messaging"
 
 @observer
 class App extends Component {
@@ -35,46 +33,41 @@ class App extends Component {
       projectId: PropTypes.string,
       taskId: PropTypes.string
     }),
-    settings: PropTypes.shape({
-      subdomain: PropTypes.string,
-      apiKey: PropTypes.string,
-      version: PropTypes.string
-    }),
+    activities: PropTypes.array,
+    schedules: PropTypes.array,
+    projects: PropTypes.array,
     lastProjectId: PropTypes.number,
     lastTaskId: PropTypes.number,
+    roundTimeEntries: PropTypes.bool,
+    fromDate: PropTypes.string,
+    toDate: PropTypes.string,
     errorType: PropTypes.string
   };
 
   static defaultProps = {
-    service: {},
-    settings: {}
+    activities: [],
+    schedules: [],
+    projects: [],
+    roundTimeEntries: false
   };
 
-  @observable projects = [];
-  @observable activities = [];
-  @observable schedules = [];
-  @observable lastProjectId;
-  @observable lastTaskId;
   @observable changeset = {};
   @observable formErrors = {};
-  @observable isLoading = true;
 
   @computed get changesetWithDefaults() {
-    const { service, lastProjectId, lastTaskId } = this.props
+    const { service, projects, lastProjectId, lastTaskId } = this.props
 
     const project =
-      findProject(service.projectId || lastProjectId || this.lastProjectId)(
-        this.projects
-      ) || head(this.projects)
+      findProject(service?.projectId || lastProjectId)(projects) ||
+      head(projects)
 
     const task =
-      findTask(service.taskId || lastTaskId || this.lastTaskId)(project) ||
-      head(project?.tasks)
+      findTask(service?.taskId || lastTaskId)(project) || head(project?.tasks)
 
     const defaults = {
-      remote_service: service.name,
-      remote_id: service.id,
-      remote_url: service.url,
+      remote_service: service?.name,
+      remote_id: service?.id,
+      remote_url: service?.url,
       date: formatDate(new Date()),
       assignment_id: project?.value,
       task_id: task?.value,
@@ -83,7 +76,7 @@ class App extends Component {
       seconds:
         this.changeset.hours &&
         new TimeInputParser(this.changeset.hours).parseSeconds(),
-      description: service.description
+      description: service?.description
     }
 
     return {
@@ -92,72 +85,18 @@ class App extends Component {
     }
   }
 
-  #apiClient;
-
-  constructor(props) {
-    super(props)
-    this.#apiClient = new ApiClient(this.props.settings)
-  }
-
   componentDidMount() {
-    const fetches = this.props.errorType
-      ? []
-      : [this.fetchProjects(), this.fetchActivities(), this.fetchSchedules()]
-
-    Promise.all(fetches)
-      .catch(() => null)
-      .finally(() => (this.isLoading = false))
-
     window.addEventListener("keydown", this.handleKeyDown)
+    registerMessageHandler("setFormErrors", this.handleSetFormErrors)
   }
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown)
+    window.runtime.onMessage.removeListener(this.handleSetFormErrors)
   }
 
-  fromDate = () => startOfWeek(new Date(), { weekStartsOn });
-  toDate = () => endOfWeek(new Date(), { weekStartsOn });
-
-  fetchProjects = () =>
-    this.#apiClient.projects().then(({ data }) => {
-      this.projects = groupedProjectOptions(data.projects)
-      this.lastProjectId = data.last_project_id
-      this.lastTaskId = data.lastTaskId
-    });
-
-  fetchActivities = () =>
-    this.#apiClient
-      .activities(this.fromDate(), this.toDate())
-      .then(({ data }) => (this.activities = data));
-
-  fetchSchedules = () => {
-    this.#apiClient
-      .schedules(this.fromDate(), this.toDate())
-      .then(({ data }) => (this.schedules = data))
-  };
-
-  createActivity = () => {
-    this.isLoading = true
-
-    this.#apiClient
-      .createActivity(this.changesetWithDefaults)
-      .then(({ data }) => {
-        this.changeset = {}
-        this.formErrors = {}
-        sendMessageToRuntime({
-          type: "activityCreated",
-          payload: { hours: data.hours }
-        })
-      })
-      .catch(error => {
-        if (error.response?.status === 422) {
-          this.formErrors = error.response.data
-        }
-      })
-      .finally(() => (this.isLoading = false))
-  };
-
   handleChange = event => {
+    const { projects } = this.props
     const {
       target: { name, value }
     } = event
@@ -165,7 +104,7 @@ class App extends Component {
     this.changeset[name] = value
 
     if (name === "assignment_id") {
-      const project = findProject(value)(this.projects)
+      const project = findProject(value)(projects)
       this.changeset.task_id = head(project?.tasks).value || null
     }
   };
@@ -176,26 +115,43 @@ class App extends Component {
 
   handleSubmit = event => {
     event.preventDefault()
-    this.createActivity()
+    const { service } = this.props
+
+    sendMessageToRuntime({
+      type: "createActivity",
+      payload: {
+        activity: this.changesetWithDefaults,
+        service
+      }
+    })
   };
 
   handleKeyDown = event => {
     if (event.keyCode === 27) {
       event.stopPropagation()
-      sendMessageToRuntime({ type: "closeModal" })
+      sendMessageToRuntime({ type: "closePopup" })
     }
   };
 
-  render() {
-    if (this.isLoading) {
-      return <Spinner />
-    }
+  handleSetFormErrors = ({ payload }) => {
+    this.formErrors = payload
+  };
 
-    if (this.props.errorType === ERROR_UNAUTHORIZED) {
+  render() {
+    const {
+      projects,
+      activities,
+      schedules,
+      fromDate,
+      toDate,
+      errorType
+    } = this.props
+
+    if (errorType === ERROR_UNAUTHORIZED) {
       return <InvalidConfigurationError />
     }
 
-    if (this.props.errorType === ERROR_UPGRADE_REQUIRED) {
+    if (errorType === ERROR_UPGRADE_REQUIRED) {
       return <UpgradeRequiredError />
     }
 
@@ -213,16 +169,16 @@ class App extends Component {
               {() => (
                 <>
                   <Calendar
-                    fromDate={this.fromDate()}
-                    toDate={this.toDate()}
-                    activities={this.activities}
-                    schedules={this.schedules}
+                    fromDate={parse(fromDate)}
+                    toDate={parse(toDate)}
+                    activities={activities}
+                    schedules={schedules}
                     selectedDate={new Date(this.changesetWithDefaults.date)}
                     onChange={this.handleSelectDate}
                   />
                   <Form
                     changeset={this.changesetWithDefaults}
-                    projects={this.projects}
+                    projects={projects}
                     errors={this.formErrors}
                     onChange={this.handleChange}
                     onSubmit={this.handleSubmit}
