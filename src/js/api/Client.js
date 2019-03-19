@@ -50,10 +50,14 @@ export default class Client {
       params: { date: `${formatDate(fromDate)}:${formatDate(toDate)}` }
     });
 
-  bookedHours = service =>
-    this.#client.get("activities/tags", {
+  bookedHours = service => {
+    if (!service) {
+      return Promise.resolve({ data: { hours: 0 } })
+    }
+    return this.#client.get("activities/tags", {
       params: { selection: [service.id], remote_service: service.name }
-    });
+    })
+  };
 
   createActivity = activity => this.#client.post("activities", { activity });
 }

@@ -17,11 +17,13 @@ const UpgradeRequiredError = () => (
         Browser-Erweiterungen öffnen
       </button>
     ) : (
-      <p>
-        Die Browser-Erweiterung kann unter der folgenden URL aktualisiert
-        werden:
+      <>
+        <p>
+          Die Browser-Erweiterung kann unter der folgenden URL aktualisiert
+          werden:
+        </p>
         <pre>about:addons</pre>
-      </p>
+      </>
     )}
   </div>
 )

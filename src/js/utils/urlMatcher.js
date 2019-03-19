@@ -1,6 +1,20 @@
-import UrlPattern from 'url-pattern'
-import { isFunction, isUndefined, compose, toPairs, map, omit, values } from 'lodash/fp'
-import queryString from 'query-string'
+import UrlPattern from "url-pattern"
+import {
+  isFunction,
+  isUndefined,
+  compose,
+  toPairs,
+  map,
+  pipe
+} from "lodash/fp"
+import queryString from "query-string"
+
+const extractQueryParams = (queryParams, query) => {
+  return toPairs(queryParams).reduce((acc, [key, param]) => {
+    acc[key] = query[param]
+    return acc
+  }, {})
+}
 
 const createEvaluator = args => fnOrValue => {
   if (isUndefined(fnOrValue)) {
@@ -38,7 +52,7 @@ export const createEnhancer = document => service => {
     description: evaluate(service.description),
     projectId: evaluate(service.projectId),
     taskId: evaluate(service.taskId),
-    position: service.position || { left: '50%', transform: 'translateX(-50%)' }
+    position: service.position || { left: "50%", transform: "translateX(-50%)" }
   }
 }
 
@@ -48,14 +62,19 @@ export const createMatcher = remoteServices => {
     const { origin, pathname, hash, search } = new URL(tabUrl)
     const url = `${origin}${pathname}${hash}`
     const query = queryString.parse(search)
-    const service = services.find(service => service.patterns.some(pattern => pattern.match(url)))
+    const service = services.find(service =>
+      service.patterns.some(pattern => pattern.match(url))
+    )
     if (!service) {
       return undefined
     }
     const pattern = service.patterns.find(pattern => pattern.match(url))
     let match = pattern.match(url)
     if (service.queryParams) {
-      const extractedQueryParams = extractQueryParams(service.queryParams, query)
+      const extractedQueryParams = extractQueryParams(
+        service.queryParams,
+        query
+      )
       match = { ...extractedQueryParams, ...match }
     }
     return {
@@ -67,10 +86,11 @@ export const createMatcher = remoteServices => {
   }
 }
 
-const extractQueryParams = (queryParams, query) => {
-  return toPairs(queryParams).reduce((acc, [key, param]) => {
-    acc[key] = query[param]
-    return acc
-  }, {})
+export const createServiceFinder = remoteServices => document => {
+  const matcher = createMatcher(remoteServices)
+  const enhancer = createEnhancer(document)
+  return pipe(
+    matcher,
+    enhancer
+  )
 }
-

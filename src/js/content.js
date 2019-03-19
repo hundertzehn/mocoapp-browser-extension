@@ -3,59 +3,46 @@ import ReactDOM from "react-dom"
 import { Transition, animated, config } from "react-spring/renderprops"
 import Bubble from "./components/Bubble"
 import Popup from "components/Popup"
-import { createMatcher, createEnhancer } from "utils/urlMatcher"
+import { createServiceFinder } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
-import { pipe } from "lodash/fp"
 import { ErrorBoundary } from "utils/notifier"
-import { onRuntimeMessage } from "utils/browser"
+import { sendMessageToRuntime } from "utils/browser"
+import { registerMessageHandler } from "utils/messaging"
 import "../css/content.scss"
 
-const bubbleRef = createRef()
 const popupRef = createRef()
-const matcher = createMatcher(remoteServices)
+const findService = createServiceFinder(remoteServices)(document)
 
-const findService = () =>
-  pipe(
-    matcher,
-    createEnhancer(document)
-  )(window.location.href)
-
-onRuntimeMessage(({ type, payload }) => {
-  switch (type) {
-    case "mountBubble": {
-      const settings = payload
-      const service = findService()
-      if (service) {
-        updateBubble(settings, service)
-      } else {
-        updateBubble()
-      }
-      return
-    }
-
-    case "unmountBubble": {
-      updateBubble()
-      return
-    }
-
-    case "toggleModal": {
-      if (popupRef.current) {
-        unmountPopup()
-      } else {
-        const service = findService()
-        mountPopup(payload, service)
-      }
-      return
-    }
-
-    case "closeModal":
-    case "activityCreated": {
-      return unmountPopup()
-    }
-  }
+registerMessageHandler("getService", () => {
+  const service = findService(window.location.href)
+  return Promise.resolve(service)
 })
 
-const updateBubble = (settings, service) => {
+registerMessageHandler(
+  "showBubble",
+  ({ payload: { service, bookedHours } }) => {
+    updateBubble({ service, bookedHours })
+  }
+)
+
+registerMessageHandler("hideBubble", () => {
+  updateBubble()
+})
+
+registerMessageHandler("togglePopup", () => {
+  const service = findService(window.location.href)
+  return Promise.resolve({ isOpen: !!popupRef.current, service })
+})
+
+registerMessageHandler("openPopup", ({ payload }) => {
+  openPopup(payload)
+})
+
+registerMessageHandler(["closePopup", "activityCreated"], () => {
+  closePopup()
+})
+
+const updateBubble = ({ service, bookedHours } = {}) => {
   if (!document.getElementById("moco-bx-root")) {
     const domRoot = document.createElement("div")
     domRoot.setAttribute("id", "moco-bx-root")
@@ -82,9 +69,8 @@ const updateBubble = (settings, service) => {
             >
               <Bubble
                 key={service.url}
-                ref={bubbleRef}
-                service={service}
-                settings={settings}
+                bookedHours={bookedHours}
+                onClick={() => sendMessageToRuntime({ type: "togglePopup" })}
               />
             </animated.div>
           ))
@@ -95,7 +81,7 @@ const updateBubble = (settings, service) => {
   )
 }
 
-const mountPopup = (settings, service) => {
+const openPopup = payload => {
   if (!document.getElementById("moco-bx-popup-root")) {
     const domRoot = document.createElement("div")
     domRoot.setAttribute("id", "moco-bx-popup-root")
@@ -104,18 +90,13 @@ const mountPopup = (settings, service) => {
 
   ReactDOM.render(
     <ErrorBoundary>
-      <Popup
-        ref={popupRef}
-        settings={settings}
-        service={service}
-        onRequestClose={unmountPopup}
-      />
+      <Popup ref={popupRef} {...payload} onRequestClose={closePopup} />
     </ErrorBoundary>,
     document.getElementById("moco-bx-popup-root")
   )
 }
 
-const unmountPopup = () => {
+const closePopup = () => {
   const domRoot = document.getElementById("moco-bx-popup-root")
 
   if (domRoot) {

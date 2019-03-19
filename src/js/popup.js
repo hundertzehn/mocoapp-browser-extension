@@ -8,9 +8,16 @@ import "../css/popup.scss"
 
 const parsedProps = parseProps([
   "service",
-  "settings",
+  "projects",
+  "activities",
+  "schedules",
   "lastProjectId",
   "lastTaskId",
+  "roundTimeEntries",
+  "lastProjectId",
+  "lastTaskId",
+  "fromDate",
+  "toDate",
   "errorType"
 ])(queryString.parse(location.search))
 

@@ -29,14 +29,33 @@ export const queryTabs = queryInfo => {
   }
 }
 
-export const sendMessageToTab = (tab, action) => {
-  chrome.tabs.sendMessage(tab.id, action)
+export const sendMessageToTab = (tab, action, callback) => {
+  if (isChrome()) {
+    chrome.tabs.sendMessage(tab.id, action, callback)
+  } else {
+    browser.tabs
+      .sendMessage(tab.id, action)
+      .then(result => callback && callback(result))
+  }
 }
 
 export const sendMessageToRuntime = action => {
-  chrome.runtime.sendMessage(action)
+  if (isChrome()) {
+    return chrome.runtime.sendMessage(action)
+  } else {
+    return browser.runtime.sendMessage(action)
+  }
 }
 
 export const onRuntimeMessage = handler => {
-  chrome.runtime.onMessage.addListener(handler)
+  if (isChrome()) {
+    chrome.runtime.onMessage.addListener((action, _sender, sendMessage) => {
+      handler(action)?.then(response => {
+        sendMessage(response)
+      })
+      return true
+    })
+  } else {
+    browser.runtime.onMessage.addListener(handler)
+  }
 }

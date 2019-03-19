@@ -1,12 +1,25 @@
 import { createMatcher } from "utils/urlMatcher"
+import ApiClient from "api/Client"
 import remoteServices from "./remoteServices"
+import { registerMessageHandler } from "utils/messaging"
+import { startOfWeek, endOfWeek } from "date-fns"
 import {
   isChrome,
-  queryTabs,
   sendMessageToTab,
+  queryTabs,
   getStorage
 } from "utils/browser"
-import { forEach } from "lodash/fp"
+import {
+  ERROR_UNAUTHORIZED,
+  ERROR_UPGRADE_REQUIRED,
+  ERROR_UNKNOWN,
+  groupedProjectOptions,
+  weekStartsOn
+} from "utils"
+import { get, head, forEach } from "lodash/fp"
+
+const getStartOfWeek = () => startOfWeek(new Date(), { weekStartsOn })
+const getEndOfWeek = () => endOfWeek(new Date(), { weekStartsOn })
 
 const { version } = chrome.runtime.getManifest()
 const matcher = createMatcher(remoteServices)
@@ -14,30 +27,47 @@ const matcher = createMatcher(remoteServices)
 function tabHandler(tab, settings) {
   const service = matcher(tab.url)
   if (service?.match?.id) {
-    // the timeout is a hack to ensure the frontend is fully rendered
-    setTimeout(
-      () => sendMessageToTab(tab, { type: "mountBubble", payload: settings }),
-      800
-    )
+    setTimeout(() => {
+      sendMessageToTab(tab, { type: "getService" }, service => {
+        const apiClient = new ApiClient(settings)
+        apiClient
+          .bookedHours(service)
+          .then(({ data }) => {
+            sendMessageToTab(tab, {
+              type: "showBubble",
+              payload: {
+                bookedHours: parseFloat(data[0]?.hours) || 0,
+                service
+              }
+            })
+          })
+          .catch(() => {
+            sendMessageToTab(tab, {
+              type: "showBubble",
+              payload: {
+                bookedHours: 0,
+                service
+              }
+            })
+          })
+      })
+    }, 0)
   } else {
-    sendMessageToTab(tab, { type: "unmountBubble" })
+    setTimeout(() => sendMessageToTab(tab, { type: "hideBubble" }), 0)
   }
-}
-
-function forEachTabInCurrentWindow(callback) {
-  queryTabs({ currentWindow: true }).then(forEach(callback))
 }
 
 function settingsChangedHandler(settings) {
   settings = { ...settings, version }
-  forEachTabInCurrentWindow(tab => {
-    sendMessageToTab(tab, { type: "closeModal" })
-    tabHandler(tab, settings)
-  })
+  queryTabs({ currentWindow: true }).then(
+    forEach(tab => {
+      sendMessageToTab(tab, { type: "closePopup" })
+      tabHandler(tab, settings)
+    })
+  )
 }
 
 chrome.runtime.onInstalled.addListener(() => {
-  getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
   chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {
       getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
@@ -46,7 +76,6 @@ chrome.runtime.onInstalled.addListener(() => {
 })
 
 chrome.runtime.onStartup.addListener(() => {
-  getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
   chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {
       getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
@@ -63,48 +92,133 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 })
 
-chrome.browserAction.onClicked.addListener(tab => {
-  getStorage(["subdomain", "apiKey"]).then(settings => {
-    settings = { ...settings, version }
-    sendMessageToTab(tab, { type: "toggleModal", payload: settings })
-  })
+chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
+  if (areaName === "sync" && (apiKey || subdomain)) {
+    getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
+  }
 })
 
-chrome.runtime.onMessage.addListener(action => {
-  switch (action.type) {
-    case "openOptions": {
-      let url
-      if (isChrome()) {
-        url = `chrome://extensions/?options=${chrome.runtime.id}`
+const openPopup = (tab, service) => {
+  const fromDate = getStartOfWeek()
+  const toDate = getEndOfWeek()
+  getStorage(["subdomain", "apiKey"])
+    .then(settings => {
+      settings = { ...settings, version }
+      return new ApiClient(settings)
+    })
+    .then(apiClient =>
+      Promise.all([
+        apiClient.login(service),
+        apiClient.projects(),
+        apiClient.activities(fromDate, toDate),
+        apiClient.schedules(fromDate, toDate)
+      ])
+    )
+    .then(responses => {
+      const action = {
+        type: "openPopup",
+        payload: {
+          service,
+          lastProjectId: get("[0].data.last_project_id", responses),
+          lastTaskId: get("[0].data.last_task_id", responses),
+          roundTimeEntries: get("[0].data.round_time_entries", responses),
+          projects: groupedProjectOptions(get("[1].data.projects", responses)),
+          activities: get("[2].data", responses),
+          schedules: get("[3].data", responses),
+          fromDate,
+          toDate
+        }
+      }
+      sendMessageToTab(tab, action)
+    })
+    .catch(error => {
+      let errorType
+      if (error.response?.status === 401) {
+        errorType = ERROR_UNAUTHORIZED
+      } else if (error.response?.status === 426) {
+        errorType = ERROR_UPGRADE_REQUIRED
       } else {
-        url = browser.runtime.getURL("options.html")
+        errorType = ERROR_UNKNOWN
       }
-      return chrome.tabs.create({ url })
-    }
-
-    case "openExtensions": {
-      if (isChrome()) {
-        chrome.tabs.create({ url: "chrome://extensions" })
-      }
-      return
-    }
-
-    case "toggleModal": {
-      return queryTabs({ active: true, currentWindow: true }).then(tabs => {
-        sendMessageToTab(tabs[0], action)
+      sendMessageToTab(tab, {
+        type: "openPopup",
+        payload: { errorType }
       })
-    }
+    })
+}
 
-    case "closeModal": {
-      return queryTabs({ active: true, currentWindow: true }).then(tabs =>
-        sendMessageToTab(tabs[0], action)
-      )
-    }
-
-    case "activityCreated": {
-      return queryTabs({ active: true, currentWindow: true }).then(tabs =>
-        sendMessageToTab(tabs[0], action)
-      )
-    }
+const togglePopup = tab => ({ isOpen, service }) => {
+  if (isOpen) {
+    sendMessageToTab(tab, { type: "closePopup" })
+  } else {
+    openPopup(tab, service)
   }
+}
+
+chrome.browserAction.onClicked.addListener(tab => {
+  sendMessageToTab(tab, { type: "togglePopup" }, togglePopup(tab))
+})
+
+registerMessageHandler("togglePopup", () => {
+  queryTabs({ active: true, currentWindow: true }).then(tabs =>
+    sendMessageToTab(tabs[0], { type: "togglePopup" }, togglePopup(tabs[0]))
+  )
+})
+
+registerMessageHandler(
+  "createActivity",
+  ({ payload: { activity, service } }) => {
+    queryTabs({ active: true, currentWindow: true })
+      .then(head)
+      .then(tab => {
+        getStorage(["subdomain", "apiKey"]).then(settings => {
+          settings = { ...settings, version }
+          const apiClient = new ApiClient(settings)
+          apiClient
+            .createActivity(activity)
+            .then(() => {
+              sendMessageToTab(tab, { type: "closePopup" })
+              apiClient.bookedHours(service).then(({ data }) => {
+                sendMessageToTab(tab, {
+                  type: "showBubble",
+                  payload: {
+                    bookedHours: parseFloat(data[0]?.hours) || 0,
+                    service
+                  }
+                })
+              })
+            })
+            .catch(error => {
+              if (error.response?.status === 422) {
+                sendMessageToTab(tab, {
+                  type: "setFormErrors",
+                  payload: error.response.data
+                })
+              }
+            })
+        })
+      })
+  }
+)
+
+registerMessageHandler("openOptions", () => {
+  let url
+  if (isChrome()) {
+    url = `chrome://extensions/?options=${chrome.runtime.id}`
+  } else {
+    url = browser.runtime.getURL("options.html")
+  }
+  return chrome.tabs.create({ url })
+})
+
+registerMessageHandler("openExtensions", () => {
+  if (isChrome()) {
+    chrome.tabs.create({ url: "chrome://extensions" })
+  }
+})
+
+registerMessageHandler("closePopup", action => {
+  return queryTabs({ active: true, currentWindow: true }).then(tabs =>
+    sendMessageToTab(tabs[0], action)
+  )
 })
