@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
-import { getStorage, setStorage } from "utils/browser"
+import { isChrome, getStorage, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
 
 @observer
@@ -36,7 +36,7 @@ class Options extends Component {
         .login()
         .then(() => {
           this.isSuccess = true
-          window.close()
+          this.closeWindow()
         })
         .catch(error => {
           this.errorMessage =
@@ -50,6 +50,10 @@ class Options extends Component {
     if (event.key === "Enter") {
       this.handleSubmit()
     }
+  };
+
+  closeWindow = () => {
+    isChrome() && window.close()
   };
 
   render() {

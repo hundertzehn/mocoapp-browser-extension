@@ -1,6 +1,5 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import { toJS } from 'mobx'
 import ReactSelect, { createFilter } from "react-select"
 import {
   values,
@@ -14,7 +13,7 @@ import {
   pathEq
 } from "lodash/fp"
 
-const hasOptionGroups = options => 
+const hasOptionGroups = options =>
   options.some(option => Boolean(option.options))
 
 const customTheme = theme => ({
@@ -22,15 +21,15 @@ const customTheme = theme => ({
   borderRadius: 0,
   spacing: {
     ...theme.spacing,
-    baseUnit: 2,
+    baseUnit: 3,
     controlHeight: 32
   },
   colors: {
     ...theme.colors,
     primary: "#38b5eb",
-    primary75: "rgba(56, 181, 235, 0.75)",
-    primary50: "rgba(56, 181, 235, 0.5)",
-    primary25: "rgba(56, 181, 235, 0.25)",
+    primary75: "rgba(56, 181, 235, 0.25)",
+    primary50: "#38b5eb",
+    primary25: "#38b5eb"
   }
 })
 
@@ -41,8 +40,12 @@ const customStyles = props => ({
   }),
   valueContainer: base => ({
     ...base,
-    height: "32px",
-    padding: "6px 12px",
+    padding: "4px 12px"
+  }),
+  input: base => ({
+    ...base,
+    border: "0 !important",
+    boxShadow: "0 !important"
   }),
   groupHeading: (base, _state) => ({
     ...base,
@@ -50,12 +53,14 @@ const customStyles = props => ({
     textTransform: "none",
     fontWeight: "bold",
     fontSize: "100%",
-    padding: "2px 7px 4px",
+    padding: "2px 7px 4px"
   }),
   option: (base, state) => ({
     ...base,
-    padding: hasOptionGroups(state.options) ? "3px 7px 4px 20px" : "3px 7px 4px",
-    color: state.isSelected ? 'white' : 'hsl(0, 0%, 20%)'
+    padding: hasOptionGroups(state.options)
+      ? "4px 7px 4px 20px"
+      : "4px 7px 4px",
+    color: state.isSelected || state.isFocused ? "white" : "hsl(0, 0%, 20%)"
   })
 })
 
@@ -75,7 +80,7 @@ export default class Select extends Component {
     options: PropTypes.array,
     hasError: PropTypes.bool,
     onChange: PropTypes.func.isRequired
-  }
+  };
 
   static findOptionByValue = (selectOptions, value) => {
     const options = flatMap(
@@ -84,7 +89,7 @@ export default class Select extends Component {
     )
 
     return options.find(pathEq("value", value)) || null
-  }
+  };
 
   constructor(props) {
     super(props)
@@ -95,17 +100,17 @@ export default class Select extends Component {
     const { name, onChange } = this.props
     const { value } = option
     onChange({ target: { name, value } })
-  }
+  };
 
   handleKeyDown = event => {
     if (!this.select.current) {
       return
     }
 
-    if (!this.select.current.state.menuIsOpen && event.key === 'Enter') {
+    if (!this.select.current.state.menuIsOpen && event.key === "Enter") {
       this.select.current.setState({ menuIsOpen: true })
     }
-  }
+  };
 
   render() {
     const { value, ...passThroughProps } = this.props
