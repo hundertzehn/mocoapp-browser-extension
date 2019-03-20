@@ -40,8 +40,7 @@ class Options extends Component {
         })
         .catch(error => {
           this.errorMessage =
-            error.response?.data?.message ||
-            "Anmeldung fehlgeschlagen, Internetadresse überprüfen"
+            error.response?.data?.message || "Anmeldung fehlgeschlagen"
         })
     })
   };
@@ -59,7 +58,7 @@ class Options extends Component {
   render() {
     return (
       <div className="moco-bx-options">
-        <h2>Einstellungen</h2>
+        <h2 style={{ textAlign: "center" }}>Einstellungen</h2>
         {this.errorMessage && (
           <div className="text-danger">{this.errorMessage}</div>
         )}
@@ -67,7 +66,7 @@ class Options extends Component {
           <div className="text-success">Anmeldung erfolgreich</div>
         )}
         <div className="form-group">
-          <label>Internetadresse</label>
+          <label>Internetadresse eintragen</label>
           <div className="input-group">
             <input
               type="text"
@@ -80,7 +79,7 @@ class Options extends Component {
           </div>
         </div>
         <div className="form-group">
-          <label>API Key</label>
+          <label>Persönlichen API-Schlüssel eintragen</label>
           <input
             type="text"
             name="apiKey"
@@ -88,12 +87,9 @@ class Options extends Component {
             onKeyDown={this.handleInputKeyDown}
             onChange={this.onChange}
           />
-          <div className="text-muted" style={{ marginTop: "0.5rem" }}>
-            Den API-Schlüssel finden Sie im Profil unter Integrationen
-          </div>
         </div>
         <button className="moco-bx-btn" onClick={this.handleSubmit}>
-          Save
+          OK
         </button>
       </div>
     )

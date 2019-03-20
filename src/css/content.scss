@@ -1,16 +1,8 @@
 @import "variables";
 @import "button";
 
-#moco-bx-root, #moco-bx-popup-root {
-  font-family: system-ui, sans-serif;
-
-  iframe {
-    border: 0;
-  }
-
-  h2 {
-    margin-bottom: 1rem;
-  }
+#moco-bx-root {
+  font-family: $font-family;
 
   .moco-bx-bubble {
     box-sizing: content-box;
@@ -50,6 +42,18 @@
       }
     }
   }
+}
+
+#moco-bx-popup-root {
+  font-family: $font-family;
+
+  iframe {
+    border: 0;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+  }
 
   .moco-bx-popup {
     position: fixed; /* Stay in place */
@@ -66,17 +70,6 @@
     .moco-bx-popup-content {
       background-color: white;
       margin: 0 auto;
-    }
-  }
-
-  .moco-bx-error-container {
-    width: 468px;
-    padding: 2rem 4rem 3rem;
-    img {
-      width: 100%;
-    }
-    button {
-      margin-top: 1.5rem;
     }
   }
 }

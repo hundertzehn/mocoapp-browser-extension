@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import queryString from "query-string"
 import {
+  ERROR_UNKNOWN,
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
   serializeProps
@@ -18,9 +19,11 @@ class Popup extends Component {
     width: "516px",
     height:
       this.props.errorType === ERROR_UNAUTHORIZED
-        ? "888px"
+        ? "844x"
         : this.props.errorType === ERROR_UPGRADE_REQUIRED
-        ? "276px"
+        ? "355px"
+        : this.props.errorType === ERROR_UNKNOWN
+        ? "377px"
         : "558px"
   });
 
