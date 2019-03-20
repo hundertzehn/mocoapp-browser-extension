@@ -6,7 +6,7 @@ const UpgradeRequiredError = () => (
     <h1>Upgrade erforderlich</h1>
     <p>Die installierte MOCO Browser-Erweiterung ist veraltet.</p>
     <p>
-      Bitte aktualisiere die MOCO Browser-Erweiterung auf den aktuellsten Stand.
+      Bitte aktualisiere die MOCO Browser-Erweiterung auf den neuesten Stand.
     </p>
 
     {isChrome() ? (
