@@ -6,6 +6,7 @@ import { observable, computed } from "mobx"
 import { Observer, observer } from "mobx-react"
 import { Spring, animated, config } from "react-spring/renderprops"
 import {
+  ERROR_UNKNOWN,
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
   findProject,
@@ -14,6 +15,7 @@ import {
 } from "utils"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
+import UnknownError from "components/Errors/UnknownError"
 import { parse } from "date-fns"
 import Header from "./shared/Header"
 import { head } from "lodash"
@@ -40,7 +42,8 @@ class App extends Component {
     roundTimeEntries: PropTypes.bool,
     fromDate: PropTypes.string,
     toDate: PropTypes.string,
-    errorType: PropTypes.string
+    errorType: PropTypes.string,
+    errorMessage: PropTypes.string
   };
 
   static defaultProps = {
@@ -143,7 +146,8 @@ class App extends Component {
       schedules,
       fromDate,
       toDate,
-      errorType
+      errorType,
+      errorMessage
     } = this.props
 
     if (errorType === ERROR_UNAUTHORIZED) {
@@ -152,6 +156,10 @@ class App extends Component {
 
     if (errorType === ERROR_UPGRADE_REQUIRED) {
       return <UpgradeRequiredError />
+    }
+
+    if (errorType === ERROR_UNKNOWN) {
+      return <UnknownError message={errorMessage} />
     }
 
     return (

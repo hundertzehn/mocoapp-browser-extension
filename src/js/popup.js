@@ -18,7 +18,8 @@ const parsedProps = parseProps([
   "lastTaskId",
   "fromDate",
   "toDate",
-  "errorType"
+  "errorType",
+  "errorMessage"
 ])(queryString.parse(location.search))
 
 ReactDOM.render(

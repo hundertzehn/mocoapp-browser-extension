@@ -136,17 +136,18 @@ const openPopup = (tab, service) => {
       sendMessageToTab(tab, action)
     })
     .catch(error => {
-      let errorType
+      let errorType, errorMessage
       if (error.response?.status === 401) {
         errorType = ERROR_UNAUTHORIZED
       } else if (error.response?.status === 426) {
         errorType = ERROR_UPGRADE_REQUIRED
       } else {
         errorType = ERROR_UNKNOWN
+        errorMessage = error.message
       }
       sendMessageToTab(tab, {
         type: "openPopup",
-        payload: { errorType }
+        payload: { errorType, errorMessage }
       })
     })
 }

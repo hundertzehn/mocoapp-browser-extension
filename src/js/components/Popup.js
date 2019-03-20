@@ -43,7 +43,8 @@ class Popup extends Component {
       "lastTaskId",
       "fromDate",
       "toDate",
-      "errorType"
+      "errorType",
+      "errorMessage"
     ])(this.props)
 
     const styles = this.getStyles()
