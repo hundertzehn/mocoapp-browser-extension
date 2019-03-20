@@ -70,7 +70,10 @@ const updateBubble = ({ service, bookedHours } = {}) => {
               <Bubble
                 key={service.url}
                 bookedHours={bookedHours}
-                onClick={() => sendMessageToRuntime({ type: "togglePopup" })}
+                onClick={event => {
+                  event.stopPropagation()
+                  sendMessageToRuntime({ type: "togglePopup" })
+                }}
               />
             </animated.div>
           ))
