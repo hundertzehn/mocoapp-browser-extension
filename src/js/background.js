@@ -16,7 +16,9 @@ import {
   groupedProjectOptions,
   weekStartsOn
 } from "utils"
-import { get, head, forEach, isNil } from "lodash/fp"
+import { get, head, forEach, reject, isNil } from "lodash/fp"
+
+const isBrowserTab = tab => /^(?:chrome|about):/.test(tab.url)
 
 const getStartOfWeek = () => startOfWeek(new Date(), { weekStartsOn })
 const getEndOfWeek = () => endOfWeek(new Date(), { weekStartsOn })
@@ -59,12 +61,14 @@ function tabHandler(tab, settings) {
 
 function settingsChangedHandler(settings) {
   settings = { ...settings, version }
-  queryTabs({ currentWindow: true }).then(
-    forEach(tab => {
-      sendMessageToTab(tab, { type: "closePopup" })
-      tabHandler(tab, settings)
-    })
-  )
+  queryTabs({ currentWindow: true })
+    .then(reject(isBrowserTab))
+    .then(
+      forEach(tab => {
+        sendMessageToTab(tab, { type: "closePopup" })
+        tabHandler(tab, settings)
+      })
+    )
 }
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -160,13 +164,19 @@ const togglePopup = tab => ({ isOpen, service } = {}) => {
 }
 
 chrome.browserAction.onClicked.addListener(tab => {
-  sendMessageToTab(tab, { type: "togglePopup" }, togglePopup(tab))
+  if (!isBrowserTab(tab)) {
+    sendMessageToTab(tab, { type: "togglePopup" }, togglePopup(tab))
+  }
 })
 
 registerMessageHandler("togglePopup", () => {
-  queryTabs({ active: true, currentWindow: true }).then(tabs =>
-    sendMessageToTab(tabs[0], { type: "togglePopup" }, togglePopup(tabs[0]))
-  )
+  queryTabs({ active: true, currentWindow: true })
+    .then(head)
+    .then(tab => {
+      if (tab && !isBrowserTab(tab)) {
+        sendMessageToTab(tab, { type: "togglePopup" }, togglePopup(tab))
+      }
+    })
 })
 
 registerMessageHandler(
