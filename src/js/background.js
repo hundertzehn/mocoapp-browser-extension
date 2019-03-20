@@ -29,33 +29,31 @@ const matcher = createMatcher(remoteServices)
 function tabHandler(tab, settings) {
   const service = matcher(tab.url)
   if (service?.match?.id) {
-    setTimeout(() => {
-      sendMessageToTab(tab, { type: "getService" }, service => {
-        const apiClient = new ApiClient(settings)
-        apiClient
-          .bookedHours(service)
-          .then(({ data }) => {
-            sendMessageToTab(tab, {
-              type: "showBubble",
-              payload: {
-                bookedHours: parseFloat(data[0]?.hours) || 0,
-                service
-              }
-            })
+    sendMessageToTab(tab, { type: "getService" }, service => {
+      const apiClient = new ApiClient(settings)
+      apiClient
+        .bookedHours(service)
+        .then(({ data }) => {
+          sendMessageToTab(tab, {
+            type: "showBubble",
+            payload: {
+              bookedHours: parseFloat(data[0]?.hours) || 0,
+              service
+            }
           })
-          .catch(() => {
-            sendMessageToTab(tab, {
-              type: "showBubble",
-              payload: {
-                bookedHours: 0,
-                service
-              }
-            })
+        })
+        .catch(() => {
+          sendMessageToTab(tab, {
+            type: "showBubble",
+            payload: {
+              bookedHours: 0,
+              service
+            }
           })
-      })
-    }, 0)
+        })
+    })
   } else {
-    setTimeout(() => sendMessageToTab(tab, { type: "hideBubble" }), 0)
+    sendMessageToTab(tab, { type: "hideBubble" })
   }
 }
 
