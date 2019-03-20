@@ -16,7 +16,6 @@
     box-sizing: content-box;
     position: fixed;
     bottom: 2rem;
-    z-index: 1000;
     height: 60px;
     width: 60px;
     background-color: white;
@@ -24,6 +23,7 @@
     box-shadow: -1px -1px 15px 4px rgba(0, 0, 0, 0.05),
     2px 2px 15px 4px rgba(0, 0, 0, 0.05);
     padding: 5px;
+    z-index: 9999;
 
     cursor: pointer;
 
