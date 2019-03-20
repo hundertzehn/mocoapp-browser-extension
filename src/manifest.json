@@ -20,7 +20,7 @@
     "tabs"
   ],
   "background": {
-    "scripts": ["background.[version].js"]
+    "page": "background.html"
   },
   "browser_action": {
     "default_icon": "src/images/logo.png"

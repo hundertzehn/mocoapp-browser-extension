@@ -1,6 +1,5 @@
 import React from "react"
 import settingsUrl from "images/settings.png"
-import { sendMessageToRuntime } from "utils/browser"
 
 const InvalidConfigurationError = () => (
   <div className="moco-bx-error-container">
@@ -13,7 +12,7 @@ const InvalidConfigurationError = () => (
     </p>
     <button
       className="moco-bx-btn"
-      onClick={() => sendMessageToRuntime({ type: "openOptions" })}
+      onClick={() => chrome.runtime.sendMessage({ type: "openOptions" })}
     >
       Einstellungen öffnen
     </button>

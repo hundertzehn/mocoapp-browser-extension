@@ -1,5 +1,6 @@
 export const isChrome = () => typeof browser === "undefined" && chrome
 export const isFirefox = () => typeof browser !== "undefined" && chrome
+import { head } from "lodash/fp"
 
 export const getStorage = keys => {
   if (isChrome()) {
@@ -29,33 +30,6 @@ export const queryTabs = queryInfo => {
   }
 }
 
-export const sendMessageToTab = (tab, action, callback) => {
-  if (isChrome()) {
-    chrome.tabs.sendMessage(tab.id, action, callback)
-  } else {
-    browser.tabs
-      .sendMessage(tab.id, action)
-      .then(result => callback && callback(result))
-  }
-}
-
-export const sendMessageToRuntime = action => {
-  if (isChrome()) {
-    return chrome.runtime.sendMessage(action)
-  } else {
-    return browser.runtime.sendMessage(action)
-  }
-}
-
-export const onRuntimeMessage = handler => {
-  if (isChrome()) {
-    chrome.runtime.onMessage.addListener((action, _sender, sendMessage) => {
-      handler(action)?.then(response => {
-        sendMessage(response)
-      })
-      return true
-    })
-  } else {
-    browser.runtime.onMessage.addListener(handler)
-  }
+export const getCurrentTab = () => {
+  return queryTabs({ currentWindow: true, active: true }).then(head)
 }
