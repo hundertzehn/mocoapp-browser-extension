@@ -63,6 +63,11 @@ module.exports = env => {
         chunkFilename: "[id].css"
       }),
       new HtmlWebpackPlugin({
+        template: path.join(__dirname, "src", "background.html"),
+        filename: "background.html",
+        chunks: ["background"]
+      }),
+      new HtmlWebpackPlugin({
         template: path.join(__dirname, "src", "popup.html"),
         filename: "popup.html",
         chunks: ["popup"]

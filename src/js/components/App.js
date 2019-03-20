@@ -20,8 +20,6 @@ import { parse } from "date-fns"
 import Header from "./shared/Header"
 import { head } from "lodash"
 import TimeInputParser from "utils/TimeInputParser"
-import { sendMessageToRuntime } from "utils/browser"
-import { registerMessageHandler } from "utils/messaging"
 
 @observer
 class App extends Component {
@@ -89,7 +87,7 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
-    registerMessageHandler("setFormErrors", this.handleSetFormErrors)
+    chrome.runtime.onMessage.addListener(this.handleSetFormErrors)
   }
 
   componentWillUnmount() {
@@ -119,7 +117,7 @@ class App extends Component {
     event.preventDefault()
     const { service } = this.props
 
-    sendMessageToRuntime({
+    chrome.runtime.sendMessage({
       type: "createActivity",
       payload: {
         activity: this.changesetWithDefaults,
@@ -131,12 +129,14 @@ class App extends Component {
   handleKeyDown = event => {
     if (event.keyCode === 27) {
       event.stopPropagation()
-      sendMessageToRuntime({ type: "closePopup" })
+      chrome.runtime.sendMessage({ type: "closePopup" })
     }
   };
 
-  handleSetFormErrors = ({ payload }) => {
-    this.formErrors = payload
+  handleSetFormErrors = ({ type, payload }) => {
+    if (type === "setFormErrors") {
+      this.formErrors = payload
+    }
   };
 
   render() {

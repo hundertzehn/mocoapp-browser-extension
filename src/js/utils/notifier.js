@@ -3,12 +3,22 @@ import bugsnag from "@bugsnag/js"
 import bugsnagReact from "@bugsnag/plugin-react"
 import { includes } from "lodash/fp"
 
-const { version: appVersion } = chrome.runtime.getManifest()
+function getAppVersion() {
+  try {
+    return chrome.runtime.getManifest().version
+  } catch (error) {
+    return
+  }
+}
 
 const filterReport = report => {
-  const { version } = chrome.runtime.getManifest()
+  const appVersion = getAppVersion()
+  if (!appVersion) {
+    return false
+  }
+
   const scripts = ["background", "content", "options", "popup"].map(
-    file => `${chrome.extension.getURL(file)}.${version}.js`
+    file => `${chrome.extension.getURL(file)}.${appVersion}.js`
   )
 
   return scripts.some(script => report.stacktrace.some(includes(script)))
@@ -16,10 +26,10 @@ const filterReport = report => {
 
 const bugsnagClient = bugsnag({
   apiKey: "da6caac4af70af3e4683454b40fe5ef5",
-  appVersion,
+  appVersion: getAppVersion(),
   beforeSend: filterReport,
-  releaseStage: process.env.NODE_ENV,
-  notifyReleaseStages: ["production"]
+  releaseStage: process.env.NODE_ENV
+  // notifyReleaseStages: ["production"]
 })
 
 bugsnagClient.use(bugsnagReact, React)

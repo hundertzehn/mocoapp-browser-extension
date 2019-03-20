@@ -1,14 +1,9 @@
 import { createMatcher } from "utils/urlMatcher"
 import ApiClient from "api/Client"
 import remoteServices from "./remoteServices"
-import { registerMessageHandler } from "utils/messaging"
 import { startOfWeek, endOfWeek } from "date-fns"
-import {
-  isChrome,
-  sendMessageToTab,
-  queryTabs,
-  getStorage
-} from "utils/browser"
+import { isChrome, queryTabs, getCurrentTab, getStorage } from "utils/browser"
+import { BackgroundMessenger } from "utils/messaging"
 import {
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
@@ -16,25 +11,29 @@ import {
   groupedProjectOptions,
   weekStartsOn
 } from "utils"
-import { get, head, forEach, reject, isNil } from "lodash/fp"
+import { get, forEach, reject, isNil } from "lodash/fp"
 
 const isBrowserTab = tab => /^(?:chrome|about):/.test(tab.url)
-
 const getStartOfWeek = () => startOfWeek(new Date(), { weekStartsOn })
 const getEndOfWeek = () => endOfWeek(new Date(), { weekStartsOn })
-
-const { version } = chrome.runtime.getManifest()
 const matcher = createMatcher(remoteServices)
+const { version } = chrome.runtime.getManifest()
 
-function tabHandler(tab, settings) {
+const messenger = new BackgroundMessenger()
+
+function tabUpdated(tab, settings) {
+  messenger.connectTab(tab)
+
   const service = matcher(tab.url)
-  if (service?.match?.id) {
-    sendMessageToTab(tab, { type: "getService" }, service => {
-      const apiClient = new ApiClient(settings)
+  if (service) {
+    messenger.postMessage(tab, { type: "requestService" })
+
+    messenger.once("newService", ({ payload: { service } }) => {
+      const apiClient = new ApiClient({ ...settings, version })
       apiClient
         .bookedHours(service)
         .then(({ data }) => {
-          sendMessageToTab(tab, {
+          messenger.postMessage(tab, {
             type: "showBubble",
             payload: {
               bookedHours: parseFloat(data[0]?.hours) || 0,
@@ -43,7 +42,7 @@ function tabHandler(tab, settings) {
           })
         })
         .catch(() => {
-          sendMessageToTab(tab, {
+          messenger.postMessage(tab, {
             type: "showBubble",
             payload: {
               bookedHours: 0,
@@ -53,21 +52,76 @@ function tabHandler(tab, settings) {
         })
     })
   } else {
-    sendMessageToTab(tab, { type: "hideBubble" })
+    messenger.postMessage(tab, { type: "hideBubble" })
   }
 }
 
 function settingsChangedHandler(settings) {
-  settings = { ...settings, version }
   queryTabs({ currentWindow: true })
     .then(reject(isBrowserTab))
     .then(
       forEach(tab => {
-        sendMessageToTab(tab, { type: "closePopup" })
-        tabHandler(tab, settings)
+        messenger.postMessage(tab, { type: "closePopup" })
+        tabUpdated(tab, settings)
       })
     )
 }
+
+chrome.runtime.onMessage.addListener(action => {
+  if (action.type === "closePopup") {
+    getCurrentTab().then(tab => {
+      messenger.postMessage(tab, action)
+    })
+  }
+
+  if (action.type === "createActivity") {
+    const { activity, service } = action.payload
+    getCurrentTab().then(tab => {
+      getStorage(["subdomain", "apiKey"]).then(settings => {
+        settings = { ...settings, version }
+        const apiClient = new ApiClient(settings)
+        apiClient
+          .createActivity(activity)
+          .then(() => {
+            messenger.postMessage(tab, { type: "closePopup" })
+            apiClient.bookedHours(service).then(({ data }) => {
+              messenger.postMessage(tab, {
+                type: "showBubble",
+                payload: {
+                  bookedHours: parseFloat(data[0]?.hours) || 0,
+                  service
+                }
+              })
+            })
+          })
+          .catch(error => {
+            if (error.response?.status === 422) {
+              chrome.runtime.sendMessage({
+                type: "setFormErrors",
+                payload: error.response.data
+              })
+            }
+          })
+      })
+    })
+  }
+
+  if (action.type === "openOptions") {
+    let url
+    if (isChrome()) {
+      url = `chrome://extensions/?options=${chrome.runtime.id}`
+    } else {
+      url = browser.runtime.getURL("options.html")
+    }
+    return chrome.tabs.create({ url })
+  }
+
+  if (action.type === "openExtensions") {
+    if (isChrome()) {
+      chrome.tabs.create({ url: "chrome://extensions" })
+    }
+  }
+})
 
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
@@ -75,6 +129,8 @@ chrome.runtime.onInstalled.addListener(() => {
       getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
     }
   })
+
+  queryTabs({}).then(forEach(tab => chrome.tabs.reload(tab.id)))
 })
 
 chrome.runtime.onStartup.addListener(() => {
@@ -86,13 +142,21 @@ chrome.runtime.onStartup.addListener(() => {
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === "complete") {
+  if (!isBrowserTab(tab) && changeInfo.status === "complete") {
     getStorage(["subdomain", "apiKey"]).then(settings => {
       settings = { ...settings, version }
-      tabHandler(tab, settings)
+      tabUpdated(tab, settings)
     })
   }
 })
+
+chrome.tabs.onCreated.addListener(tab => {
+  if (!isBrowserTab(tab)) {
+    messenger.connectTab(tab)
+  }
+})
+
+chrome.tabs.onRemoved.addListener(messenger.disconnectTab)
 
 chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
   if (areaName === "sync" && (apiKey || subdomain)) {
@@ -100,7 +164,30 @@ chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
   }
 })
 
-const openPopup = (tab, service) => {
+chrome.browserAction.onClicked.addListener(tab => {
+  if (!isBrowserTab(tab)) {
+    messenger.postMessage(tab, { type: "requestService" })
+    messenger.once("newService", ({ payload }) => {
+      togglePopup(tab)(payload)
+    })
+  }
+})
+
+function togglePopup(tab) {
+  return function({ isOpen, service } = {}) {
+    if (isNil(isOpen)) {
+      return
+    }
+
+    if (isOpen) {
+      messenger.postMessage(tab, { type: "closePopup" })
+    } else {
+      openPopup(tab, service)
+    }
+  }
+}
+
+function openPopup(tab, service) {
   const fromDate = getStartOfWeek()
   const toDate = getEndOfWeek()
   getStorage(["subdomain", "apiKey"])
@@ -131,7 +218,7 @@ const openPopup = (tab, service) => {
           toDate
         }
       }
-      sendMessageToTab(tab, action)
+      messenger.postMessage(tab, action)
     })
     .catch(error => {
       let errorType, errorMessage
@@ -143,95 +230,20 @@ const openPopup = (tab, service) => {
         errorType = ERROR_UNKNOWN
         errorMessage = error.message
       }
-      sendMessageToTab(tab, {
+      messenger.postMessage(tab, {
         type: "openPopup",
         payload: { errorType, errorMessage }
       })
     })
 }
 
-const togglePopup = tab => ({ isOpen, service } = {}) => {
-  if (isNil(isOpen)) {
-    return
-  }
-
-  if (isOpen) {
-    sendMessageToTab(tab, { type: "closePopup" })
-  } else {
-    openPopup(tab, service)
-  }
-}
-
-chrome.browserAction.onClicked.addListener(tab => {
-  if (!isBrowserTab(tab)) {
-    sendMessageToTab(tab, { type: "togglePopup" }, togglePopup(tab))
-  }
-})
-
-registerMessageHandler("togglePopup", () => {
-  queryTabs({ active: true, currentWindow: true })
-    .then(head)
-    .then(tab => {
-      if (tab && !isBrowserTab(tab)) {
-        sendMessageToTab(tab, { type: "togglePopup" }, togglePopup(tab))
-      }
-    })
-})
-
-registerMessageHandler(
-  "createActivity",
-  ({ payload: { activity, service } }) => {
-    queryTabs({ active: true, currentWindow: true })
-      .then(head)
-      .then(tab => {
-        getStorage(["subdomain", "apiKey"]).then(settings => {
-          settings = { ...settings, version }
-          const apiClient = new ApiClient(settings)
-          apiClient
-            .createActivity(activity)
-            .then(() => {
-              sendMessageToTab(tab, { type: "closePopup" })
-              apiClient.bookedHours(service).then(({ data }) => {
-                sendMessageToTab(tab, {
-                  type: "showBubble",
-                  payload: {
-                    bookedHours: parseFloat(data[0]?.hours) || 0,
-                    service
-                  }
-                })
-              })
-            })
-            .catch(error => {
-              if (error.response?.status === 422) {
-                sendMessageToTab(tab, {
-                  type: "setFormErrors",
-                  payload: error.response.data
-                })
-              }
-            })
-        })
+messenger.on("togglePopup", () => {
+  getCurrentTab().then(tab => {
+    if (tab && !isBrowserTab(tab)) {
+      messenger.postMessage(tab, { type: "requestService" })
+      messenger.once("newService", ({ payload }) => {
+        togglePopup(tab)(payload)
       })
-  }
-)
-
-registerMessageHandler("openOptions", () => {
-  let url
-  if (isChrome()) {
-    url = `chrome://extensions/?options=${chrome.runtime.id}`
-  } else {
-    url = browser.runtime.getURL("options.html")
-  }
-  return chrome.tabs.create({ url })
-})
-
-registerMessageHandler("openExtensions", () => {
-  if (isChrome()) {
-    chrome.tabs.create({ url: "chrome://extensions" })
-  }
-})
-
-registerMessageHandler("closePopup", action => {
-  return queryTabs({ active: true, currentWindow: true }).then(tabs =>
-    sendMessageToTab(tabs[0], action)
-  )
+    }
+  })
 })

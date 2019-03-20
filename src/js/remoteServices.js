@@ -80,7 +80,11 @@ export default {
 
   wunderlist: {
     name: "wunderlist",
-    urlPatterns: ["https\\://www.wunderlist.com/webapp#/tasks/:id"],
+    urlPatterns: [
+      "https\\://www.wunderlist.com/webapp#/tasks/:id",
+      "https\\://www.wunderlist.com/webapp#/tasks/:id/title/edit",
+      "https\\://www.wunderlist.com/webapp#/tasks/:id/title/focus"
+    ],
     description: document =>
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
