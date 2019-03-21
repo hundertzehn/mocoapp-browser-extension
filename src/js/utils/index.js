@@ -21,11 +21,13 @@ export const ERROR_UNKNOWN = "unknown"
 
 export const noop = () => null
 
-export const findProject = id =>
+export const findProjectBy = prop => val =>
   compose(
-    find(pathEq("value", Number(id))),
+    find(pathEq(prop, val)),
     flatMap(get("options"))
   )
+export const findProjectByIdentifier = findProjectBy("identifier")
+export const findProjectByValue = findProjectBy("value")
 
 export const findTask = id =>
   compose(
@@ -45,6 +47,7 @@ export function projectOptions(projects) {
   return projects.map(project => ({
     value: project.id,
     label: project.intern ? `(${project.name})` : project.name,
+    identifier: project.identifier,
     customerName: project.customer_name,
     tasks: taskOptions(project.tasks)
   }))

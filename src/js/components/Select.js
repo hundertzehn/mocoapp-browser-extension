@@ -60,7 +60,8 @@ const customStyles = props => ({
     padding: hasOptionGroups(state.options)
       ? "4px 7px 4px 20px"
       : "4px 7px 4px",
-    color: state.isSelected || state.isFocused ? "white" : "hsl(0, 0%, 20%)"
+    backgroundColor: state.isFocused ? "#38b5eb" : "none",
+    color: state.isFocused ? "white" : "hsl(0, 0%, 20%)"
   })
 })
 

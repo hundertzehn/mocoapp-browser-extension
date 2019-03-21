@@ -10,7 +10,8 @@ import {
   ERROR_UNKNOWN,
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
-  findProject,
+  findProjectByValue,
+  findProjectByIdentifier,
   findTask,
   formatDate
 } from "utils"
@@ -60,7 +61,8 @@ class App extends Component {
     const { service, projects, lastProjectId, lastTaskId } = this.props
 
     const project =
-      findProject(service?.projectId || lastProjectId)(projects) ||
+      findProjectByIdentifier(service?.projectId)(projects) ||
+      findProjectByValue(Number(lastProjectId))(projects) ||
       head(projects)
 
     const task =
@@ -94,7 +96,7 @@ class App extends Component {
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown)
-    window.runtime.onMessage.removeListener(this.handleSetFormErrors)
+    chrome.runtime.onMessage.removeListener(this.handleSetFormErrors)
   }
 
   handleChange = event => {
@@ -106,7 +108,7 @@ class App extends Component {
     this.changeset[name] = value
 
     if (name === "assignment_id") {
-      const project = findProject(value)(projects)
+      const project = findProjectByValue(value)(projects)
       this.changeset.task_id = head(project?.tasks).value || null
     }
   };
