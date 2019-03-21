@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import Spinner from "components/Spinner"
 import Form from "components/Form"
 import Calendar from "components/Calendar"
 import { observable, computed } from "mobx"
@@ -24,6 +25,7 @@ import TimeInputParser from "utils/TimeInputParser"
 @observer
 class App extends Component {
   static propTypes = {
+    loading: PropTypes.bool.isRequired,
     service: PropTypes.shape({
       id: PropTypes.string,
       url: PropTypes.string,
@@ -141,6 +143,7 @@ class App extends Component {
 
   render() {
     const {
+      loading,
       projects,
       activities,
       schedules,
@@ -149,6 +152,10 @@ class App extends Component {
       errorType,
       errorMessage
     } = this.props
+
+    if (loading) {
+      return <Spinner />
+    }
 
     if (errorType === ERROR_UNAUTHORIZED) {
       return <InvalidConfigurationError />

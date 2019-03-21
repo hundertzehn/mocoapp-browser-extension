@@ -35,6 +35,7 @@ class Popup extends Component {
 
   render() {
     const serializedProps = serializeProps([
+      "loading",
       "service",
       "lastProjectId",
       "lastTaskId",

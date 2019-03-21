@@ -7,6 +7,7 @@ import { ErrorBoundary } from "utils/notifier"
 import "../css/popup.scss"
 
 const parsedProps = parseProps([
+  "loading",
   "service",
   "projects",
   "activities",

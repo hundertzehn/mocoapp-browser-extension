@@ -129,8 +129,6 @@ chrome.runtime.onInstalled.addListener(() => {
       getStorage(["subdomain", "apiKey"]).then(settingsChangedHandler)
     }
   })
-
-  queryTabs({}).then(forEach(tab => chrome.tabs.reload(tab.id)))
 })
 
 chrome.runtime.onStartup.addListener(() => {
@@ -188,6 +186,8 @@ function togglePopup(tab) {
 }
 
 function openPopup(tab, service) {
+  messenger.postMessage(tab, { type: "openPopup", payload: { loading: true } })
+
   const fromDate = getStartOfWeek()
   const toDate = getEndOfWeek()
   getStorage(["subdomain", "apiKey"])
@@ -215,7 +215,8 @@ function openPopup(tab, service) {
           activities: get("[2].data", responses),
           schedules: get("[3].data", responses),
           fromDate,
-          toDate
+          toDate,
+          loading: false
         }
       }
       messenger.postMessage(tab, action)
