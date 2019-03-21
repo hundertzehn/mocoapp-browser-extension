@@ -66,7 +66,7 @@ class Options extends Component {
           <div className="text-success">Anmeldung erfolgreich</div>
         )}
         <div className="form-group">
-          <label>Internetadresse eintragen</label>
+          <label>Internetadresse</label>
           <div className="input-group">
             <input
               type="text"
@@ -79,7 +79,7 @@ class Options extends Component {
           </div>
         </div>
         <div className="form-group">
-          <label>Persönlichen API-Schlüssel eintragen</label>
+          <label>API-Schlüssel</label>
           <input
             type="text"
             name="apiKey"
@@ -87,6 +87,10 @@ class Options extends Component {
             onKeyDown={this.handleInputKeyDown}
             onChange={this.onChange}
           />
+          <p className="text-muted">
+            Den API-Schlüssel findest du in deinem Profil unter
+            &quot;Integrationen&quot;.
+          </p>
         </div>
         <button className="moco-bx-btn" onClick={this.handleSubmit}>
           OK

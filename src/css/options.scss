@@ -4,14 +4,25 @@
 
 #moco-bx-root {
   font-family: $font-family;
+  color: $font-color;
   font-size: 14px;
+  line-height: 1.5;
 
   .moco-bx-options {
     padding: 0rem 2rem 2rem;
 
+    p {
+      margin: 0.5rem 0;
+    }
+
     h2 {
       font-size: 1.5rem;
       margin: 1rem 0 2rem;
+    }
+
+    label {
+      font-weight: normal;
+      margin-bottom: 5px;
     }
 
     input {

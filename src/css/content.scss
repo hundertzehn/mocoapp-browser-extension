@@ -3,6 +3,7 @@
 
 #moco-bx-root {
   font-family: $font-family;
+  color: $font-color;
 
   .moco-bx-bubble {
     box-sizing: content-box;
@@ -46,6 +47,7 @@
 
 #moco-bx-popup-root {
   font-family: $font-family;
+  color: $font-color;
 
   iframe {
     border: 0;

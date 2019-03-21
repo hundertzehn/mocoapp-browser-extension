@@ -4,12 +4,10 @@ import settingsUrl from "images/settings.png"
 const InvalidConfigurationError = () => (
   <div className="moco-bx-error-container">
     <h1>Bitte Einstellungen aktualisieren</h1>
-    <p>
-      Bitte trage deine Internetadresse und deinen API-Schlüssel in den
-      Einstellungen der MOCO Browser-Erweiterung ein. Deinen API-Schlüssel
-      findest du in der MOCO App in deinem Profil im Register
-      &quot;Integrationen&quot;.
-    </p>
+    <ol>
+      <li>Internetadresse eintragen</li>
+      <li>Persönlichen API-Schlüssel eintragen</li>
+    </ol>
     <button
       className="moco-bx-btn"
       onClick={() => chrome.runtime.sendMessage({ type: "openOptions" })}
@@ -21,6 +19,8 @@ const InvalidConfigurationError = () => (
     <img
       src={chrome.extension.getURL(settingsUrl)}
       alt="Browser extension configuration settings"
+      style={{ cursor: "pointer" }}
+      onClick={() => chrome.runtime.sendMessage({ type: "openOptions" })}
     />
   </div>
 )

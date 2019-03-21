@@ -7,6 +7,23 @@ import {
   ERROR_UPGRADE_REQUIRED,
   serializeProps
 } from "utils"
+import { isChrome } from "utils/browser"
+
+function getStyles(errorType) {
+  return {
+    width: "516px",
+    height:
+      errorType === ERROR_UNAUTHORIZED
+        ? "834px"
+        : errorType === ERROR_UPGRADE_REQUIRED
+        ? isChrome()
+          ? "369px"
+          : "461px"
+        : errorType === ERROR_UNKNOWN
+        ? "550px"
+        : "558px"
+  }
+}
 
 class Popup extends Component {
   static propTypes = {
@@ -14,18 +31,6 @@ class Popup extends Component {
     errorType: PropTypes.string,
     onRequestClose: PropTypes.func.isRequired
   };
-
-  getStyles = () => ({
-    width: "516px",
-    height:
-      this.props.errorType === ERROR_UNAUTHORIZED
-        ? "844px"
-        : this.props.errorType === ERROR_UPGRADE_REQUIRED
-        ? "355px"
-        : this.props.errorType === ERROR_UNKNOWN
-        ? "377px"
-        : "558px"
-  });
 
   handleRequestClose = event => {
     if (event.target.classList.contains("moco-bx-popup")) {
@@ -51,7 +56,7 @@ class Popup extends Component {
       "errorMessage"
     ])(this.props)
 
-    const styles = this.getStyles()
+    const styles = getStyles(this.props.errorType)
 
     return (
       <div className="moco-bx-popup" onClick={this.handleRequestClose}>
