@@ -1,7 +1,7 @@
 import React, { Component } from "react"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
-import { isChrome, getStorage, setStorage } from "utils/browser"
+import { isChrome, getSettings, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
 
 @observer
@@ -12,7 +12,7 @@ class Options extends Component {
   @observable isSuccess = false;
 
   componentDidMount() {
-    getStorage(["subdomain", "apiKey"]).then(({ subdomain, apiKey }) => {
+    getSettings().then(({ subdomain, apiKey }) => {
       this.subdomain = subdomain || ""
       this.apiKey = apiKey || ""
     })

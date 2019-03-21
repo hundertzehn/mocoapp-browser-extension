@@ -19,7 +19,7 @@ class Popup extends Component {
     width: "516px",
     height:
       this.props.errorType === ERROR_UNAUTHORIZED
-        ? "844x"
+        ? "844px"
         : this.props.errorType === ERROR_UPGRADE_REQUIRED
         ? "355px"
         : this.props.errorType === ERROR_UNKNOWN

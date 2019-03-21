@@ -25,7 +25,7 @@ import TimeInputParser from "utils/TimeInputParser"
 @observer
 class App extends Component {
   static propTypes = {
-    loading: PropTypes.bool.isRequired,
+    loading: PropTypes.bool,
     service: PropTypes.shape({
       id: PropTypes.string,
       url: PropTypes.string,
