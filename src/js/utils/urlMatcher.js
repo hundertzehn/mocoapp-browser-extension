@@ -48,7 +48,7 @@ export const createEnhancer = document => service => {
 
   return {
     ...service,
-    id: evaluate(service.id) || match.id,
+    id: evaluate(service.id),
     description: evaluate(service.description),
     projectId: evaluate(service.projectId),
     taskId: evaluate(service.taskId),
@@ -65,9 +65,11 @@ export const createMatcher = remoteServices => {
     const service = services.find(service =>
       service.patterns.some(pattern => pattern.match(url))
     )
+
     if (!service) {
-      return undefined
+      return
     }
+
     const pattern = service.patterns.find(pattern => pattern.match(url))
     let match = pattern.match(url)
     if (service.queryParams) {
@@ -77,10 +79,11 @@ export const createMatcher = remoteServices => {
       )
       match = { ...extractedQueryParams, ...match }
     }
+
     return {
+      ...match,
       ...service,
       url,
-      query,
       match
     }
   }

@@ -20,7 +20,7 @@ export function tabUpdated(tab, { messenger, settings }) {
   messenger.connectTab(tab)
 
   const service = matcher(tab.url)
-  if (service) {
+  if (service?.match?.id) {
     messenger.postMessage(tab, { type: "requestService" })
 
     messenger.once("newService", ({ payload: { service } }) => {

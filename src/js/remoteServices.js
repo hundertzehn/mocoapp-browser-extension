@@ -42,24 +42,23 @@ export default {
     urlPatterns: [
       "https\\://:org.atlassian.net/secure/RapidBoard.jspa",
       "https\\://:org.atlassian.net/browse/:id",
-      "https\\://:org.atlassian.net/jira/software/projects/:project/boards/:board"
+      "https\\://:org.atlassian.net/jira/software/projects/:projectId/boards/:board",
+      "https\\://:org.atlassian.net/jira/software/projects/:projectId/boards/:board/backlog"
     ],
     queryParams: {
       id: "selectedIssue",
-      project: "projectKey"
+      projectId: "projectKey"
     },
     description: (document, service, { id }) => {
       const title =
-        (
-          document.querySelector("#jira-frontend") ||
-          document.querySelector("div[role=dialog]")
-        )
-          ?.querySelector("h1")
+        document
+          .querySelector('[aria-label="Edit Summary"]')
+          ?.parentNode?.querySelector("h1")
           ?.textContent?.trim() ||
         document
           .querySelector(".ghx-selected .ghx-summary")
           ?.textContent?.trim()
-      return `[${id}] ${title ? title : ""}`
+      return `[${id}] ${title || ""}`
     }
   },
 
@@ -80,11 +79,7 @@ export default {
 
   wunderlist: {
     name: "wunderlist",
-    urlPatterns: [
-      "https\\://www.wunderlist.com/webapp#/tasks/:id",
-      "https\\://www.wunderlist.com/webapp#/tasks/:id/title/edit",
-      "https\\://www.wunderlist.com/webapp#/tasks/:id/title/focus"
-    ],
+    urlPatterns: ["https\\://www.wunderlist.com/(webapp)#/tasks/:id(/*)"],
     description: document =>
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")

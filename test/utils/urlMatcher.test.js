@@ -24,17 +24,23 @@ describe("utils", () => {
         )
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
-        expect(service.match.org).toEqual('moco-bx')
-        expect(service.match.project).toEqual('TEST1')
-        expect(service.match.id).toEqual('TEST1-1')
+        expect(service.org).toEqual("moco-bx")
+        expect(service.projectId).toEqual("TEST1")
+        expect(service.id).toEqual("TEST1-1")
+        expect(service.match.org).toEqual("moco-bx")
+        expect(service.match.projectId).toEqual("TEST1")
+        expect(service.match.id).toEqual("TEST1-1")
 
         service = matcher(
           "https://moco-bx.atlassian.net/secure/RapidBoard.jspa?rapidView=2&projectKey=TEST1&modal=detail"
         )
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
-        expect(service.match.org).toEqual('moco-bx')
-        expect(service.match.project).toEqual('TEST1')
+        expect(service.org).toEqual("moco-bx")
+        expect(service.projectId).toEqual("TEST1")
+        expect(service.id).toBeUndefined()
+        expect(service.match.org).toEqual("moco-bx")
+        expect(service.match.projectId).toEqual("TEST1")
         expect(service.match.id).toBeUndefined()
 
         service = matcher(
@@ -42,17 +48,20 @@ describe("utils", () => {
         )
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
-        expect(service.match.org).toEqual('moco-bx')
-        expect(service.match.project).toEqual('TEST1')
-        expect(service.match.id).toEqual('')
+        expect(service.org).toEqual("moco-bx")
+        expect(service.projectId).toEqual("TEST1")
+        expect(service.id).toEqual("")
+        expect(service.match.org).toEqual("moco-bx")
+        expect(service.match.projectId).toEqual("TEST1")
+        expect(service.match.id).toEqual("")
 
         service = matcher(
           "https://moco-bx.atlassian.net/secure/RapidBoard.jspa"
         )
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
-        expect(service.match.org).toEqual('moco-bx')
-        expect(service.match.project).toBeUndefined()
+        expect(service.match.org).toEqual("moco-bx")
+        expect(service.match.projectId).toBeUndefined()
         expect(service.match.id).toBeUndefined()
 
         service = matcher(
@@ -60,13 +69,18 @@ describe("utils", () => {
         )
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
-        expect(service.match.org).toEqual('moco-bx')
-        expect(service.match.project).toBeUndefined()
-        expect(service.match.id).toEqual('TEST2-1')
+        expect(service.org).toEqual("moco-bx")
+        expect(service.projectId).toBeUndefined()
+        expect(service.id).toEqual("TEST2-1")
+        expect(service.match.org).toEqual("moco-bx")
+        expect(service.match.projectId).toBeUndefined()
+        expect(service.match.id).toEqual("TEST2-1")
       })
 
       it("matches url with hash", () => {
-        let service = matcher("https://www.wunderlist.com/webapp#/tasks/4771178545")
+        let service = matcher(
+          "https://www.wunderlist.com/webapp#/tasks/4771178545"
+        )
         expect(service.key).toEqual("wunderlist")
         expect(service.name).toEqual("wunderlist")
         expect(service.match.id).toEqual("4771178545")
@@ -91,9 +105,7 @@ describe("utils", () => {
         const service = matcher(url)
         const enhancedService = createEnhancer(document)(service)
         expect(enhancedService.id).toEqual("github-pr.hundertzehn.mocoapp.123")
-        expect(enhancedService.description).toEqual(
-          "[4321] Foo"
-        )
+        expect(enhancedService.description).toEqual("[4321] Foo")
         expect(enhancedService.projectId).toEqual("4321")
         expect(enhancedService.taskId).toBe(undefined)
       })
