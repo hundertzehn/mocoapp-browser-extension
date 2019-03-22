@@ -28,7 +28,6 @@
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "exclude_globs": ["*extensions*", "*settings*", "*addons*", "*debugging*"],
       "js": ["content.[version].js"],
       "css": ["content.css"]
     }

@@ -4,7 +4,7 @@ module.exports = class RemoveSourceMapPlugin {
   }
 
   apply(compiler) {
-    compiler.hooks.afterCompile.tap("RemoveSourceMapPlugin", compilation => {
+    compiler.hooks.afterEmit.tap("RemoveSourceMapPlugin", compilation => {
       Object.keys(compilation.assets)
         .filter(key => this.test.test(key))
         .forEach(key => {

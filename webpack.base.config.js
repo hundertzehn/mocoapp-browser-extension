@@ -5,7 +5,10 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const RemoveSourceMapPlugin = require("./webpack/RemoveSourceMapPlugin")
 const ZipPlugin = require("zip-webpack-plugin")
-const { BugsnagBuildReporterPlugin } = require("webpack-bugsnag-plugins")
+const {
+  BugsnagBuildReporterPlugin,
+  BugsnagSourceMapUploaderPlugin
+} = require("webpack-bugsnag-plugins")
 
 module.exports = env => {
   const config = {
@@ -85,19 +88,30 @@ module.exports = env => {
         images: path.join(__dirname, "src/images")
       }
     },
-    mode: env.NODE_ENV || "development"
+    mode: env.NODE_ENV || "development",
+    devtool: "cheap-module-source-map"
   }
 
   if (env.NODE_ENV === "production") {
     config.devtool = "source-maps"
 
     config.plugins.push(
-      new RemoveSourceMapPlugin(),
       new BugsnagBuildReporterPlugin({
         apiKey: "da6caac4af70af3e4683454b40fe5ef5",
         appVersion: process.env.npm_package_version,
         releaseStage: "production"
       }),
+      // important: upload sourcemaps before removing source mapping url
+      new BugsnagSourceMapUploaderPlugin({
+        apiKey: "da6caac4af70af3e4683454b40fe5ef5",
+        appVersion: process.env.npm_package_version,
+        publicPath:
+          env.browser === "firefox"
+            ? "moz-extension*://*/"
+            : "chrome-extension*://*/", // extra asterisk after protocol needed
+        overwrite: true
+      }),
+      new RemoveSourceMapPlugin(),
       new ZipPlugin({
         filename: `moco-bx-${env.browser}-v${
           process.env.npm_package_version

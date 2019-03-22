@@ -1,5 +1,4 @@
 const CopyWebpackPlugin = require("copy-webpack-plugin")
-const { BugsnagSourceMapUploaderPlugin } = require("webpack-bugsnag-plugins")
 const { compact } = require("lodash/fp")
 
 const baseConfig = require("./webpack.base.config")
@@ -38,17 +37,6 @@ module.exports = env => {
       }
     ])
   )
-
-  if (env.NODE_ENV === "production") {
-    config.plugins.push(
-      new BugsnagSourceMapUploaderPlugin({
-        apiKey: "da6caac4af70af3e4683454b40fe5ef5",
-        appVersion: process.env.npm_package_version,
-        publicPath: "chrome-extension*://*/", // extra asterisk after protocol needed
-        overwrite: true
-      })
-    )
-  }
 
   return config
 }
