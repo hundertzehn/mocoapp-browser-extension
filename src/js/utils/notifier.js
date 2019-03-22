@@ -27,9 +27,10 @@ const filterReport = report => {
 const bugsnagClient = bugsnag({
   apiKey: "da6caac4af70af3e4683454b40fe5ef5",
   appVersion: getAppVersion(),
+  collectUserIp: false,
   beforeSend: filterReport,
-  releaseStage: process.env.NODE_ENV
-  // notifyReleaseStages: ["production"]
+  releaseStage: process.env.NODE_ENV,
+  notifyReleaseStages: ["production"]
 })
 
 bugsnagClient.use(bugsnagReact, React)
