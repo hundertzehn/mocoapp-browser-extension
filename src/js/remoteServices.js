@@ -11,7 +11,11 @@ export default {
     description: document =>
       document
         .querySelector(".ItemRow--highlighted textarea")
-        ?.textContent?.trim()
+        ?.textContent?.trim() ||
+      document
+        .querySelector(".ItemRow--focused textarea")
+        ?.textContent?.trim() ||
+      document.querySelector(".SingleTaskPane textarea")?.textContent?.trim()
   },
 
   "github-pr": {
@@ -87,6 +91,7 @@ export default {
     description: document =>
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
-        ?.textContent?.trim()
+        ?.textContent?.trim(),
+    position: { right: "calc(2rem + 4px)" }
   }
 }
