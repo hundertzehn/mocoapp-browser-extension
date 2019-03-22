@@ -7,6 +7,7 @@ import { createServiceFinder } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
 import { ErrorBoundary } from "utils/notifier"
 import { ContentMessenger } from "utils/messaging"
+import { trace } from "utils"
 import "../css/content.scss"
 
 const popupRef = createRef()
@@ -34,7 +35,7 @@ chrome.runtime.onConnect.addListener(function(port) {
           from={{ transform: "scale(0.1)" }}
           enter={{ transform: "scale(1)" }}
           leave={{ transform: "scale(0.1)" }}
-          config={config.wobbly}
+          config={config.gentle}
         >
           {service =>
             service &&
