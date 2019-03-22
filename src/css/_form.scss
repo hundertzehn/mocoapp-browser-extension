@@ -1,0 +1,91 @@
+@import "button";
+
+input {
+  border-radius: 0;
+  height: 20px;
+}
+
+.form-group {
+  width: 100%;
+  margin: 1rem 0;
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.25rem;
+  }
+
+  input, textarea {
+    padding: 6px 12px;
+    background-color: white;
+    border-color: #cccccc;
+    width: 100%;
+    font-size: 100%;
+    border-style: solid;
+    border-width: 1px;
+    min-height: 20px;
+  }
+
+  .text-muted {
+    color: #999;
+  }
+
+  &.has-error {
+    input, textarea {
+      border-color: #FB3A2F;
+    }
+  }
+
+  .form-error {
+    color: #FB3A2F;
+  }
+
+  .input-group {
+    display: flex;
+    flex-flow: row nowrap;
+
+    input {
+      flex: 1 1;
+    }
+
+    .input-group-addon {
+      flex: 0 0 auto;
+      padding: 6px 12px;
+      font-weight: normal;
+      color: #555555;
+      text-align: center;
+      background-color: #eeeeee;
+      border: 1px solid #cccccc;
+      border-left: none;
+      line-height: 18px;
+    }
+  }
+}
+
+.moco-bx-select + .moco-bx-select {
+  margin-top: 3px;
+}
+
+input[name="hours"] {
+  width: 48px;
+  outline: 0 !important;
+
+  &:focus {
+    border: 1px solid #38b5eb;
+    box-shadow: 0 0 0 1px #38b5eb;
+  }
+}
+
+textarea[name="description"] {
+  font-family: inherit;
+  box-sizing: border-box;
+  width: 100%;
+  resize: none;
+  outline: 0 !important;
+
+  &:focus {
+    border: 1px solid #38b5eb;
+    box-shadow: 0 0 0 1px #38b5eb;
+  }
+}
+

@@ -1,0 +1,128 @@
+@import "form";
+@import "spinner";
+@import "variables";
+
+html {
+  overflow: hidden;
+
+  body {
+    font-size: 14px;
+    margin: 0px;
+    font-family: $font-family;
+    color: $font-color;
+
+    #moco-bx-root {
+      min-width: 516px;
+
+      .moco-bx-app-container {
+        width: 324px;
+        padding: 3rem 6rem;
+
+        .moco-bx-logo__container {
+          display: flex;
+          justify-content: center;
+          margin-bottom: 3rem;
+          text-align: center;
+
+          img.moco-bx-logo {
+            flex: 0 0 48px;
+            width: 48px;
+            height: 48px;
+
+          }
+
+          h1 {
+            line-height: 48px;
+            margin: 0;
+          }
+        }
+
+        .moco-bx-calendar {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 3rem;
+
+          .moco-bx-calendar__day {
+            display: flex;
+            flex-flow: column nowrap;
+            align-items: center;
+
+            flex: 0 0 42px;
+            width: 42px;
+            cursor: pointer;
+
+            .moco-bx-calendar__day-of-week {
+              margin-bottom: 5px;
+              font-size: 12px;
+              color: hsl(0, 0%, 60%);
+            }
+
+            .moco-bx-calendar__hours {
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              width: 42px;
+              height: 42px;
+              flex: 0 0 42px;
+              color: white;
+              background-color: #eee;
+
+            }
+
+            &.moco-bx-calendar__day--filled {
+              .moco-bx-calendar__hours {
+                background-color: #7dc332;
+              }
+            }
+
+            &.moco-bx-calendar__day--week-day-6,
+            &.moco-bx-calendar__day--week-day-0 {
+              .moco-bx-calendar__hours {
+                background-color: #bbb;
+              }
+            }
+
+            &.moco-bx-calendar__day--active {
+              .moco-bx-calendar__hours {
+                background-color: #38b5eb;
+              }
+            }
+          }
+        }
+      }
+
+      .moco-bx-error-container {
+        font-size: 18px;
+        line-height: 1.5;
+        width: 420px;
+        padding: 3rem;
+        text-align: center;
+
+        h1 {
+          font-size: 35px;
+          font-weight: normal;
+          margin-top: 0;
+          line-height: 1.3;
+        }
+
+        img {
+          width: auto;
+          max-width: 100%;
+
+          &.moco-bx-logo {
+            width: 48px;
+            margin-bottom: 2rem;
+          }
+        }
+
+        ol {
+          text-align: left;
+        }
+
+        button {
+          margin-top: 1.5rem;
+        }
+      }
+    }
+  }
+}

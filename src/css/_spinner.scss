@@ -1,0 +1,24 @@
+#moco-bx-root {
+  @keyframes moco-bx-spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  .moco-bx-spinner__container {
+    width: 100%;
+    margin-top: 120px;
+
+    .moco-bx-spinner {
+      display: block;
+      width: 2rem;
+      height: 2rem;
+      vertical-align: text-bottom;
+      border: 2px solid #999;
+      border-right-color: transparent;
+      border-radius: 50%;
+      margin: 0 auto;
+      animation: moco-bx-spinner .75s linear infinite;
+    }
+  }
+}

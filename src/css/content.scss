@@ -1,0 +1,77 @@
+@import "variables";
+@import "button";
+
+#moco-bx-root {
+  font-family: $font-family;
+  color: $font-color;
+
+  .moco-bx-bubble {
+    box-sizing: content-box;
+    position: fixed;
+    bottom: 2rem;
+    height: 60px;
+    width: 60px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: -1px -1px 15px 4px rgba(0, 0, 0, 0.05),
+    2px 2px 15px 4px rgba(0, 0, 0, 0.05);
+    padding: 5px;
+    z-index: 9999;
+
+    cursor: pointer;
+
+    .moco-bx-bubble-inner {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+      height: 100%;
+
+      img.moco-bx-logo {
+        width: 30px;
+        height: 30px;
+      }
+
+      .moco-bx-booked-hours {
+        display: inline-block;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1;
+        color: black;
+        text-align: center;
+        padding: 5px 0 7px;
+      }
+    }
+  }
+}
+
+#moco-bx-popup-root {
+  font-family: $font-family;
+  color: $font-color;
+
+  iframe {
+    border: 0;
+  }
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+
+  .moco-bx-popup {
+    position: fixed; /* Stay in place */
+    z-index: 2000; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0); /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+
+    .moco-bx-popup-content {
+      background-color: white;
+      margin: 0 auto;
+    }
+  }
+}
