@@ -1,7 +1,7 @@
 {
   "name": "moco-browser-extensions",
   "description": "Browser plugin for MOCO",
-  "version": "1.0.17",
+  "version": "1.0.17-beta.1",
   "main": "bundle.js",
   "scripts": {
     "start": "yarn start:chrome",

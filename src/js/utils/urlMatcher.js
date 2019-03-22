@@ -32,7 +32,12 @@ const parseServices = compose(
   map(([key, config]) => ({
     ...config,
     key,
-    patterns: config.urlPatterns.map(pattern => new UrlPattern(pattern))
+    patterns: config.urlPatterns.map(pattern => {
+      if (Array.isArray(pattern)) {
+        return new UrlPattern(...pattern)
+      }
+      return new UrlPattern(pattern)
+    })
   })),
   toPairs
 )

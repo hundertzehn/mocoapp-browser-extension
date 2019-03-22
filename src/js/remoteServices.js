@@ -2,12 +2,16 @@ export default {
   asana: {
     name: "asana",
     urlPatterns: [
-      "https\\://app.asana.com/0/:domainUserId/:id",
-      "https\\://app.asana.com/0/inbox/:domainUserId/:id(/*)",
-      "https\\://app.asana.com/0/search/:domainUserId/:id"
+      [/^https:\/\/app.asana.com\/0\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
+      [
+        /^https:\/\/app.asana.com\/0\/search\/([^/]+)\/(\d+)/,
+        ["domainUserId", "id"]
+      ]
     ],
     description: document =>
-      document.querySelector(".TaskRow--focused textarea")?.textContent
+      document
+        .querySelector(".ItemRow--highlighted textarea")
+        ?.textContent?.trim()
   },
 
   "github-pr": {
