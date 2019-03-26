@@ -10,6 +10,7 @@ import {
   ERROR_UNKNOWN,
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
+  extractAndSetTag,
   findProjectByValue,
   findProjectByIdentifier,
   findTask,
@@ -80,13 +81,11 @@ class App extends Component {
       seconds:
         this.changeset.hours &&
         new TimeInputParser(this.changeset.hours).parseSeconds(),
-      description: service?.description
+      description: service?.description,
+      tag: ""
     }
 
-    return {
-      ...defaults,
-      ...this.changeset
-    }
+    return { ...defaults, ...this.changeset }
   }
 
   componentDidMount() {
@@ -124,7 +123,7 @@ class App extends Component {
     chrome.runtime.sendMessage({
       type: "createActivity",
       payload: {
-        activity: this.changesetWithDefaults,
+        activity: extractAndSetTag(this.changesetWithDefaults),
         service
       }
     })

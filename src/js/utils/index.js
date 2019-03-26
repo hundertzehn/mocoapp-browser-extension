@@ -86,3 +86,16 @@ export const formatDate = date => format(date, "YYYY-MM-DD")
 
 export const extensionSettingsUrl = () =>
   `chrome://extensions/?id=${chrome.runtime.id}`
+
+export const extractAndSetTag = changeset => {
+  let { description } = changeset
+  const match = description.match(/^#(\S+)/)
+  if (!match) {
+    return changeset
+  }
+  return {
+    ...changeset,
+    description: description.replace(/^#\S+\s/, ""),
+    tag: match[1]
+  }
+}

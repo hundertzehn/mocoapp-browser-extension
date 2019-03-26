@@ -3,7 +3,8 @@ import {
   findProjectByValue,
   findProjectByIdentifier,
   findTask,
-  groupedProjectOptions
+  groupedProjectOptions,
+  extractAndSetTag
 } from "../../src/js/utils"
 import { map } from "lodash/fp"
 
@@ -84,6 +85,38 @@ describe("utils", () => {
         "MOCO APP",
         "sharoo"
       ])
+    })
+  })
+
+  describe("extractAndSetTag", () => {
+    it("sets the correct tag and updates description", () => {
+      const changeset = {
+        description: "#meeting Lorem ipsum",
+        tag: ""
+      }
+
+      expect(extractAndSetTag(changeset)).toEqual({
+        description: "Lorem ipsum",
+        tag: "meeting"
+      })
+    })
+
+    it("only matches tag at the beginning", () => {
+      const changeset = {
+        description: "Lorem #meeting ipsum",
+        tag: ""
+      }
+
+      expect(extractAndSetTag(changeset)).toEqual(changeset)
+    })
+
+    it("returns the changeset if not tag is set", () => {
+      const changeset = {
+        description: "Without tag",
+        tag: ""
+      }
+
+      expect(extractAndSetTag(changeset)).toEqual(changeset)
     })
   })
 })
