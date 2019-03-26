@@ -12,7 +12,7 @@ class Options extends Component {
   @observable isSuccess = false;
 
   componentDidMount() {
-    getSettings().then(({ subdomain, apiKey }) => {
+    getSettings(false).then(({ subdomain, apiKey }) => {
       this.subdomain = subdomain || ""
       this.apiKey = apiKey || ""
     })
