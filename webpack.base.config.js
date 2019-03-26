@@ -1,3 +1,5 @@
+require("dotenv").config()
+
 const path = require("path")
 const webpack = require("webpack")
 const CleanWebpackPlugin = require("clean-webpack-plugin")
@@ -60,7 +62,10 @@ module.exports = env => {
     plugins: [
       new CleanWebpackPlugin([`build/${env.browser}`]),
       new webpack.DefinePlugin({
-        "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV)
+        "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
+        "process.env.BUGSNAG_API_KEY": JSON.stringify(
+          process.env.BUGSNAG_API_KEY
+        )
       }),
       new MiniCssExtractPlugin({
         filename: "[name].css",
@@ -95,22 +100,27 @@ module.exports = env => {
   if (env.NODE_ENV === "production") {
     config.devtool = "source-maps"
 
+    if (process.env.BUGSNAG_API_KEY) {
+      config.plugins.push(
+        new BugsnagBuildReporterPlugin({
+          apiKey: process.env.BUGSNAG_API_KEY,
+          appVersion: process.env.npm_package_version,
+          releaseStage: "production"
+        }),
+        // important: upload sourcemaps before removing source mapping url
+        new BugsnagSourceMapUploaderPlugin({
+          apiKey: process.env.BUGSNAG_API_KEY,
+          appVersion: process.env.npm_package_version,
+          publicPath:
+            env.browser === "firefox"
+              ? "moz-extension*://*/"
+              : "chrome-extension*://*/", // extra asterisk after protocol needed
+          overwrite: true
+        })
+      )
+    }
+
     config.plugins.push(
-      new BugsnagBuildReporterPlugin({
-        apiKey: "da6caac4af70af3e4683454b40fe5ef5",
-        appVersion: process.env.npm_package_version,
-        releaseStage: "production"
-      }),
-      // important: upload sourcemaps before removing source mapping url
-      new BugsnagSourceMapUploaderPlugin({
-        apiKey: "da6caac4af70af3e4683454b40fe5ef5",
-        appVersion: process.env.npm_package_version,
-        publicPath:
-          env.browser === "firefox"
-            ? "moz-extension*://*/"
-            : "chrome-extension*://*/", // extra asterisk after protocol needed
-        overwrite: true
-      }),
       new RemoveSourceMapPlugin(),
       new ZipPlugin({
         filename: `moco-bx-${env.browser}-v${

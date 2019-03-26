@@ -1,3 +1,4 @@
+const uuidv4 = require("uuid/v4")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
 const { compact } = require("lodash/fp")
 
@@ -30,7 +31,9 @@ module.exports = env => {
                 browser_style: true
               },
               browser_specific_settings: {
-                gecko: { id: "browser-extension@mocoapp.com" }
+                gecko: {
+                  id: process.env.APPLICATION_ID || `{${uuidv4()}}`
+                }
               },
               description: process.env.npm_package_description,
               version: process.env.npm_package_version

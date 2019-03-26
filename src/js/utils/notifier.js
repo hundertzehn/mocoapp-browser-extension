@@ -25,7 +25,7 @@ const filterReport = report => {
 }
 
 const bugsnagClient = bugsnag({
-  apiKey: "da6caac4af70af3e4683454b40fe5ef5",
+  apiKey: process.env.BUGSNAG_API_KEY,
   appVersion: getAppVersion(),
   collectUserIp: false,
   beforeSend: filterReport,
