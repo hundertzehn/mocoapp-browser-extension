@@ -64,7 +64,7 @@ export default {
         document
           .querySelector(".ghx-selected .ghx-summary")
           ?.textContent?.trim()
-      return `[${id}] ${title || ""}`
+      return `#${id} ${title || ""}`
     }
   },
 
