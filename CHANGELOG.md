@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add support for tags in description
 
+## [1.0.21] - 2019-03-26
 ### Changed
 - Update README with example configuration and instructions for local installation
 
