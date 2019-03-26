@@ -57,7 +57,7 @@ export const createEnhancer = document => service => {
     description: evaluate(service.description),
     projectId: evaluate(service.projectId),
     taskId: evaluate(service.taskId),
-    position: service.position || { left: "50%", transform: "translateX(-50%)" }
+    position: service.position || { right: "calc(2rem + 5px)" }
   }
 }
 

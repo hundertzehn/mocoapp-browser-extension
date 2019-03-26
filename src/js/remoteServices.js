@@ -31,8 +31,7 @@ export default {
         ?.textContent.trim()
         ?.match(/^\[(\d+)\]/)
       return match && match[1]
-    },
-    position: { right: "2rem" }
+    }
   },
 
   "github-issue": {
@@ -41,8 +40,7 @@ export default {
     id: (document, service, { org, repo, id }) =>
       [service.key, org, repo, id].join("."),
     description: (document, service, { org, repo, id }) =>
-      document.querySelector(".js-issue-title")?.textContent?.trim(),
-    position: { right: "2rem" }
+      document.querySelector(".js-issue-title")?.textContent?.trim()
   },
 
   jira: {
@@ -74,8 +72,7 @@ export default {
     name: "trello",
     urlPatterns: ["https\\://trello.com/c/:id/:title"],
     description: (document, service, { title }) =>
-      document.querySelector(".js-title-helper")?.textContent?.trim() || title,
-    position: { right: "calc(2rem + 4px)" }
+      document.querySelector(".js-title-helper")?.textContent?.trim() || title
   },
 
   youtrack: {
@@ -91,7 +88,6 @@ export default {
     description: document =>
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
-        ?.textContent?.trim(),
-    position: { right: "calc(2rem + 4px)" }
+        ?.textContent?.trim()
   }
 }
