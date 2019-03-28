@@ -2,6 +2,8 @@ import { head } from "lodash/fp"
 export const isChrome = () => typeof browser === "undefined" && chrome
 export const isFirefox = () => typeof browser !== "undefined" && chrome
 
+const DEFAULT_SUBDOMAIN = "unset"
+
 export const getSettings = (withDefaultSubdomain = true) => {
   const keys = ["subdomain", "apiKey"]
   const { version } = chrome.runtime.getManifest()
@@ -9,7 +11,7 @@ export const getSettings = (withDefaultSubdomain = true) => {
     return new Promise(resolve => {
       chrome.storage.sync.get(keys, data => {
         if (withDefaultSubdomain) {
-          data.subdomain = data.subdomain || "__unset__"
+          data.subdomain = data.subdomain || DEFAULT_SUBDOMAIN
         }
         resolve({ ...data, version })
       })
@@ -17,7 +19,7 @@ export const getSettings = (withDefaultSubdomain = true) => {
   } else {
     return browser.storage.sync.get(keys).then(data => {
       if (withDefaultSubdomain) {
-        data.subdomain = data.subdomain || "__unset__"
+        data.subdomain = data.subdomain || DEFAULT_SUBDOMAIN
       }
       return { ...data, version }
     })
