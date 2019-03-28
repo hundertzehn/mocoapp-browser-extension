@@ -1,3 +1,5 @@
+const projectRegex = /^\[(\d+)\]/
+
 export default {
   asana: {
     name: "asana",
@@ -29,7 +31,7 @@ export default {
       const match = document
         .querySelector(".js-issue-title")
         ?.textContent.trim()
-        ?.match(/^\[(\d+)\]/)
+        ?.match(projectRegex)
       return match && match[1]
     }
   },
@@ -70,7 +72,20 @@ export default {
 
   meistertask: {
     name: "meistertask",
-    urlPatterns: ["https\\://www.meistertask.com/app/task/:id/:slug"]
+    urlPatterns: ["https\\://www.meistertask.com/app/task/:id/:slug"],
+    description: document => {
+      const json =
+        document.getElementById("mt-toggl-data")?.dataset?.togglJson || "{}"
+      const data = JSON.parse(json)
+      return data.taskName
+    },
+    projectId: document => {
+      const json =
+        document.getElementById("mt-toggl-data")?.dataset?.togglJson || "{}"
+      const data = JSON.parse(json)
+      const match = data.projectName?.match(projectRegex)
+      return match && match[1]
+    }
   },
 
   trello: {
