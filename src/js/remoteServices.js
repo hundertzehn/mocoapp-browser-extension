@@ -68,6 +68,11 @@ export default {
     }
   },
 
+  meistertask: {
+    name: "meistertask",
+    urlPatterns: ["https\\://www.meistertask.com/app/task/:id/:slug"]
+  },
+
   trello: {
     name: "trello",
     urlPatterns: ["https\\://trello.com/c/:id/:title"],

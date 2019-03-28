@@ -43,15 +43,12 @@ chrome.runtime.onConnect.addListener(function(port) {
               <animated.div
                 className="moco-bx-bubble"
                 style={{ ...props, ...service.position }}
+                onClick={event => {
+                  event.stopPropagation()
+                  messenger.postMessage({ type: "togglePopup" })
+                }}
               >
-                <Bubble
-                  key={service.url}
-                  bookedHours={bookedHours}
-                  onClick={event => {
-                    event.stopPropagation()
-                    messenger.postMessage({ type: "togglePopup" })
-                  }}
-                />
+                <Bubble key={service.url} bookedHours={bookedHours} />
               </animated.div>
             ))
           }

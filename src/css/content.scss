@@ -4,6 +4,7 @@
 #moco-bx-root {
   font-family: $font-family;
   color: $font-color;
+  pointer-events: all;
 
   .moco-bx-bubble {
     box-sizing: content-box;
@@ -48,6 +49,7 @@
 #moco-bx-popup-root {
   font-family: $font-family;
   color: $font-color;
+  pointer-events: all;
 
   iframe {
     border: 0;
@@ -58,16 +60,15 @@
   }
 
   .moco-bx-popup {
-    position: fixed; /* Stay in place */
-    z-index: 2000; /* Sit on top */
-    padding-top: 100px; /* Location of the box */
+    position: fixed;
+    z-index: 2000;
+    padding-top: 100px;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgb(0, 0, 0); /* Fallback color */
-    background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
 
     .moco-bx-popup-content {
       background-color: white;
