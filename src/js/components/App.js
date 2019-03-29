@@ -36,6 +36,7 @@ class App extends Component {
       projectId: PropTypes.string,
       taskId: PropTypes.string
     }),
+    subdomain: PropTypes.string,
     activities: PropTypes.array,
     schedules: PropTypes.array,
     projects: PropTypes.array,
@@ -145,6 +146,7 @@ class App extends Component {
   render() {
     const {
       loading,
+      subdomain,
       projects,
       activities,
       schedules,
@@ -179,7 +181,7 @@ class App extends Component {
       >
         {props => (
           <animated.div className="moco-bx-app-container" style={props}>
-            <Header />
+            <Header subdomain={subdomain} />
             <Observer>
               {() => (
                 <>

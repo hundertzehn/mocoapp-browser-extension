@@ -16,6 +16,7 @@
     "test:watch": "node_modules/.bin/jest --watch"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.4.0",
     "@bugsnag/js": "^5.2.0",
     "@bugsnag/plugin-react": "^5.2.0",
     "axios": "^0.18.0",
