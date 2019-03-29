@@ -1,4 +1,4 @@
-const projectRegex = /^\[(\d+)\]/
+const projectRegex = /\[(\d+)\]/
 
 export default {
   asana: {
