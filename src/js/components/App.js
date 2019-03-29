@@ -63,12 +63,14 @@ class App extends Component {
     const { service, projects, lastProjectId, lastTaskId } = this.props
 
     const project =
+      findProjectByValue(this.changeset.assignment_id)(projects) ||
       findProjectByIdentifier(service?.projectId)(projects) ||
       findProjectByValue(Number(lastProjectId))(projects) ||
       head(projects)
 
     const task =
-      findTask(service?.taskId || lastTaskId)(project) || head(project?.tasks)
+      findTask(this.changeset.task_id || service?.taskId || lastTaskId)(project) ||
+      head(project?.tasks)
 
     const defaults = {
       remote_service: service?.name,
@@ -109,7 +111,7 @@ class App extends Component {
 
     if (name === "assignment_id") {
       const project = findProjectByValue(value)(projects)
-      this.changeset.task_id = head(project?.tasks).value || null
+      this.changeset.task_id =  head(project?.tasks)?.value
     }
   };
 
