@@ -17,7 +17,14 @@ export default {
       document
         .querySelector(".ItemRow--focused textarea")
         ?.textContent?.trim() ||
-      document.querySelector(".SingleTaskPane textarea")?.textContent?.trim()
+      document.querySelector(".SingleTaskPane textarea")?.textContent?.trim(),
+    projectId: document => {
+      const match = document
+        .querySelector(".ProjectPageHeader-projectName")
+        ?.textContent?.trim()
+        ?.match(/^\[(\w+)\]/)
+      return match && match[1]
+    }
   },
 
   "github-pr": {
