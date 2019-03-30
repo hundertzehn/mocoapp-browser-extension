@@ -88,7 +88,7 @@ export const createMatcher = remoteServices => {
     return {
       ...match,
       ...service,
-      url,
+      url: tabUrl,
       match
     }
   }

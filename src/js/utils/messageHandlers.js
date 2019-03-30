@@ -76,52 +76,50 @@ export function togglePopup(tab, { messenger }) {
   }
 }
 
-function openPopup(tab, { service, messenger }) {
+async function openPopup(tab, { service, messenger }) {
   messenger.postMessage(tab, { type: "openPopup", payload: { loading: true } })
 
   const fromDate = getStartOfWeek()
   const toDate = getEndOfWeek()
-  getSettings()
-    .then(settings => new ApiClient(settings))
-    .then(apiClient =>
-      Promise.all([
-        apiClient.login(service),
-        apiClient.projects(),
-        apiClient.activities(fromDate, toDate),
-        apiClient.schedules(fromDate, toDate)
-      ])
-    )
-    .then(responses => {
-      const action = {
-        type: "openPopup",
-        payload: {
-          service,
-          lastProjectId: get("[0].data.last_project_id", responses),
-          lastTaskId: get("[0].data.last_task_id", responses),
-          roundTimeEntries: get("[0].data.round_time_entries", responses),
-          projects: groupedProjectOptions(get("[1].data.projects", responses)),
-          activities: get("[2].data", responses),
-          schedules: get("[3].data", responses),
-          fromDate,
-          toDate,
-          loading: false
-        }
+  const settings = await getSettings()
+  const apiClient = new ApiClient(settings)
+  try {
+    const responses = await Promise.all([
+      apiClient.login(service),
+      apiClient.projects(),
+      apiClient.activities(fromDate, toDate),
+      apiClient.schedules(fromDate, toDate)
+    ])
+    const action = {
+      type: "openPopup",
+      payload: {
+        service,
+        subdomain: settings.subdomain,
+        lastProjectId: get("[0].data.last_project_id", responses),
+        lastTaskId: get("[0].data.last_task_id", responses),
+        roundTimeEntries: get("[0].data.round_time_entries", responses),
+        projects: groupedProjectOptions(get("[1].data.projects", responses)),
+        activities: get("[2].data", responses),
+        schedules: get("[3].data", responses),
+        fromDate,
+        toDate,
+        loading: false
       }
-      messenger.postMessage(tab, action)
+    }
+    messenger.postMessage(tab, action)
+  } catch (error) {
+    let errorType, errorMessage
+    if (error.response?.status === 401) {
+      errorType = ERROR_UNAUTHORIZED
+    } else if (error.response?.status === 426) {
+      errorType = ERROR_UPGRADE_REQUIRED
+    } else {
+      errorType = ERROR_UNKNOWN
+      errorMessage = error.message
+    }
+    messenger.postMessage(tab, {
+      type: "openPopup",
+      payload: { errorType, errorMessage }
     })
-    .catch(error => {
-      let errorType, errorMessage
-      if (error.response?.status === 401) {
-        errorType = ERROR_UNAUTHORIZED
-      } else if (error.response?.status === 426) {
-        errorType = ERROR_UPGRADE_REQUIRED
-      } else {
-        errorType = ERROR_UNKNOWN
-        errorMessage = error.message
-      }
-      messenger.postMessage(tab, {
-        type: "openPopup",
-        payload: { errorType, errorMessage }
-      })
-    })
+  }
 }

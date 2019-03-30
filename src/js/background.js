@@ -1,3 +1,4 @@
+import "@babel/polyfill"
 import ApiClient from "api/Client"
 import {
   isChrome,

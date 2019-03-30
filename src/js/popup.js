@@ -9,6 +9,7 @@ import "../css/popup.scss"
 const parsedProps = parseProps([
   "loading",
   "service",
+  "subdomain",
   "projects",
   "activities",
   "schedules",
