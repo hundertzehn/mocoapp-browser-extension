@@ -1,4 +1,4 @@
-const projectRegex = /\[(\d+)\]/
+const projectRegex = /\[([\w-]+)\]/
 
 export default {
   asana: {
@@ -22,7 +22,7 @@ export default {
       const match = document
         .querySelector(".ProjectPageHeader-projectName")
         ?.textContent?.trim()
-        ?.match(/^\[(\w+)\]/)
+        ?.match(projectRegex)
       return match && match[1]
     }
   },
