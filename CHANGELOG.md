@@ -32,9 +32,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Change the default value of subdomain to `unset` to have a well-formed URL.
 
-## [1.0.23] - 2019-03-28
+## [1.1.0] - 2019-03-30
 ### Added
-- Link logo in modal to MOCO activities page
+- Read project identifier from Asana project title
+- Add support for meistertask.com
 
 ### Fixed
+- Link logo in modal to MOCO activities page
 - Set full url on service, including query params
