@@ -21,11 +21,17 @@ export const ERROR_UNKNOWN = "unknown"
 
 export const noop = () => null
 
-export const findProjectBy = prop => val =>
-  compose(
+export const findProjectBy = prop => val => projects => {
+  if (!val) {
+    return undefined
+  }
+
+  return compose(
     find(pathEq(prop, val)),
     flatMap(get("options"))
-  )
+  )(projects)
+}
+
 export const findProjectByIdentifier = findProjectBy("identifier")
 export const findProjectByValue = findProjectBy("value")
 
