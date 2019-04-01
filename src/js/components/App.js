@@ -69,8 +69,9 @@ class App extends Component {
       head(projects)
 
     const task =
-      findTask(this.changeset.task_id || service?.taskId || lastTaskId)(project) ||
-      head(project?.tasks)
+      findTask(this.changeset.task_id || service?.taskId || lastTaskId)(
+        project
+      ) || head(project?.tasks)
 
     const defaults = {
       remote_service: service?.name,
@@ -111,7 +112,7 @@ class App extends Component {
 
     if (name === "assignment_id") {
       const project = findProjectByValue(value)(projects)
-      this.changeset.task_id =  head(project?.tasks)?.value
+      this.changeset.task_id = head(project?.tasks)?.value
     }
   };
 
