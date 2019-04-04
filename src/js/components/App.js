@@ -73,6 +73,8 @@ class App extends Component {
         project
       ) || head(project?.tasks)
 
+    const billable = /\(.+\)/.test(this.changeset.hours) === true ? false : !!task?.billable
+
     const defaults = {
       remote_service: service?.name,
       remote_id: service?.id,
@@ -80,7 +82,7 @@ class App extends Component {
       date: formatDate(new Date()),
       assignment_id: project?.value,
       task_id: task?.value,
-      billable: task?.billable,
+      billable,
       hours: "",
       seconds:
         this.changeset.hours &&
