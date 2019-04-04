@@ -24,16 +24,22 @@ const filterReport = report => {
   return scripts.some(script => report.stacktrace.some(includes(script)))
 }
 
-const bugsnagClient = bugsnag({
-  apiKey: process.env.BUGSNAG_API_KEY,
-  appVersion: getAppVersion(),
-  collectUserIp: false,
-  beforeSend: filterReport,
-  releaseStage: process.env.NODE_ENV,
-  notifyReleaseStages: ["production"]
-})
 
-bugsnagClient.use(bugsnagReact, React)
+// When BUGSNAG_API_KEY is undefined ErrorBoundary should simply render children
+let ErrorBoundary = ({ children }) => children
 
-export default bugsnagClient
-export const ErrorBoundary = bugsnagClient.getPlugin("react")
+if (process.env.BUGSNAG_API_KEY) {
+  const bugsnagClient = bugsnag({
+    apiKey: process.env.BUGSNAG_API_KEY,
+    appVersion: getAppVersion(),
+    collectUserIp: false,
+    beforeSend: filterReport,
+    releaseStage: process.env.NODE_ENV,
+    notifyReleaseStages: ["production"]
+  })
+
+  bugsnagClient.use(bugsnagReact, React)
+  ErrorBoundary = bugsnagClient.getPlugin("react")
+}
+
+export { ErrorBoundary }
