@@ -90,7 +90,9 @@ export default {
       const json =
         document.getElementById("mt-toggl-data")?.dataset?.togglJson || "{}"
       const data = JSON.parse(json)
-      const match = data.projectName?.match(projectRegex)
+      const match =
+        data.taskName?.match(projectRegex) ||
+        data.projectName?.match(projectRegex)
       return match && match[1]
     }
   },
