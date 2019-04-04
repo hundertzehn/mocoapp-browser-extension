@@ -14,7 +14,7 @@ import {
   findProjectByValue,
   findProjectByIdentifier,
   findTask,
-  formatDate
+  formatDate,
 } from "utils"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
@@ -34,7 +34,7 @@ class App extends Component {
       name: PropTypes.string,
       description: PropTypes.string,
       projectId: PropTypes.string,
-      taskId: PropTypes.string
+      taskId: PropTypes.string,
     }),
     subdomain: PropTypes.string,
     activities: PropTypes.array,
@@ -46,18 +46,18 @@ class App extends Component {
     fromDate: PropTypes.string,
     toDate: PropTypes.string,
     errorType: PropTypes.string,
-    errorMessage: PropTypes.string
-  };
+    errorMessage: PropTypes.string,
+  }
 
   static defaultProps = {
     activities: [],
     schedules: [],
     projects: [],
-    roundTimeEntries: false
-  };
+    roundTimeEntries: false,
+  }
 
-  @observable changeset = {};
-  @observable formErrors = {};
+  @observable changeset = {}
+  @observable formErrors = {}
 
   @computed get changesetWithDefaults() {
     const { service, projects, lastProjectId, lastTaskId } = this.props
@@ -69,9 +69,8 @@ class App extends Component {
       head(projects)
 
     const task =
-      findTask(this.changeset.task_id || service?.taskId || lastTaskId)(
-        project
-      ) || head(project?.tasks)
+      findTask(this.changeset.task_id || service?.taskId || lastTaskId)(project) ||
+      head(project?.tasks)
 
     const billable = /\(.+\)/.test(this.changeset.hours) === true ? false : !!task?.billable
 
@@ -84,11 +83,9 @@ class App extends Component {
       task_id: task?.value,
       billable,
       hours: "",
-      seconds:
-        this.changeset.hours &&
-        new TimeInputParser(this.changeset.hours).parseSeconds(),
+      seconds: this.changeset.hours && new TimeInputParser(this.changeset.hours).parseSeconds(),
       description: service?.description,
-      tag: ""
+      tag: "",
     }
 
     return { ...defaults, ...this.changeset }
@@ -107,7 +104,7 @@ class App extends Component {
   handleChange = event => {
     const { projects } = this.props
     const {
-      target: { name, value }
+      target: { name, value },
     } = event
 
     this.changeset[name] = value
@@ -116,11 +113,11 @@ class App extends Component {
       const project = findProjectByValue(value)(projects)
       this.changeset.task_id = head(project?.tasks)?.value
     }
-  };
+  }
 
   handleSelectDate = date => {
     this.changeset.date = formatDate(date)
-  };
+  }
 
   handleSubmit = event => {
     event.preventDefault()
@@ -130,23 +127,23 @@ class App extends Component {
       type: "createActivity",
       payload: {
         activity: extractAndSetTag(this.changesetWithDefaults),
-        service
-      }
+        service,
+      },
     })
-  };
+  }
 
   handleKeyDown = event => {
     if (event.keyCode === 27) {
       event.stopPropagation()
       chrome.runtime.sendMessage({ type: "closePopup" })
     }
-  };
+  }
 
   handleSetFormErrors = ({ type, payload }) => {
     if (type === "setFormErrors") {
       this.formErrors = payload
     }
-  };
+  }
 
   render() {
     const {
@@ -158,7 +155,7 @@ class App extends Component {
       fromDate,
       toDate,
       errorType,
-      errorMessage
+      errorMessage,
     } = this.props
 
     if (loading) {
@@ -178,12 +175,7 @@ class App extends Component {
     }
 
     return (
-      <Spring
-        native
-        from={{ opacity: 0 }}
-        to={{ opacity: 1 }}
-        config={config.stiff}
-      >
+      <Spring native from={{ opacity: 0 }} to={{ opacity: 1 }} config={config.stiff}>
         {props => (
           <animated.div className="moco-bx-app-container" style={props}>
             <Header subdomain={subdomain} />
