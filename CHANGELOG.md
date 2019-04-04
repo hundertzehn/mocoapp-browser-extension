@@ -44,3 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.1] - 2019-04-01
 ### Fixed
 - Discard projects with undefined identifier for preselecting
+
+## [1.1.2] - 2019-04-04
+### Fixed
+- Allow production build without BUGSNAG_API_KEY
+
+### Changed
+- Add read project identifier also from card title in the meistertask service
