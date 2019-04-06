@@ -62,6 +62,8 @@ class App extends Component {
   @computed get changesetWithDefaults() {
     const { service, projects, lastProjectId, lastTaskId } = this.props
 
+    // TODO: extract project, task and billable to own methods
+
     const project =
       findProjectByValue(this.changeset.assignment_id)(projects) ||
       findProjectByIdentifier(service?.projectId)(projects) ||
