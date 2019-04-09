@@ -13,7 +13,7 @@ export default {
       document.querySelector(".SingleTaskPane textarea")?.textContent?.trim(),
     projectId: document => {
       const match = document
-        .querySelector(".ProjectPageHeader-projectName")
+        .querySelector(".TaskProjectPill-projectName")
         ?.textContent?.trim()
         ?.match(projectRegex)
       return match && match[1]
