@@ -1,5 +1,5 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "extends": ["eslint:recommended", "plugin:react/recommended", "plugin:prettier/recommended"],
   "env": {
     "browser": true,
     "commonjs": true,
@@ -68,6 +68,7 @@
           "userStore"
         ]
       }
-    ]
+    ],
+    "prettier/prettier": "error"
   }
 }
