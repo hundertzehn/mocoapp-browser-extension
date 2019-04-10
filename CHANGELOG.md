@@ -52,3 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Read project identifier also from card title in the meistertask service
+
+## [1.1.3] - 2019-04-10
+### Fixed
+- Read projected identifier in Asana's "My tasks"-view

@@ -59,31 +59,39 @@ class App extends Component {
   @observable changeset = {}
   @observable formErrors = {}
 
-  @computed get changesetWithDefaults() {
-    const { service, projects, lastProjectId, lastTaskId } = this.props
-
-    // TODO: extract project, task and billable to own methods
-
-    const project =
+  @computed get project() {
+    const { service, projects, lastProjectId } = this.props
+    return (
       findProjectByValue(this.changeset.assignment_id)(projects) ||
       findProjectByIdentifier(service?.projectId)(projects) ||
       findProjectByValue(Number(lastProjectId))(projects) ||
       head(projects)
+    )
+  }
 
-    const task =
-      findTask(this.changeset.task_id || service?.taskId || lastTaskId)(project) ||
-      head(project?.tasks)
+  @computed get task() {
+    const { service, lastTaskId } = this.props
+    return (
+      findTask(this.changeset.task_id || service?.taskId || lastTaskId)(this.project) ||
+      head(this.project?.tasks)
+    )
+  }
 
-    const billable = /\(.+\)/.test(this.changeset.hours) === true ? false : !!task?.billable
+  @computed get billable() {
+    return /\(.+\)/.test(this.changeset.hours) === true ? false : !!this.task?.billable
+  }
+
+  @computed get changesetWithDefaults() {
+    const { service } = this.props
 
     const defaults = {
       remote_service: service?.name,
       remote_id: service?.id,
       remote_url: service?.url,
       date: formatDate(new Date()),
-      assignment_id: project?.value,
-      task_id: task?.value,
-      billable,
+      assignment_id: this.project?.value,
+      task_id: this.task?.value,
+      billable: this.billable,
       hours: "",
       seconds: this.changeset.hours && new TimeInputParser(this.changeset.hours).parseSeconds(),
       description: service?.description,
