@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import ReactSelect, { createFilter } from "react-select"
+import ReactSelect, { createFilter, components } from "react-select"
 import {
   values,
   isString,
@@ -10,7 +10,8 @@ import {
   compose,
   property,
   flatMap,
-  pathEq
+  pathEq,
+  isNil,
 } from "lodash/fp"
 
 const hasOptionGroups = options => options.some(option => Boolean(option.options))
@@ -71,6 +72,20 @@ const filterOption = createFilter({
   ),
 })
 
+SingleValue.propTypes = {
+  children: PropTypes.string.isRequired,
+  data: PropTypes.shape({
+    customerName: PropTypes.string,
+  }).isRequired,
+}
+
+function SingleValue({ children, ...props }) {
+  const label = isNil(props.data.customerName)
+    ? children
+    : `${props.data.customerName}: ${children}`
+  return <components.SingleValue {...props}>{label}</components.SingleValue>
+}
+
 export default class Select extends Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
@@ -118,6 +133,7 @@ export default class Select extends Component {
         filterOption={filterOption}
         theme={customTheme}
         styles={customStyles(this.props)}
+        components={{ SingleValue }}
         onChange={this.handleChange}
         onKeyDown={this.handleKeyDown}
       />
