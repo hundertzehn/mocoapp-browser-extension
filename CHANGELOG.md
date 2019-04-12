@@ -56,3 +56,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.3] - 2019-04-10
 ### Fixed
 - Read projected identifier in Asana's "My tasks"-view
+
+## [1.1.4] - 2019-04-11
+### Added
+- Show customer name in the project select box
