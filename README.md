@@ -38,7 +38,7 @@ You can keep the extension settings between builds by providing a stable `APPLIC
 
 ## Remote Service Configuration 
 
-Remote services are configured in `src/remoteServices.js`.
+Remote services are configured in `src/js/remoteServices.js`.
 
 A remote service is configured as follows:
 
