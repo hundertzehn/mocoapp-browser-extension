@@ -12,11 +12,11 @@ const Bubble = ({ bookedHours }) => (
 )
 
 Bubble.propTypes = {
-  bookedHours: PropTypes.number
+  bookedHours: PropTypes.number,
 }
 
 Bubble.defaultProps = {
-  bookedHours: 0
+  bookedHours: 0,
 }
 
 export default Bubble
