@@ -20,6 +20,7 @@ export const ERROR_UPGRADE_REQUIRED = "upgrade-required"
 export const ERROR_UNKNOWN = "unknown"
 
 export const noop = () => null
+export const asArray = input => (Array.isArray(input) ? input : [input])
 
 export const findProjectBy = prop => val => projects => {
   if (!val) {

@@ -1,10 +1,28 @@
 import UrlPattern from "url-pattern"
-import { isFunction, isUndefined, compose, toPairs, map, pipe } from "lodash/fp"
+import { isFunction, isUndefined, compose, toPairs, map, pipe, isNil } from "lodash/fp"
+import { asArray } from "./index"
 import queryString from "query-string"
 
-const extractQueryParams = (queryParams, query) => {
-  return toPairs(queryParams).reduce((acc, [key, param]) => {
-    acc[key] = query[param]
+function parseUrl(url) {
+  const urlObject = new URL(url)
+  const { origin, pathname, search } = urlObject
+  let { hash } = urlObject
+  const query = {
+    ...queryString.parse(search),
+    ...queryString.parse(hash),
+  }
+  if (hash) {
+    hash = hash.match(/#[^&]+/)[0]
+  }
+  return { origin, pathname, hash, query }
+}
+
+function extractQueryParams(queryParams, query) {
+  return toPairs(queryParams).reduce((acc, [key, params]) => {
+    const param = asArray(params).find(param => !isNil(query[param]))
+    if (param) {
+      acc[key] = query[param]
+    }
     return acc
   }, {})
 }

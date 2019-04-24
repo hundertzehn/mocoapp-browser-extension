@@ -95,6 +95,25 @@ export default {
     description: document => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
   },
 
+  wrike: {
+    name: "wrike",
+    urlPatterns: [
+      "https\\://www.wrike.com/workspace.htm#path=mywork",
+      "https\\://www.wrike.com/workspace.htm#path=folder",
+    ],
+    queryParams: {
+      id: ["t", "ot"],
+    },
+    description: document => document.querySelector(".title-field-ghost")?.textContent?.trim(),
+    projectId: document => {
+      const match = document
+        .querySelector(".header-title__main")
+        ?.textContent?.trim()
+        ?.match(projectRegex)
+      return match && match[1]
+    },
+  },
+
   wunderlist: {
     name: "wunderlist",
     urlPatterns: ["https\\://www.wunderlist.com/(webapp)#/tasks/:id(/*)"],

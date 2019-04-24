@@ -68,6 +68,7 @@
     height: 100%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
+    z-index: 9999;
 
     .moco-bx-popup-content {
       background-color: white;
