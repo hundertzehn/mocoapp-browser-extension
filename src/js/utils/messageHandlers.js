@@ -4,7 +4,7 @@ import {
   ERROR_UPGRADE_REQUIRED,
   ERROR_UNKNOWN,
   groupedProjectOptions,
-  weekStartsOn
+  weekStartsOn,
 } from "utils"
 import { get, forEach, reject, isNil } from "lodash/fp"
 import { startOfWeek, endOfWeek } from "date-fns"
@@ -32,8 +32,8 @@ export function tabUpdated(tab, { messenger, settings }) {
             type: "showBubble",
             payload: {
               bookedHours: parseFloat(data[0]?.hours) || 0,
-              service
-            }
+              service,
+            },
           })
         })
         .catch(() => {
@@ -41,8 +41,8 @@ export function tabUpdated(tab, { messenger, settings }) {
             type: "showBubble",
             payload: {
               bookedHours: 0,
-              service
-            }
+              service,
+            },
           })
         })
     })
@@ -58,7 +58,7 @@ export function settingsChanged(settings, { messenger }) {
       forEach(tab => {
         messenger.postMessage(tab, { type: "closePopup" })
         tabUpdated(tab, { settings, messenger })
-      })
+      }),
     )
 }
 
@@ -88,7 +88,7 @@ async function openPopup(tab, { service, messenger }) {
       apiClient.login(service),
       apiClient.projects(),
       apiClient.activities(fromDate, toDate),
-      apiClient.schedules(fromDate, toDate)
+      apiClient.schedules(fromDate, toDate),
     ])
     const action = {
       type: "openPopup",
@@ -103,8 +103,8 @@ async function openPopup(tab, { service, messenger }) {
         schedules: get("[3].data", responses),
         fromDate,
         toDate,
-        loading: false
-      }
+        loading: false,
+      },
     }
     messenger.postMessage(tab, action)
   } catch (error) {
@@ -119,7 +119,7 @@ async function openPopup(tab, { service, messenger }) {
     }
     messenger.postMessage(tab, {
       type: "openPopup",
-      payload: { errorType, errorMessage }
+      payload: { errorType, errorMessage },
     })
   }
 }

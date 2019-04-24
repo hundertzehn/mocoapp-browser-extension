@@ -9,7 +9,7 @@ import {
   get,
   find,
   curry,
-  pick
+  pick,
 } from "lodash/fp"
 import { format } from "date-fns"
 
@@ -28,7 +28,7 @@ export const findProjectBy = prop => val => projects => {
 
   return compose(
     find(pathEq(prop, val)),
-    flatMap(get("options"))
+    flatMap(get("options")),
   )(projects)
 }
 
@@ -38,14 +38,14 @@ export const findProjectByValue = findProjectBy("value")
 export const findTask = id =>
   compose(
     find(pathEq("value", Number(id))),
-    get("tasks")
+    get("tasks"),
   )
 
 function taskOptions(tasks) {
   return tasks.map(({ id, name, billable }) => ({
     label: billable ? name : `(${name})`,
     value: id,
-    billable
+    billable,
   }))
 }
 
@@ -55,30 +55,30 @@ export function projectOptions(projects) {
     label: project.intern ? `(${project.name})` : project.name,
     identifier: project.identifier,
     customerName: project.customer_name,
-    tasks: taskOptions(project.tasks)
+    tasks: taskOptions(project.tasks),
   }))
 }
 
 export const groupedProjectOptions = compose(
   map(([customerName, projects]) => ({
     label: customerName,
-    options: projectOptions(projects)
+    options: projectOptions(projects),
   })),
   toPairs,
   groupBy("customer_name"),
-  nilToArray
+  nilToArray,
 )
 
 export const serializeProps = attrs =>
   compose(
     mapValues(JSON.stringify),
-    pick(attrs)
+    pick(attrs),
   )
 
 export const parseProps = attrs =>
   compose(
     mapValues(JSON.parse),
-    pick(attrs)
+    pick(attrs),
   )
 
 export const trace = curry((tag, value) => {
@@ -90,8 +90,7 @@ export const trace = curry((tag, value) => {
 export const weekStartsOn = 1
 export const formatDate = date => format(date, "YYYY-MM-DD")
 
-export const extensionSettingsUrl = () =>
-  `chrome://extensions/?id=${chrome.runtime.id}`
+export const extensionSettingsUrl = () => `chrome://extensions/?id=${chrome.runtime.id}`
 
 export const extractAndSetTag = changeset => {
   let { description } = changeset
@@ -102,6 +101,6 @@ export const extractAndSetTag = changeset => {
   return {
     ...changeset,
     description: description.replace(/^#\S+\s/, ""),
-    tag: match[1]
+    tag: match[1],
   }
 }

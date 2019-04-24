@@ -1,12 +1,5 @@
 import UrlPattern from "url-pattern"
-import {
-  isFunction,
-  isUndefined,
-  compose,
-  toPairs,
-  map,
-  pipe
-} from "lodash/fp"
+import { isFunction, isUndefined, compose, toPairs, map, pipe } from "lodash/fp"
 import queryString from "query-string"
 
 const extractQueryParams = (queryParams, query) => {
@@ -37,9 +30,9 @@ const parseServices = compose(
         return new UrlPattern(...pattern)
       }
       return new UrlPattern(pattern)
-    })
+    }),
   })),
-  toPairs
+  toPairs,
 )
 
 export const createEnhancer = document => service => {
@@ -57,19 +50,16 @@ export const createEnhancer = document => service => {
     description: evaluate(service.description),
     projectId: evaluate(service.projectId),
     taskId: evaluate(service.taskId),
-    position: service.position || { right: "calc(2rem + 5px)" }
+    position: service.position || { right: "calc(2rem + 5px)" },
   }
 }
 
 export const createMatcher = remoteServices => {
   const services = parseServices(remoteServices)
   return tabUrl => {
-    const { origin, pathname, hash, search } = new URL(tabUrl)
+    const { origin, pathname, hash, query } = parseUrl(tabUrl)
     const url = `${origin}${pathname}${hash}`
-    const query = queryString.parse(search)
-    const service = services.find(service =>
-      service.patterns.some(pattern => pattern.match(url))
-    )
+    const service = services.find(service => service.patterns.some(pattern => pattern.match(url)))
 
     if (!service) {
       return
@@ -78,10 +68,7 @@ export const createMatcher = remoteServices => {
     const pattern = service.patterns.find(pattern => pattern.match(url))
     let match = pattern.match(url)
     if (service.queryParams) {
-      const extractedQueryParams = extractQueryParams(
-        service.queryParams,
-        query
-      )
+      const extractedQueryParams = extractQueryParams(service.queryParams, query)
       match = { ...extractedQueryParams, ...match }
     }
 
@@ -89,7 +76,7 @@ export const createMatcher = remoteServices => {
       ...match,
       ...service,
       url: tabUrl,
-      match
+      match,
     }
   }
 }
@@ -99,6 +86,6 @@ export const createServiceFinder = remoteServices => document => {
   const enhancer = createEnhancer(document)
   return pipe(
     matcher,
-    enhancer
+    enhancer,
   )
 }
