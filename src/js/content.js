@@ -15,8 +15,15 @@ const findService = createServiceFinder(remoteServices)(document)
 chrome.runtime.onConnect.addListener(function(port) {
   const messenger = new ContentMessenger(port)
 
+  function clickHandler(event) {
+    if (event.target.closest(".moco-bx-bubble")) {
+      event.stopPropagation()
+      messenger.postMessage({ type: "togglePopup" })
+    }
+  }
   port.onDisconnect.addListener(() => {
     messenger.stop()
+    document.removeEventListener("click", clickHandler, true)
   })
 
   function updateBubble({ service, bookedHours } = {}) {
@@ -24,6 +31,7 @@ chrome.runtime.onConnect.addListener(function(port) {
       const domRoot = document.createElement("div")
       domRoot.setAttribute("id", "moco-bx-root")
       document.body.appendChild(domRoot)
+      document.addEventListener("click", clickHandler, true)
     }
 
     ReactDOM.render(
@@ -40,21 +48,14 @@ chrome.runtime.onConnect.addListener(function(port) {
             service &&
             // eslint-disable-next-line react/display-name
             (props => (
-              <animated.div
-                className="moco-bx-bubble"
-                style={{ ...props, ...service.position }}
-                onClick={event => {
-                  event.stopPropagation()
-                  messenger.postMessage({ type: "togglePopup" })
-                }}
-              >
+              <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
                 <Bubble key={service.url} bookedHours={bookedHours} />
               </animated.div>
             ))
           }
         </Transition>
       </ErrorBoundary>,
-      document.getElementById("moco-bx-root")
+      document.getElementById("moco-bx-root"),
     )
   }
 
@@ -69,7 +70,7 @@ chrome.runtime.onConnect.addListener(function(port) {
       <ErrorBoundary>
         <Popup ref={popupRef} {...payload} onRequestClose={closePopup} />
       </ErrorBoundary>,
-      document.getElementById("moco-bx-popup-root")
+      document.getElementById("moco-bx-popup-root"),
     )
   }
 
@@ -86,7 +87,7 @@ chrome.runtime.onConnect.addListener(function(port) {
     const service = findService(window.location.href)
     messenger.postMessage({
       type: "newService",
-      payload: { isOpen: !!popupRef.current, service }
+      payload: { isOpen: !!popupRef.current, service },
     })
   })
 
