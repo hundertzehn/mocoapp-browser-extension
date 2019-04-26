@@ -11,16 +11,14 @@ describe("utils", () => {
 
     describe("createMatcher", () => {
       it("matches host and path", () => {
-        const service = matcher(
-          "https://github.com/hundertzehn/mocoapp/pull/123"
-        )
+        const service = matcher("https://github.com/hundertzehn/mocoapp/pull/123")
         expect(service.key).toEqual("github-pr")
         expect(service.name).toEqual("github")
       })
 
       it("matches query string", () => {
         let service = matcher(
-          "https://moco-bx.atlassian.net/secure/RapidBoard.jspa?rapidView=2&projectKey=TEST1&modal=detail&selectedIssue=TEST1-1"
+          "https://moco-bx.atlassian.net/secure/RapidBoard.jspa?rapidView=2&projectKey=TEST1&modal=detail&selectedIssue=TEST1-1",
         )
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
@@ -32,7 +30,7 @@ describe("utils", () => {
         expect(service.match.id).toEqual("TEST1-1")
 
         service = matcher(
-          "https://moco-bx.atlassian.net/secure/RapidBoard.jspa?rapidView=2&projectKey=TEST1&modal=detail"
+          "https://moco-bx.atlassian.net/secure/RapidBoard.jspa?rapidView=2&projectKey=TEST1&modal=detail",
         )
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
@@ -44,7 +42,7 @@ describe("utils", () => {
         expect(service.match.id).toBeUndefined()
 
         service = matcher(
-          "https://moco-bx.atlassian.net/secure/RapidBoard.jspa?rapidView=2&projectKey=TEST1&modal=detail&selectedIssue="
+          "https://moco-bx.atlassian.net/secure/RapidBoard.jspa?rapidView=2&projectKey=TEST1&modal=detail&selectedIssue=",
         )
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
@@ -55,9 +53,7 @@ describe("utils", () => {
         expect(service.match.projectId).toEqual("TEST1")
         expect(service.match.id).toEqual("")
 
-        service = matcher(
-          "https://moco-bx.atlassian.net/secure/RapidBoard.jspa"
-        )
+        service = matcher("https://moco-bx.atlassian.net/secure/RapidBoard.jspa")
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
         expect(service.match.org).toEqual("moco-bx")
@@ -65,7 +61,7 @@ describe("utils", () => {
         expect(service.match.id).toBeUndefined()
 
         service = matcher(
-          "https://moco-bx.atlassian.net/secure/RapidBoard.jspa?rapidView=2&modal=detail&selectedIssue=TEST2-1"
+          "https://moco-bx.atlassian.net/secure/RapidBoard.jspa?rapidView=2&modal=detail&selectedIssue=TEST2-1",
         )
         expect(service.key).toEqual("jira")
         expect(service.name).toEqual("jira")
@@ -78,19 +74,39 @@ describe("utils", () => {
       })
 
       it("matches url with hash", () => {
-        let service = matcher(
-          "https://www.wunderlist.com/webapp#/tasks/4771178545"
-        )
+        let service = matcher("https://www.wunderlist.com/webapp#/tasks/4771178545")
         expect(service.key).toEqual("wunderlist")
         expect(service.name).toEqual("wunderlist")
         expect(service.match.id).toEqual("4771178545")
       })
 
       it("does not match different host", () => {
-        const service = matcher(
-          "https://trello.com/hundertzehn/mocoapp/pull/123"
-        )
+        const service = matcher("https://trello.com/hundertzehn/mocoapp/pull/123")
         expect(service).toBeFalsy()
+      })
+
+      it("matches query string in the hash", () => {
+        const service = matcher(
+          "https://www.wrike.com/workspace.htm?acc=2771711#path=folder&id=342769537&p=342762920&a=2771711&c=board&ot=342769562&so=10&bso=10&sd=0&st=space-342762920",
+        )
+        expect(service.key).toEqual("wrike")
+        expect(service.name).toEqual("wrike")
+        expect(service.id).toEqual("342769562")
+        expect(service.match.id).toEqual("342769562")
+      })
+
+      it("matches query parameter with different names", () => {
+        expect(
+          matcher(
+            "https://www.wrike.com/workspace.htm?acc=2771711#path=mywork&id=342769537&p=342762920&a=2771711&c=board&ot=1234&so=10&bso=10&sd=0&st=space-342762920",
+          ).id,
+        ).toEqual("1234")
+
+        expect(
+          matcher(
+            "https://www.wrike.com/workspace.htm?acc=2771711#path=folder&id=342769537&p=342762920&a=2771711&c=board&t=1234&so=10&bso=10&sd=0&st=space-342762920",
+          ).id,
+        ).toEqual("1234")
       })
     })
 
@@ -98,9 +114,7 @@ describe("utils", () => {
       it("enhances a services", () => {
         const url = "https://github.com/hundertzehn/mocoapp/pull/123"
         const document = {
-          querySelector: jest
-            .fn()
-            .mockReturnValue({ textContent: "[4321] Foo" })
+          querySelector: jest.fn().mockReturnValue({ textContent: "[4321] Foo" }),
         }
         const service = matcher(url)
         const enhancedService = createEnhancer(document)(service)

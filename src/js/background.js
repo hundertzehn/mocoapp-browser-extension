@@ -1,17 +1,8 @@
 import "@babel/polyfill"
 import ApiClient from "api/Client"
-import {
-  isChrome,
-  getCurrentTab,
-  getSettings,
-  isBrowserTab
-} from "utils/browser"
+import { isChrome, getCurrentTab, getSettings, isBrowserTab } from "utils/browser"
 import { BackgroundMessenger } from "utils/messaging"
-import {
-  tabUpdated,
-  settingsChanged,
-  togglePopup
-} from "utils/messageHandlers"
+import { tabUpdated, settingsChanged, togglePopup } from "utils/messageHandlers"
 
 const messenger = new BackgroundMessenger()
 
@@ -47,8 +38,8 @@ chrome.runtime.onMessage.addListener(action => {
                 type: "showBubble",
                 payload: {
                   bookedHours: parseFloat(data[0]?.hours) || 0,
-                  service
-                }
+                  service,
+                },
               })
             })
           })
@@ -56,7 +47,7 @@ chrome.runtime.onMessage.addListener(action => {
             if (error.response?.status === 422) {
               chrome.runtime.sendMessage({
                 type: "setFormErrors",
-                payload: error.response.data
+                payload: error.response.data,
               })
             }
           })
