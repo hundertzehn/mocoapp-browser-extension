@@ -84,6 +84,30 @@ describe("utils", () => {
         const service = matcher("https://trello.com/hundertzehn/mocoapp/pull/123")
         expect(service).toBeFalsy()
       })
+
+      it("matches query string in the hash", () => {
+        const service = matcher(
+          "https://www.wrike.com/workspace.htm?acc=2771711#path=folder&id=342769537&p=342762920&a=2771711&c=board&ot=342769562&so=10&bso=10&sd=0&st=space-342762920",
+        )
+        expect(service.key).toEqual("wrike")
+        expect(service.name).toEqual("wrike")
+        expect(service.id).toEqual("342769562")
+        expect(service.match.id).toEqual("342769562")
+      })
+
+      it("matches query parameter with different names", () => {
+        expect(
+          matcher(
+            "https://www.wrike.com/workspace.htm?acc=2771711#path=mywork&id=342769537&p=342762920&a=2771711&c=board&ot=1234&so=10&bso=10&sd=0&st=space-342762920",
+          ).id,
+        ).toEqual("1234")
+
+        expect(
+          matcher(
+            "https://www.wrike.com/workspace.htm?acc=2771711#path=folder&id=342769537&p=342762920&a=2771711&c=board&t=1234&so=10&bso=10&sd=0&st=space-342762920",
+          ).id,
+        ).toEqual("1234")
+      })
     })
 
     describe("createEnhancer", () => {
