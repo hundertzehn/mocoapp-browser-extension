@@ -100,6 +100,8 @@ export default {
     urlPatterns: [
       "https\\://www.wrike.com/workspace.htm#path=mywork",
       "https\\://www.wrike.com/workspace.htm#path=folder",
+      "https\\://app-eu.wrike.com/workspace.htm#path=mywork",
+      "https\\://app-eu.wrike.com/workspace.htm#path=folder",
     ],
     queryParams: {
       id: ["t", "ot"],
