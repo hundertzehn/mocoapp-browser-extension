@@ -5,7 +5,6 @@ import Bubble from "./components/Bubble"
 import Popup from "components/Popup"
 import { createServiceFinder } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
-import { ErrorBoundary } from "utils/notifier"
 import { ContentMessenger } from "utils/messaging"
 import "../css/content.scss"
 
@@ -35,26 +34,24 @@ chrome.runtime.onConnect.addListener(function(port) {
     }
 
     ReactDOM.render(
-      <ErrorBoundary>
-        <Transition
-          native
-          items={service}
-          from={{ opacity: "0" }}
-          enter={{ opacity: "1" }}
-          leave={{ opacity: "0" }}
-          config={config.stiff}
-        >
-          {service =>
-            service &&
-            // eslint-disable-next-line react/display-name
-            (props => (
-              <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
-                <Bubble key={service.url} bookedHours={bookedHours} />
-              </animated.div>
-            ))
-          }
-        </Transition>
-      </ErrorBoundary>,
+      <Transition
+        native
+        items={service}
+        from={{ opacity: "0" }}
+        enter={{ opacity: "1" }}
+        leave={{ opacity: "0" }}
+        config={config.stiff}
+      >
+        {service =>
+          service &&
+          // eslint-disable-next-line react/display-name
+          (props => (
+            <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
+              <Bubble key={service.url} bookedHours={bookedHours} />
+            </animated.div>
+          ))
+        }
+      </Transition>,
       document.getElementById("moco-bx-root"),
     )
   }
@@ -67,9 +64,7 @@ chrome.runtime.onConnect.addListener(function(port) {
     }
 
     ReactDOM.render(
-      <ErrorBoundary>
-        <Popup ref={popupRef} {...payload} onRequestClose={closePopup} />
-      </ErrorBoundary>,
+      <Popup ref={popupRef} {...payload} onRequestClose={closePopup} />,
       document.getElementById("moco-bx-popup-root"),
     )
   }
