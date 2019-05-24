@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for starting/stopping a timer
 - Show hours as HH:MM or decimal in the Bubble, depending on setting in MOCO
 
+## [1.2.2] - 2019-05-24
+
+### Removed
+
+- Bugsnag client
+
 ## [1.2.1] - 2019-05-03
 
 ### Fixed
