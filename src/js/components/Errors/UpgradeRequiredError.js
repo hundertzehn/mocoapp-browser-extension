@@ -7,10 +7,7 @@ const UpgradeRequiredError = () => (
   <div className="moco-bx-error-container">
     <img className="moco-bx-logo" src={logo} alt="MOCO logo" />
     <h1>Upgrade erforderlich</h1>
-    <p>
-      Die installierte MOCO Browser-Erweiterung ist veraltet &mdash; bitte
-      aktualisieren.
-    </p>
+    <p>Die installierte MOCO Browser-Erweiterung ist veraltet &mdash; bitte aktualisieren.</p>
     {isChrome() ? (
       <button
         className="moco-bx-btn"
@@ -22,11 +19,7 @@ const UpgradeRequiredError = () => (
       <>
         <br />
         <p>Unter folgender URL:</p>
-        <img
-          className="firefox-addons"
-          src={firefoxAddons}
-          alt="about:addons"
-        />
+        <img className="firefox-addons" src={firefoxAddons} alt="about:addons" />
       </>
     )}
   </div>

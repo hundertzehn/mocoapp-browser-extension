@@ -15,7 +15,7 @@ const UnknownError = ({ message = "Unbekannter Fehler" }) => (
 )
 
 UnknownError.propTypes = {
-  message: PropTypes.string
+  message: PropTypes.string,
 }
 
 export default UnknownError

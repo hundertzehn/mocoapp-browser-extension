@@ -6,10 +6,10 @@ import ApiClient from "api/Client"
 
 @observer
 class Options extends Component {
-  @observable subdomain = "";
-  @observable apiKey = "";
-  @observable errorMessage = null;
-  @observable isSuccess = false;
+  @observable subdomain = ""
+  @observable apiKey = ""
+  @observable errorMessage = null
+  @observable isSuccess = false
 
   componentDidMount() {
     getSettings(false).then(({ subdomain, apiKey }) => {
@@ -20,7 +20,7 @@ class Options extends Component {
 
   onChange = event => {
     this[event.target.name] = event.target.value.trim()
-  };
+  }
 
   handleSubmit = _event => {
     this.isSuccess = false
@@ -30,7 +30,7 @@ class Options extends Component {
       const apiClient = new ApiClient({
         subdomain: this.subdomain,
         apiKey: this.apiKey,
-        version
+        version,
       })
       apiClient
         .login()
@@ -39,32 +39,27 @@ class Options extends Component {
           this.closeWindow()
         })
         .catch(error => {
-          this.errorMessage =
-            error.response?.data?.message || "Anmeldung fehlgeschlagen"
+          this.errorMessage = error.response?.data?.message || "Anmeldung fehlgeschlagen"
         })
     })
-  };
+  }
 
   handleInputKeyDown = event => {
     if (event.key === "Enter") {
       this.handleSubmit()
     }
-  };
+  }
 
   closeWindow = () => {
     isChrome() && window.close()
-  };
+  }
 
   render() {
     return (
       <div className="moco-bx-options">
         <h2 style={{ textAlign: "center" }}>Einstellungen</h2>
-        {this.errorMessage && (
-          <div className="text-danger">{this.errorMessage}</div>
-        )}
-        {this.isSuccess && (
-          <div className="text-success">Anmeldung erfolgreich</div>
-        )}
+        {this.errorMessage && <div className="text-danger">{this.errorMessage}</div>}
+        {this.isSuccess && <div className="text-success">Anmeldung erfolgreich</div>}
         <div className="form-group">
           <label>Internetadresse</label>
           <div className="input-group">
@@ -88,8 +83,7 @@ class Options extends Component {
             onChange={this.onChange}
           />
           <p className="text-muted">
-            Den API-Schlüssel findest du in deinem Profil unter
-            &quot;Integrationen&quot;.
+            Den API-Schlüssel findest du in deinem Profil unter &quot;Integrationen&quot;.
           </p>
         </div>
         <button className="moco-bx-btn" onClick={this.handleSubmit}>

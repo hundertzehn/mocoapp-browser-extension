@@ -10,15 +10,11 @@ const Day = ({ date, hours, absence, active, onClick }) => {
 
   return (
     <div
-      className={cn(
-        "moco-bx-calendar__day",
-        `moco-bx-calendar__day--week-day-${getDay(date)}`,
-        {
-          "moco-bx-calendar__day--active": active,
-          "moco-bx-calendar__day--filled": hours > 0,
-          "moco-bx-calendar__day--absence": absence
-        }
-      )}
+      className={cn("moco-bx-calendar__day", `moco-bx-calendar__day--week-day-${getDay(date)}`, {
+        "moco-bx-calendar__day--active": active,
+        "moco-bx-calendar__day--filled": hours > 0,
+        "moco-bx-calendar__day--absence": absence,
+      })}
       onClick={handleClick}
     >
       <span className="moco-bx-calendar__day-of-week">
@@ -34,7 +30,7 @@ Day.propTypes = {
   hours: PropTypes.number.isRequired,
   absence: PropTypes.object,
   active: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired
+  onClick: PropTypes.func.isRequired,
 }
 
 export default Day

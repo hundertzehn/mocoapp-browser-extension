@@ -35,9 +35,9 @@ Hours.propTypes = {
   hours: PropTypes.number.isRequired,
   absence: PropTypes.shape({
     assignment_code: PropTypes.string,
-    assignment_color: PropTypes.string
+    assignment_color: PropTypes.string,
   }),
-  active: PropTypes.bool.isRequired
+  active: PropTypes.bool.isRequired,
 }
 
 export default Hours

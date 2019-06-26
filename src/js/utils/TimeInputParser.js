@@ -1,5 +1,5 @@
 export default class TimeInputParser {
-  #input;
+  #input
 
   constructor(input) {
     this.#input = input.toLowerCase().replace(/[\s()]/g, "")
@@ -25,11 +25,11 @@ export default class TimeInputParser {
     const calculated = hours * 3600 + minutes * 60
 
     return isNegative ? -calculated : calculated
-  };
+  }
 
   #parseDecimal = () => {
     return this.#input.replace(/[.,]/g, ".")
-  };
+  }
 
   #parseTimeAsSeconds = () => {
     const match = this.#isTime()
@@ -39,12 +39,12 @@ export default class TimeInputParser {
     const minutes = parseInt(match[3])
 
     return this.#calculateFromHoursAndMinutes(hours, minutes, isNegative)
-  };
+  }
 
   #parseMinutesAsSeconds = () => {
     const minutes = parseInt(this.#isMinutes()[1])
     return minutes * 60
-  };
+  }
 
   #parseRange = () => {
     const match = this.#isRange()
@@ -54,7 +54,7 @@ export default class TimeInputParser {
     const to_hours = parseInt(match[3])
     const to_minutes = parseInt(match[4])
     return (to_hours - from_hours) * 3600 + (to_minutes - from_minutes) * 60
-  };
+  }
 
   #parseHoursAndMinutes = () => {
     const match = this.#isHoursAndMinutes()
@@ -64,28 +64,26 @@ export default class TimeInputParser {
     const minutes = parseInt(match[3])
 
     return this.#calculateFromHoursAndMinutes(hours, minutes, isNegative)
-  };
+  }
 
   #isDecimal = () => {
     return this.#input.match(/^([-]?[0-9]{0,2})[.,]{1}([0-9]{1,2})$/)
-  };
+  }
 
   #isTime = () => {
     return this.#input.match(/^([-]?)([0-9]{1,2}):([0-9]{2})$/)
-  };
+  }
 
   #isMinutes = () => {
     return this.#input.match(/^([-]?[0-9]{1,3})(m|mins?)$/)
-  };
+  }
 
   #isRange = () => {
-    return this.#input.match(
-      /^([0-9]{1,2})[:.]{0,1}([0-9]{2})-([0-9]{1,2})[:.]{0,1}([0-9]{2})$/
-    )
-  };
+    return this.#input.match(/^([0-9]{1,2})[:.]{0,1}([0-9]{2})-([0-9]{1,2})[:.]{0,1}([0-9]{2})$/)
+  }
 
   #isHoursAndMinutes = () => {
     // 1h 14m(in)
     return this.#input.match(/^([-]?)([0-9]{1,2})h([0-9]{1,2})(m|mins?)$/)
-  };
+  }
 }

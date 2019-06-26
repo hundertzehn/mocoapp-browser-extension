@@ -3,19 +3,15 @@ import { formatDate } from "utils"
 
 const baseURL = subdomain => {
   if (process.env.NODE_ENV === "production") {
-    return `https://${encodeURIComponent(
-      subdomain
-    )}.mocoapp.com/api/browser_extensions`
+    return `https://${encodeURIComponent(subdomain)}.mocoapp.com/api/browser_extensions`
   } else {
-    return `http://${encodeURIComponent(
-      subdomain
-    )}.mocoapp.localhost:3001/api/browser_extensions`
+    return `http://${encodeURIComponent(subdomain)}.mocoapp.localhost:3001/api/browser_extensions`
   }
 }
 
 export default class Client {
-  #client;
-  #apiKey;
+  #client
+  #apiKey
 
   constructor({ subdomain, apiKey, version }) {
     this.#apiKey = apiKey
@@ -25,9 +21,9 @@ export default class Client {
       headers: {
         common: {
           "x-api-key": apiKey,
-          "x-extension-version": version
-        }
-      }
+          "x-extension-version": version,
+        },
+      },
     })
   }
 
@@ -35,29 +31,29 @@ export default class Client {
     this.#client.post("session", {
       api_key: this.#apiKey,
       remote_service: service?.name,
-      remote_id: service?.id
-    });
+      remote_id: service?.id,
+    })
 
-  projects = () => this.#client.get("projects");
+  projects = () => this.#client.get("projects")
 
   schedules = (fromDate, toDate) =>
     this.#client.get("schedules", {
-      params: { date: `${formatDate(fromDate)}:${formatDate(toDate)}` }
-    });
+      params: { date: `${formatDate(fromDate)}:${formatDate(toDate)}` },
+    })
 
   activities = (fromDate, toDate) =>
     this.#client.get("activities", {
-      params: { date: `${formatDate(fromDate)}:${formatDate(toDate)}` }
-    });
+      params: { date: `${formatDate(fromDate)}:${formatDate(toDate)}` },
+    })
 
   bookedHours = service => {
     if (!service) {
       return Promise.resolve({ data: { hours: 0 } })
     }
     return this.#client.get("activities/tags", {
-      params: { selection: [service.id], remote_service: service.name }
+      params: { selection: [service.id], remote_service: service.name },
     })
-  };
+  }
 
-  createActivity = activity => this.#client.post("activities", { activity });
+  createActivity = activity => this.#client.post("activities", { activity })
 }

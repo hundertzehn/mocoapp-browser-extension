@@ -1,12 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import queryString from "query-string"
-import {
-  ERROR_UNKNOWN,
-  ERROR_UNAUTHORIZED,
-  ERROR_UPGRADE_REQUIRED,
-  serializeProps
-} from "utils"
+import { ERROR_UNKNOWN, ERROR_UNAUTHORIZED, ERROR_UPGRADE_REQUIRED, serializeProps } from "utils"
 import { isChrome } from "utils/browser"
 
 function getStyles(errorType) {
@@ -21,7 +16,7 @@ function getStyles(errorType) {
           : "461px"
         : errorType === ERROR_UNKNOWN
         ? "550px"
-        : "558px"
+        : "558px",
   }
 }
 
@@ -29,14 +24,14 @@ class Popup extends Component {
   static propTypes = {
     service: PropTypes.object,
     errorType: PropTypes.string,
-    onRequestClose: PropTypes.func.isRequired
-  };
+    onRequestClose: PropTypes.func.isRequired,
+  }
 
   handleRequestClose = event => {
     if (event.target.classList.contains("moco-bx-popup")) {
       this.props.onRequestClose()
     }
-  };
+  }
 
   componentDidMount() {
     // Document might lose focus when clicking the browser action.
@@ -64,7 +59,7 @@ class Popup extends Component {
       "fromDate",
       "toDate",
       "errorType",
-      "errorMessage"
+      "errorMessage",
     ])(this.props)
 
     const styles = getStyles(this.props.errorType)
@@ -73,9 +68,7 @@ class Popup extends Component {
       <div className="moco-bx-popup" onClick={this.handleRequestClose}>
         <div className="moco-bx-popup-content" style={styles}>
           <iframe
-            src={chrome.extension.getURL(
-              `popup.html?${queryString.stringify(serializedProps)}`
-            )}
+            src={chrome.extension.getURL(`popup.html?${queryString.stringify(serializedProps)}`)}
             width={styles.width}
             height={styles.height}
           />

@@ -5,22 +5,14 @@ import { formatDate } from "utils"
 import { eachDay } from "date-fns"
 import { pathEq } from "lodash/fp"
 
-const findAbsence = (date, schedules) =>
-  schedules.find(pathEq("date", formatDate(date)))
+const findAbsence = (date, schedules) => schedules.find(pathEq("date", formatDate(date)))
 
 const hoursAtDate = (date, activities) =>
   activities
     .filter(pathEq("date", formatDate(date)))
     .reduce((acc, activity) => acc + activity.hours, 0)
 
-const Calendar = ({
-  fromDate,
-  toDate,
-  selectedDate,
-  activities,
-  schedules,
-  onChange
-}) => (
+const Calendar = ({ fromDate, toDate, selectedDate, activities, schedules, onChange }) => (
   <div className="moco-bx-calendar">
     {eachDay(fromDate, toDate).map(date => (
       <Day
@@ -44,17 +36,17 @@ Calendar.propTypes = {
       id: PropTypes.number.isRequired,
       date: PropTypes.string.isRequired,
       hours: PropTypes.number.isRequired,
-      timer_started_at: PropTypes.string
-    }).isRequired
+      timer_started_at: PropTypes.string,
+    }).isRequired,
   ),
   schedules: PropTypes.arrayOf(
     PropTypes.shape({
       date: PropTypes.string,
       assignment_code: PropTypes.string,
-      assignment_color: PropTypes.string
-    })
+      assignment_color: PropTypes.string,
+    }),
   ).isRequired,
-  onChange: PropTypes.func.isRequired
+  onChange: PropTypes.func.isRequired,
 }
 
 export default Calendar

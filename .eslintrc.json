@@ -22,6 +22,11 @@
     },
     "sourceType": "module"
   },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "rules": {
     "strict": 0,
     "semi": ["error", "never"],

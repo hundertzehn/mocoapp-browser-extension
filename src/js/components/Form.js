@@ -8,24 +8,24 @@ class Form extends Component {
     changeset: PropTypes.shape({
       project: PropTypes.object,
       task: PropTypes.object,
-      hours: PropTypes.string
+      hours: PropTypes.string,
     }).isRequired,
     errors: PropTypes.object,
     projects: PropTypes.array.isRequired,
     onChange: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired
-  };
+    onSubmit: PropTypes.func.isRequired,
+  }
 
   static defaultProps = {
-    inline: true
-  };
+    inline: true,
+  }
 
   isValid = () => {
     const { changeset } = this.props
     return ["assignment_id", "task_id", "hours", "description"]
       .map(prop => changeset[prop])
       .every(Boolean)
-  };
+  }
 
   handleTextareaKeyDown = event => {
     const { onSubmit } = this.props
@@ -34,7 +34,7 @@ class Form extends Component {
       event.preventDefault()
       this.isValid() && onSubmit(event)
     }
-  };
+  }
 
   render() {
     const { projects, changeset, errors, onChange, onSubmit } = this.props
@@ -44,7 +44,7 @@ class Form extends Component {
       <form onSubmit={onSubmit}>
         <div
           className={cn("form-group", {
-            "has-error": errors.assignment_id || errors.task_id
+            "has-error": errors.assignment_id || errors.task_id,
           })}
         >
           <Select
@@ -69,9 +69,7 @@ class Form extends Component {
           {errors.assignment_id ? (
             <div className="form-error">{errors.assignment_id.join("; ")}</div>
           ) : null}
-          {errors.task_id ? (
-            <div className="form-error">{errors.task_id.join("; ")}</div>
-          ) : null}
+          {errors.task_id ? <div className="form-error">{errors.task_id.join("; ")}</div> : null}
         </div>
         <div className={cn("form-group", { "has-error": errors.hours })}>
           <input
@@ -83,9 +81,7 @@ class Form extends Component {
             autoComplete="off"
             autoFocus
           />
-          {errors.hours ? (
-            <div className="form-error">{errors.hours.join("; ")}</div>
-          ) : null}
+          {errors.hours ? <div className="form-error">{errors.hours.join("; ")}</div> : null}
         </div>
         <div className={cn("form-group", { "has-error": errors.description })}>
           <textarea
