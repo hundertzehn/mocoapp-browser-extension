@@ -2,7 +2,7 @@ require("dotenv").config()
 
 const path = require("path")
 const webpack = require("webpack")
-const CleanWebpackPlugin = require("clean-webpack-plugin")
+const { CleanWebpackPlugin } = require("clean-webpack-plugin")
 const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ZipPlugin = require("zip-webpack-plugin")
@@ -31,7 +31,9 @@ module.exports = env => {
             {
               loader: "sass-loader",
               options: {
-                includePaths: [path.join(__dirname, "src/css")],
+                sassOptions: {
+                  includePaths: [path.join(__dirname, "src/css")],
+                },
               },
             },
           ],
@@ -55,7 +57,7 @@ module.exports = env => {
       ],
     },
     plugins: [
-      new CleanWebpackPlugin([`build/${env.browser}`]),
+      new CleanWebpackPlugin(),
       new webpack.DefinePlugin({
         "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
       }),

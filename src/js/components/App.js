@@ -16,10 +16,10 @@ import {
   findTask,
   formatDate,
 } from "utils"
+import { parseISO } from "date-fns"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
 import UnknownError from "components/Errors/UnknownError"
-import { parse } from "date-fns"
 import Header from "./shared/Header"
 import { head } from "lodash"
 import TimeInputParser from "utils/TimeInputParser"
@@ -193,8 +193,8 @@ class App extends Component {
               {() => (
                 <>
                   <Calendar
-                    fromDate={parse(fromDate)}
-                    toDate={parse(toDate)}
+                    fromDate={parseISO(fromDate)}
+                    toDate={parseISO(toDate)}
                     activities={activities}
                     schedules={schedules}
                     selectedDate={new Date(this.changesetWithDefaults.date)}
