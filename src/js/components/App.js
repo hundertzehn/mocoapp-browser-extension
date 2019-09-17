@@ -14,6 +14,7 @@ import {
   findProjectByValue,
   findProjectByIdentifier,
   findTask,
+  defaultTask,
   formatDate,
 } from "utils"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
@@ -73,7 +74,7 @@ class App extends Component {
     const { service, lastTaskId } = this.props
     return (
       findTask(this.changeset.task_id || service?.taskId || lastTaskId)(this.project) ||
-      head(this.project?.tasks)
+      defaultTask(this.project?.tasks)
     )
   }
 
@@ -121,7 +122,7 @@ class App extends Component {
 
     if (name === "assignment_id") {
       const project = findProjectByValue(value)(projects)
-      this.changeset.task_id = head(project?.tasks)?.value
+      this.changeset.task_id = defaultTask(project?.tasks)?.value
     }
   }
 

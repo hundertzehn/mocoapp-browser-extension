@@ -10,6 +10,8 @@ import {
   find,
   curry,
   pick,
+  head,
+  defaultTo,
 } from "lodash/fp"
 import { format } from "date-fns"
 
@@ -42,11 +44,19 @@ export const findTask = id =>
     get("tasks"),
   )
 
+export const defaultTask = tasks =>
+  compose(
+    defaultTo(head(tasks)),
+    find(pathEq("isDefault", true)),
+    nilToArray,
+  )(tasks)
+
 function taskOptions(tasks) {
-  return tasks.map(({ id, name, billable }) => ({
+  return tasks.map(({ id, name, billable, default: isDefault }) => ({
     label: billable ? name : `(${name})`,
     value: id,
     billable,
+    isDefault,
   }))
 }
 
