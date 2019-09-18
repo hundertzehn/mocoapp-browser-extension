@@ -9,14 +9,16 @@ export const projects = [
       {
         id: 2733682,
         name: "Bugfixing",
-        billable: true
+        billable: true,
+        default: false,
       },
       {
         id: 2733681,
         name: "Development",
-        billable: true
-      }
-    ]
+        billable: true,
+        default: true,
+      },
+    ],
   },
   {
     id: 944724773,
@@ -28,24 +30,28 @@ export const projects = [
       {
         id: 1621304,
         name: "Roadmap Features",
-        billable: true
+        billable: true,
+        default: false,
       },
       {
         id: 1621310,
         name: "Bugfixing",
-        billable: true
+        billable: true,
+        default: false,
       },
       {
         id: 1621305,
         name: "Quickwins",
-        billable: true
+        billable: true,
+        default: true,
       },
       {
         id: 1621323,
         name: "Refactorings",
-        billable: true
-      }
-    ]
+        billable: true,
+        default: false,
+      },
+    ],
   },
   {
     id: 944837106,
@@ -57,24 +63,28 @@ export const projects = [
       {
         id: 2500080,
         name: "Intercom & Mails",
-        billable: false
+        billable: false,
+        default: false,
       },
       {
         id: 2500081,
         name: "Demos",
-        billable: false
+        billable: false,
+        default: true,
       },
       {
         id: 2506050,
         name: "Calls",
-        billable: false
+        billable: false,
+        default: false,
       },
       {
         id: 2500084,
         name: "Importe",
-        billable: false
-      }
-    ]
+        billable: false,
+        default: false,
+      },
+    ],
   },
   {
     id: 944621413,
@@ -86,23 +96,27 @@ export const projects = [
       {
         id: 874014,
         name: "Entwicklung",
-        billable: true
+        billable: true,
+        default: false,
       },
       {
         id: 874015,
         name: "Grafik",
-        billable: true
+        billable: true,
+        default: false,
       },
       {
         id: 874016,
         name: "Konzept",
-        billable: true
+        billable: true,
+        default: false,
       },
       {
         id: 874017,
         name: "Projektleitung",
-        billable: true
-      }
-    ]
-  }
+        billable: true,
+        default: false,
+      },
+    ],
+  },
 ]

@@ -3,16 +3,25 @@ import {
   findProjectByValue,
   findProjectByIdentifier,
   findTask,
+  defaultTask,
   groupedProjectOptions,
-  extractAndSetTag
+  extractAndSetTag,
 } from "../../src/js/utils"
-import { map } from "lodash/fp"
+import { map, compose } from "lodash/fp"
+
+const getProjectBy = finder => key =>
+  compose(
+    finder(key),
+    groupedProjectOptions,
+  )(projects)
+
+const getProjectByValue = getProjectBy(findProjectByValue)
+const getProjectByIdentifier = getProjectBy(findProjectByIdentifier)
 
 describe("utils", () => {
   describe("findProjectByValue", () => {
     it("finds an existing project", () => {
-      const options = groupedProjectOptions(projects)
-      const project = findProjectByValue(944837106)(options)
+      const project = getProjectByValue(944837106)
       expect(project.value).toEqual(944837106)
       expect(project.label).toEqual("Support")
       expect(project.customerName).toEqual("MOCO APP")
@@ -20,14 +29,12 @@ describe("utils", () => {
     })
 
     it("returns undefined if project is not found", () => {
-      const options = groupedProjectOptions(projects)
-      const project = findProjectByValue(123)(options)
+      const project = getProjectByValue(123)
       expect(project).toBe(undefined)
     })
 
     it("returns undefined for undefined id", () => {
-      const options = groupedProjectOptions(projects)
-      const project = findProjectByValue(undefined)(options)
+      const project = getProjectByValue(undefined)
       expect(project).toBe(undefined)
     })
   })
@@ -57,16 +64,14 @@ describe("utils", () => {
 
   describe("findTask", () => {
     it("find an existing task", () => {
-      const options = groupedProjectOptions(projects)
-      const project = findProjectByValue(944837106)(options)
+      const project = getProjectByValue(944837106)
       const task = findTask(2506050)(project)
       expect(task.value).toEqual(2506050)
       expect(task.label).toEqual("(Calls)")
     })
 
     it("returns undefined if task is not found", () => {
-      const options = groupedProjectOptions(projects)
-      const project = findProjectByValue(944837106)(options)
+      const project = getProjectByValue(944837106)
       const task = findTask(123)(project)
       expect(task).toBe(undefined)
     })
@@ -77,14 +82,32 @@ describe("utils", () => {
     })
   })
 
+  describe("defaultTask", () => {
+    it("find a default task", () => {
+      const project = getProjectByValue(944837106)
+      const task = defaultTask(project.tasks)
+      expect(task.label).toBe("(Demos)")
+    })
+
+    it("returns first task if no default is defined", () => {
+      const project = getProjectByValue(944621413)
+      const task = defaultTask(project.tasks)
+      expect(task.label).toBe("Entwicklung")
+    })
+
+    it("return undefined if no tasks given", () => {
+      let task = defaultTask(null)
+      expect(task).toBeUndefined()
+
+      task = defaultTask([])
+      expect(task).toBeUndefined()
+    })
+  })
+
   describe("groupedProjectOptions", () => {
     it("transforms projects into grouped options by company", () => {
       const result = groupedProjectOptions(projects)
-      expect(map("label", result)).toEqual([
-        "Simplificator",
-        "MOCO APP",
-        "sharoo"
-      ])
+      expect(map("label", result)).toEqual(["Simplificator", "MOCO APP", "sharoo"])
     })
   })
 
@@ -92,19 +115,19 @@ describe("utils", () => {
     it("sets the correct tag and updates description", () => {
       const changeset = {
         description: "#meeting Lorem ipsum",
-        tag: ""
+        tag: "",
       }
 
       expect(extractAndSetTag(changeset)).toEqual({
         description: "Lorem ipsum",
-        tag: "meeting"
+        tag: "meeting",
       })
     })
 
     it("only matches tag at the beginning", () => {
       const changeset = {
         description: "Lorem #meeting ipsum",
-        tag: ""
+        tag: "",
       }
 
       expect(extractAndSetTag(changeset)).toEqual(changeset)
@@ -113,7 +136,7 @@ describe("utils", () => {
     it("returns the changeset if not tag is set", () => {
       const changeset = {
         description: "Without tag",
-        tag: ""
+        tag: "",
       }
 
       expect(extractAndSetTag(changeset)).toEqual(changeset)
