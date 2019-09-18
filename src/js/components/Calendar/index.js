@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import Day from "./Day"
 import { formatDate } from "utils"
-import { eachDay } from "date-fns"
+import { eachDayOfInterval } from "date-fns"
 import { pathEq } from "lodash/fp"
 
 const findAbsence = (date, schedules) => schedules.find(pathEq("date", formatDate(date)))
@@ -14,7 +14,7 @@ const hoursAtDate = (date, activities) =>
 
 const Calendar = ({ fromDate, toDate, selectedDate, activities, schedules, onChange }) => (
   <div className="moco-bx-calendar">
-    {eachDay(fromDate, toDate).map(date => (
+    {eachDayOfInterval({ start: fromDate, end: toDate }).map(date => (
       <Day
         key={date}
         date={date}
