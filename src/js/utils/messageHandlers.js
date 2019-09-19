@@ -25,12 +25,13 @@ export function tabUpdated(tab, { messenger, settings }) {
 
     messenger.once("newService", ({ payload: { service } }) => {
       apiClient
-        .bookedHours(service)
+        .activitiesStatus(service)
         .then(({ data }) => {
           messenger.postMessage(tab, {
             type: "showBubble",
             payload: {
-              bookedHours: parseFloat(data[0]?.hours) || 0,
+              bookedHours: parseFloat(data.hours),
+              timedActivity: data.timed_activity,
               service,
             },
           })
@@ -89,6 +90,7 @@ async function openPopup(tab, { service, messenger }) {
       apiClient.activities(fromDate, toDate),
       apiClient.schedules(fromDate, toDate),
     ])
+
     const action = {
       type: "openPopup",
       payload: {
