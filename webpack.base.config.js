@@ -57,7 +57,9 @@ module.exports = env => {
       ],
     },
     plugins: [
-      new CleanWebpackPlugin(),
+      new CleanWebpackPlugin({
+        cleanAfterEveryBuildPatterns: ["!manifest.json"],
+      }),
       new webpack.DefinePlugin({
         "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
       }),
