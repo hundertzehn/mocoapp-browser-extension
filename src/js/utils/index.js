@@ -13,6 +13,7 @@ import {
   head,
   defaultTo,
 } from "lodash/fp"
+import { startOfWeek, endOfWeek } from "date-fns"
 import { format } from "date-fns"
 
 const nilToArray = input => input || []
@@ -105,6 +106,8 @@ export const trace = curry((tag, value) => {
 
 export const weekStartsOn = 1
 export const formatDate = date => format(date, "yyyy-MM-dd")
+export const getStartOfWeek = () => startOfWeek(new Date(), { weekStartsOn })
+export const getEndOfWeek = () => endOfWeek(new Date(), { weekStartsOn })
 
 export const extensionSettingsUrl = () => `chrome://extensions/?id=${chrome.runtime.id}`
 
