@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import logo from "images/logo.png"
+import logo from "images/moco-159x159.png"
 
 const UnknownError = ({ message = "Unbekannter Fehler" }) => (
   <div className="moco-bx-error-container">

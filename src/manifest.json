@@ -4,26 +4,21 @@
   "description": "MOCO Zeiterfassung Plugin",
   "version": "0.9.20",
   "manifest_version": 2,
-  "description": "MOCO Time Tracking Plugin",
   "icons": {
-    "16": "src/images/logo.png",
-    "32": "src/images/logo.png",
-    "48": "src/images/logo.png",
-    "128": "src/images/logo.png"
+    "16": "src/images/moco-32x32.png",
+    "32": "src/images/moco-32x32.png",
+    "48": "src/images/moco-159x159.png",
+    "128": "src/images/moco-159x159.png"
   },
   "options_ui": {
     "page": "options.html"
   },
-  "permissions": [
-    "https://*.mocoapp.com/*",
-    "storage",
-    "tabs"
-  ],
+  "permissions": ["https://*.mocoapp.com/*", "storage", "tabs"],
   "background": {
     "page": "background.html"
   },
   "browser_action": {
-    "default_icon": "src/images/logo.png"
+    "default_icon": "src/images/moco-32x32.png"
   },
   "content_scripts": [
     {
