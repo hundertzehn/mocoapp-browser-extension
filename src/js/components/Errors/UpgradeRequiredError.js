@@ -1,6 +1,6 @@
 import React from "react"
 import { isChrome } from "utils/browser"
-import logo from "images/logo.png"
+import logo from "images/moco-159x159.png"
 import firefoxAddons from "images/firefox_addons.png"
 
 const UpgradeRequiredError = () => (
