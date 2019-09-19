@@ -11,9 +11,6 @@ import { get, forEach, reject, isNil } from "lodash/fp"
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
 import { queryTabs, isBrowserTab, getSettings } from "utils/browser"
-import { isChrome } from "./browser"
-import mocoIcon from "images/moco-32x32.png"
-import mocoTimerIcon from "images/moco-timer-32x32.png"
 
 const matcher = createMatcher(remoteServices)
 
@@ -51,20 +48,6 @@ export function tabUpdated(tab, { messenger, settings }) {
   } else {
     messenger.postMessage(tab, { type: "hideBubble" })
   }
-
-  const fromDate = getStartOfWeek()
-  const toDate = getEndOfWeek()
-
-  apiClient
-    .activities(fromDate, toDate)
-    .then(({ data: activities }) => {
-      if (activities.every(activity => isNil(activity.timer_started_at))) {
-        setTimerIcon(false)
-      } else {
-        setTimerIcon()
-      }
-    })
-    .catch(() => null)
 }
 
 export function settingsChanged(settings, { messenger }) {
@@ -137,14 +120,5 @@ async function openPopup(tab, { service, messenger }) {
       type: "openPopup",
       payload: { errorType, errorMessage },
     })
-  }
-}
-
-export function setTimerIcon(enabled = true) {
-  const global = isChrome() ? chrome : browser
-  if (enabled) {
-    global.browserAction.setIcon({ path: mocoTimerIcon })
-  } else {
-    global.browserAction.setIcon({ path: mocoIcon })
   }
 }
