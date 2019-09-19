@@ -83,19 +83,26 @@ async function openPopup(tab, { service, messenger }) {
   const toDate = getEndOfWeek()
   const settings = await getSettings()
   const apiClient = new ApiClient(settings)
+  const responses = []
   try {
-    const responses = await Promise.all([
-      apiClient.login(service),
-      apiClient.projects(),
-      apiClient.activities(fromDate, toDate),
-      apiClient.schedules(fromDate, toDate),
-    ])
+    responses.push(await apiClient.login(service))
+    // we can forgo the following calls if a timed activity exists
+    if (!responses[0].data.timed_activity) {
+      responses.push(
+        ...(await Promise.all([
+          apiClient.projects(),
+          apiClient.activities(fromDate, toDate),
+          apiClient.schedules(fromDate, toDate),
+        ])),
+      )
+    }
 
     const action = {
       type: "openPopup",
       payload: {
         service,
         subdomain: settings.subdomain,
+        timedActivity: get("[0].data.timed_activity", responses),
         lastProjectId: get("[0].data.last_project_id", responses),
         lastTaskId: get("[0].data.last_task_id", responses),
         roundTimeEntries: get("[0].data.round_time_entries", responses),
