@@ -33,11 +33,12 @@ chrome.runtime.onMessage.addListener(action => {
           .createActivity(activity)
           .then(() => {
             messenger.postMessage(tab, { type: "closePopup" })
-            apiClient.bookedHours(service).then(({ data }) => {
+            apiClient.activitiesStatus(service).then(({ data }) => {
               messenger.postMessage(tab, {
                 type: "showBubble",
                 payload: {
-                  bookedHours: parseFloat(data[0]?.hours) || 0,
+                  bookedHours: parseFloat(data.hours),
+                  timedActivity: data.timed_activity,
                   service,
                 },
               })
