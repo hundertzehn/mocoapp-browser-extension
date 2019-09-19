@@ -6,8 +6,14 @@ import cn from "classnames"
 class Form extends Component {
   static propTypes = {
     changeset: PropTypes.shape({
-      project: PropTypes.object,
-      task: PropTypes.object,
+      assignment_id: PropTypes.number.isRequired,
+      billable: PropTypes.bool.isRequired,
+      date: PropTypes.string.isRequired,
+      task_id: PropTypes.number.isRequired,
+      remote_id: PropTypes.string,
+      remote_service: PropTypes.string,
+      remote_url: PropTypes.string,
+      seconds: PropTypes.number,
       hours: PropTypes.string,
     }).isRequired,
     errors: PropTypes.object,
@@ -35,7 +41,7 @@ class Form extends Component {
   }
 
   render() {
-    const { projects, changeset, errors, onChange, onSubmit } = this.props
+    const { projects, changeset, timedActivity, errors, onChange, onSubmit } = this.props
     const project = Select.findOptionByValue(projects, changeset.assignment_id)
 
     return (

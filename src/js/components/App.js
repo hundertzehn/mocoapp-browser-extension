@@ -22,8 +22,18 @@ import InvalidConfigurationError from "components/Errors/InvalidConfigurationErr
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
 import UnknownError from "components/Errors/UnknownError"
 import Header from "./shared/Header"
-import { head } from "lodash"
+import { head, isNil } from "lodash"
 import TimeInputParser from "utils/TimeInputParser"
+
+const findTimedActivity = (activities, service) => {
+  if (!service) {
+    return null
+  }
+
+  return activities.find(
+    activity => activity.remote_id === service.id && !isNil(activity.timer_started_at),
+  )
+}
 
 @observer
 class App extends Component {
@@ -41,9 +51,15 @@ class App extends Component {
     activities: PropTypes.array,
     schedules: PropTypes.array,
     projects: PropTypes.array,
+    timedActivity: PropTypes.shape({
+      customer_name: PropTypes.string.isRequired,
+      assignment_name: PropTypes.string.isRequired,
+      task_name: PropTypes.string.isRequired,
+      timer_started_at: PropTypes.string.isRequired,
+      seconds: PropTypes.number.isRequired,
+    }),
     lastProjectId: PropTypes.number,
     lastTaskId: PropTypes.number,
-    roundTimeEntries: PropTypes.bool,
     fromDate: PropTypes.string,
     toDate: PropTypes.string,
     errorType: PropTypes.string,
@@ -54,7 +70,6 @@ class App extends Component {
     activities: [],
     schedules: [],
     projects: [],
-    roundTimeEntries: false,
   }
 
   @observable changeset = {}
@@ -161,10 +176,12 @@ class App extends Component {
       loading,
       subdomain,
       projects,
+      timedActivity,
       activities,
       schedules,
       fromDate,
       toDate,
+      service,
       errorType,
       errorMessage,
     } = this.props
@@ -191,25 +208,28 @@ class App extends Component {
           <animated.div className="moco-bx-app-container" style={props}>
             <Header subdomain={subdomain} />
             <Observer>
-              {() => (
-                <>
-                  <Calendar
-                    fromDate={parseISO(fromDate)}
-                    toDate={parseISO(toDate)}
-                    activities={activities}
-                    schedules={schedules}
-                    selectedDate={new Date(this.changesetWithDefaults.date)}
-                    onChange={this.handleSelectDate}
-                  />
-                  <Form
-                    changeset={this.changesetWithDefaults}
-                    projects={projects}
-                    errors={this.formErrors}
-                    onChange={this.handleChange}
-                    onSubmit={this.handleSubmit}
-                  />
-                </>
-              )}
+              {() =>
+                timedActivity ? null : (
+                  <>
+                    <Calendar
+                      fromDate={parseISO(fromDate)}
+                      toDate={parseISO(toDate)}
+                      activities={activities}
+                      schedules={schedules}
+                      selectedDate={new Date(this.changesetWithDefaults.date)}
+                      onChange={this.handleSelectDate}
+                    />
+                    <Form
+                      changeset={this.changesetWithDefaults}
+                      projects={projects}
+                      timedActivity={findTimedActivity(activities, service)}
+                      errors={this.formErrors}
+                      onChange={this.handleChange}
+                      onSubmit={this.handleSubmit}
+                    />
+                  </>
+                )
+              }
             </Observer>
           </animated.div>
         )}
