@@ -25,7 +25,7 @@ chrome.runtime.onConnect.addListener(function(port) {
     document.removeEventListener("click", clickHandler, true)
   })
 
-  function updateBubble({ service, bookedHours, timedActivity } = {}) {
+  function updateBubble({ service, bookedSeconds, timedActivity } = {}) {
     if (!document.getElementById("moco-bx-root")) {
       const domRoot = document.createElement("div")
       domRoot.setAttribute("id", "moco-bx-root")
@@ -47,7 +47,11 @@ chrome.runtime.onConnect.addListener(function(port) {
           // eslint-disable-next-line react/display-name
           (props => (
             <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
-              <Bubble key={service.url} bookedHours={bookedHours} timedActivity={timedActivity} />
+              <Bubble
+                key={service.url}
+                bookedSeconds={bookedSeconds}
+                timedActivity={timedActivity}
+              />
             </animated.div>
           ))
         }

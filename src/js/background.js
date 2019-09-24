@@ -12,7 +12,7 @@ function resetBubble({ tab, apiClient, service }) {
     messenger.postMessage(tab, {
       type: "showBubble",
       payload: {
-        bookedHours: parseFloat(data.hours),
+        bookedSeconds: data.seconds,
         timedActivity: data.timed_activity,
         service,
       },
