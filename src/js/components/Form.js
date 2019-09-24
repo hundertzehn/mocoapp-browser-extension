@@ -29,7 +29,7 @@ class Form extends Component {
 
   isValid = () => {
     const { changeset } = this.props
-    return ["assignment_id", "task_id", "hours"].map(prop => changeset[prop]).every(Boolean)
+    return ["assignment_id", "task_id"].map(prop => changeset[prop]).every(Boolean)
   }
 
   handleTextareaKeyDown = event => {
