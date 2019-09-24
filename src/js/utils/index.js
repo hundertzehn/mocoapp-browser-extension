@@ -12,6 +12,7 @@ import {
   pick,
   head,
   defaultTo,
+  padCharsStart,
 } from "lodash/fp"
 import { startOfWeek, endOfWeek } from "date-fns"
 import { format } from "date-fns"
@@ -116,5 +117,24 @@ export const extractAndSetTag = changeset => {
     ...changeset,
     description: description.replace(/^#\S+\s/, ""),
     tag: match[1],
+  }
+}
+
+export const formatDuration = (
+  durationInSeconds,
+  { settingTimeTrackingHHMM = true, showSeconds = true },
+) => {
+  if (settingTimeTrackingHHMM) {
+    const hours = Math.floor(durationInSeconds / 3600)
+    const minutes = Math.floor((durationInSeconds % 3600) / 60)
+    const result = `${padCharsStart("0", 2, hours)}:${padCharsStart("0", 2, minutes)}`
+    if (!showSeconds) {
+      return result
+    } else {
+      const seconds = durationInSeconds % 60
+      return result + `:${padCharsStart("0", 2, seconds)}`
+    }
+  } else {
+    return (durationInSeconds / 3600).toFixed(2)
   }
 }

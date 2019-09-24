@@ -10,7 +10,7 @@ import {
 import { get, forEach, reject, isNil } from "lodash/fp"
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
-import { queryTabs, isBrowserTab, getSettings } from "utils/browser"
+import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
 
 const matcher = createMatcher(remoteServices)
 
@@ -31,6 +31,7 @@ export function tabUpdated(tab, { messenger, settings }) {
             type: "showBubble",
             payload: {
               bookedSeconds: data.seconds,
+              settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
               timedActivity: data.timed_activity,
               service,
             },
@@ -41,6 +42,7 @@ export function tabUpdated(tab, { messenger, settings }) {
             type: "showBubble",
             payload: {
               bookedSeconds: 0,
+              settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
               service,
             },
           })
@@ -96,6 +98,9 @@ export async function openPopup(tab, { service, messenger }) {
         ])),
       )
     }
+
+    const settingTimeTrackingHHMM = get("[0].data.setting_time_tracking_hh_mm", responses)
+    !isNil(settingTimeTrackingHHMM) && setStorage({ settingTimeTrackingHHMM })
 
     const action = {
       type: "openPopup",

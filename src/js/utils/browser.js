@@ -5,7 +5,7 @@ export const isFirefox = () => typeof browser !== "undefined" && chrome
 const DEFAULT_SUBDOMAIN = "unset"
 
 export const getSettings = (withDefaultSubdomain = true) => {
-  const keys = ["subdomain", "apiKey"]
+  const keys = ["subdomain", "apiKey", "settingTimeTrackingHHMM"]
   const { version } = chrome.runtime.getManifest()
   if (isChrome()) {
     return new Promise(resolve => {

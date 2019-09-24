@@ -1,7 +1,8 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
 import { useInterval } from "./hooks"
-import { differenceInSeconds, addSeconds, startOfDay, format } from "date-fns"
+import { differenceInSeconds } from "date-fns"
+import { formatDuration } from "utils"
 
 Timer.propTypes = {
   startedAt: PropTypes.instanceOf(Date).isRequired,
@@ -22,7 +23,7 @@ function Timer({ startedAt, offset = 0, onTick, ...domProps }) {
 
 function formattedTimerLabel(startedAt, offset) {
   const seconds = differenceInSeconds(new Date(), startedAt) + offset
-  return format(addSeconds(startOfDay(new Date()), seconds), "HH:mm:ss")
+  return formatDuration(seconds)
 }
 
 export default Timer

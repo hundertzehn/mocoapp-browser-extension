@@ -58,7 +58,7 @@ chrome.runtime.onMessage.addListener(action => {
         const apiClient = new ApiClient(settings)
         apiClient
           .createActivity(activity)
-          .then(() => resetBubble({ tab, apiClient, service }))
+          .then(() => resetBubble({ tab, apiClient, service, settings }))
           .catch(error => {
             if (error.response?.status === 422) {
               chrome.runtime.sendMessage({
