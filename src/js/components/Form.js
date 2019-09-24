@@ -10,6 +10,7 @@ class Form extends Component {
       billable: PropTypes.bool.isRequired,
       date: PropTypes.string.isRequired,
       task_id: PropTypes.number.isRequired,
+      description: PropTypes.string,
       remote_id: PropTypes.string,
       remote_service: PropTypes.string,
       remote_url: PropTypes.string,
@@ -41,7 +42,7 @@ class Form extends Component {
   }
 
   render() {
-    const { projects, changeset, timedActivity, errors, onChange, onSubmit } = this.props
+    const { projects, changeset, errors, onChange, onSubmit } = this.props
     const project = Select.findOptionByValue(projects, changeset.assignment_id)
 
     return (

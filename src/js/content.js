@@ -101,8 +101,4 @@ chrome.runtime.onConnect.addListener(function(port) {
   messenger.on("closePopup", () => {
     closePopup()
   })
-
-  messenger.on("activityCreated", () => {
-    closePopup()
-  })
 })

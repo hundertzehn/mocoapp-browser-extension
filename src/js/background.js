@@ -6,6 +6,20 @@ import { tabUpdated, settingsChanged, togglePopup } from "utils/messageHandlers"
 
 const messenger = new BackgroundMessenger()
 
+function resetBubble({ tab, apiClient, service }) {
+  messenger.postMessage(tab, { type: "closePopup" })
+  apiClient.activitiesStatus(service).then(({ data }) => {
+    messenger.postMessage(tab, {
+      type: "showBubble",
+      payload: {
+        bookedHours: parseFloat(data.hours),
+        timedActivity: data.timed_activity,
+        service,
+      },
+    })
+  })
+}
+
 messenger.on("togglePopup", () => {
   getCurrentTab().then(tab => {
     if (tab && !isBrowserTab(tab)) {
@@ -31,19 +45,7 @@ chrome.runtime.onMessage.addListener(action => {
         const apiClient = new ApiClient(settings)
         apiClient
           .createActivity(activity)
-          .then(() => {
-            messenger.postMessage(tab, { type: "closePopup" })
-            apiClient.activitiesStatus(service).then(({ data }) => {
-              messenger.postMessage(tab, {
-                type: "showBubble",
-                payload: {
-                  bookedHours: parseFloat(data.hours),
-                  timedActivity: data.timed_activity,
-                  service,
-                },
-              })
-            })
-          })
+          .then(() => resetBubble({ tab, apiClient, service }))
           .catch(error => {
             if (error.response?.status === 422) {
               chrome.runtime.sendMessage({

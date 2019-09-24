@@ -22,18 +22,8 @@ import InvalidConfigurationError from "components/Errors/InvalidConfigurationErr
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
 import UnknownError from "components/Errors/UnknownError"
 import Header from "./shared/Header"
-import { head, isNil } from "lodash"
+import { head } from "lodash"
 import TimeInputParser from "utils/TimeInputParser"
-
-const findTimedActivity = (activities, service) => {
-  if (!service) {
-    return null
-  }
-
-  return activities.find(
-    activity => activity.remote_id === service.id && !isNil(activity.timer_started_at),
-  )
-}
 
 @observer
 class App extends Component {
@@ -181,7 +171,6 @@ class App extends Component {
       schedules,
       fromDate,
       toDate,
-      service,
       errorType,
       errorMessage,
     } = this.props
@@ -222,7 +211,6 @@ class App extends Component {
                     <Form
                       changeset={this.changesetWithDefaults}
                       projects={projects}
-                      timedActivity={findTimedActivity(activities, service)}
                       errors={this.formErrors}
                       onChange={this.handleChange}
                       onSubmit={this.handleSubmit}
