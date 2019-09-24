@@ -10,7 +10,7 @@ import {
 import { get, forEach, reject, isNil } from "lodash/fp"
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
-import { queryTabs, isBrowserTab, getSettings } from "utils/browser"
+import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
 
 const matcher = createMatcher(remoteServices)
 
@@ -30,7 +30,7 @@ export function tabUpdated(tab, { messenger, settings }) {
           messenger.postMessage(tab, {
             type: "showBubble",
             payload: {
-              bookedHours: parseFloat(data.hours),
+              bookedSeconds: data.seconds,
               timedActivity: data.timed_activity,
               service,
             },
@@ -40,7 +40,7 @@ export function tabUpdated(tab, { messenger, settings }) {
           messenger.postMessage(tab, {
             type: "showBubble",
             payload: {
-              bookedHours: 0,
+              bookedSeconds: 0,
               service,
             },
           })

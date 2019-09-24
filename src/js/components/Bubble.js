@@ -5,14 +5,14 @@ import mocoTimerLogo from "images/moco-timer-32x32.png"
 import { parseISO } from "date-fns"
 import Timer from "./shared/Timer"
 
-const Bubble = ({ bookedHours, timedActivity }) => {
+const Bubble = ({ bookedSeconds, timedActivity }) => {
   const logo = timedActivity ? mocoTimerLogo : mocoLogo
 
   return (
     <div className="moco-bx-bubble-inner">
       <img className="moco-bx-logo" src={chrome.extension.getURL(logo)} />
-      {!timedActivity && bookedHours > 0 && (
-        <span className="moco-bx-booked-hours">{bookedHours.toFixed(2)}</span>
+      {!timedActivity && bookedSeconds > 0 && (
+        <span className="moco-bx-booked-hours">{(bookedSeconds / 3600).toFixed(2)}</span>
       )}
       {timedActivity && (
         <Timer
@@ -26,7 +26,7 @@ const Bubble = ({ bookedHours, timedActivity }) => {
 }
 
 Bubble.propTypes = {
-  bookedHours: PropTypes.number,
+  bookedSeconds: PropTypes.number,
   timedActivity: PropTypes.shape({
     timer_started_at: PropTypes.string.isRequired,
     seconds: PropTypes.number.isRequired,
@@ -34,7 +34,7 @@ Bubble.propTypes = {
 }
 
 Bubble.defaultProps = {
-  bookedHours: 0,
+  bookedSeconds: 0,
 }
 
 export default Bubble
