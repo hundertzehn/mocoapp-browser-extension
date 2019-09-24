@@ -56,4 +56,6 @@ export default class Client {
   }
 
   createActivity = activity => this.#client.post("activities", { activity })
+
+  stopTimer = timedActivity => this.#client.get(`activities/${timedActivity.id}/stop_timer`)
 }

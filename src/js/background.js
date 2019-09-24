@@ -58,6 +58,19 @@ chrome.runtime.onMessage.addListener(action => {
     })
   }
 
+  if (action.type === "stopTimer") {
+    const { timedActivity, service } = action.payload
+    getCurrentTab().then(tab => {
+      getSettings().then(settings => {
+        const apiClient = new ApiClient(settings)
+        apiClient
+          .stopTimer(timedActivity)
+          .then(() => resetBubble({ tab, apiClient, service }))
+          .catch(() => null)
+      })
+    })
+  }
+
   if (action.type === "openOptions") {
     let url
     if (isChrome()) {

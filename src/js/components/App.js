@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import Spinner from "components/Spinner"
 import Form from "components/Form"
 import Calendar from "components/Calendar"
+import TimerView from "components/App/TimerView"
 import { observable, computed } from "mobx"
 import { Observer, observer } from "mobx-react"
 import { Spring, animated, config } from "react-spring/renderprops"
@@ -135,6 +136,15 @@ class App extends Component {
     this.changeset.date = formatDate(date)
   }
 
+  handleStopTimer = timedActivity => {
+    const { service } = this.props
+
+    chrome.runtime.sendMessage({
+      type: "stopTimer",
+      payload: { timedActivity, service },
+    })
+  }
+
   handleSubmit = event => {
     event.preventDefault()
     const { service } = this.props
@@ -198,7 +208,9 @@ class App extends Component {
             <Header subdomain={subdomain} />
             <Observer>
               {() =>
-                timedActivity ? null : (
+                timedActivity ? (
+                  <TimerView timedActivity={timedActivity} onStopTimer={this.handleStopTimer} />
+                ) : (
                   <>
                     <Calendar
                       fromDate={parseISO(fromDate)}
