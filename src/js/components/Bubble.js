@@ -16,9 +16,10 @@ const Bubble = ({ bookedSeconds, timedActivity }) => {
       )}
       {timedActivity && (
         <Timer
+          className="text-red"
           startedAt={parseISO(timedActivity.timer_started_at)}
           offset={timedActivity.seconds}
-          style={{ color: "red", marginBottom: "3px", fontSize: "12px" }}
+          style={{ marginBottom: "3px", fontSize: "12px" }}
         />
       )}
     </div>
