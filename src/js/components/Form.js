@@ -103,7 +103,7 @@ class Form extends Component {
           ) : null}
         </div>
 
-        <button className="moco-bx-btn" disabled={!this.isValid()}>
+        <button type="submit" className="moco-bx-btn" disabled={!this.isValid()}>
           OK
         </button>
       </form>
