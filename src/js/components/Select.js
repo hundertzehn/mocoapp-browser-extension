@@ -36,7 +36,7 @@ const customTheme = theme => ({
 const customStyles = props => ({
   control: (base, _state) => ({
     ...base,
-    borderColor: props.hasError ? "#FB3A2F" : base.borderColor,
+    borderColor: props.hasError ? "#fb3a2f" : base.borderColor,
   }),
   valueContainer: base => ({
     ...base,

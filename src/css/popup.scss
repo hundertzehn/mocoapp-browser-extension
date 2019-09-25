@@ -1,6 +1,6 @@
+@import "variables";
 @import "form";
 @import "spinner";
-@import "variables";
 
 html {
   overflow: hidden;
@@ -13,6 +13,10 @@ html {
 
     #moco-bx-root {
       min-width: 516px;
+
+      .text-red {
+        color: $red;
+      }
 
       .moco-bx-app-container {
         width: 324px;
@@ -69,7 +73,7 @@ html {
 
             &.moco-bx-calendar__day--filled {
               .moco-bx-calendar__hours {
-                background-color: #7dc332;
+                background-color: $green;
               }
             }
 
@@ -82,7 +86,7 @@ html {
 
             &.moco-bx-calendar__day--active {
               .moco-bx-calendar__hours {
-                background-color: #38b5eb;
+                background-color: $blue;
               }
             }
           }
