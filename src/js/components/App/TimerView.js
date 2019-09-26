@@ -10,20 +10,20 @@ export default function TimerView({ timedActivity, onStopTimer }) {
 
   return (
     <div className="moco-bx-timer-view">
-      <h3>
-        {timedActivity.customer_name}:<br />
+      <h1>
         {timedActivity.assignment_name}
-      </h3>
-      <h3>{timedActivity.task_name}</h3>
-      <br />
+        <br />
+        {timedActivity.task_name}
+      </h1>
+      <p className="text-secondary">{timedActivity.customer_name}</p>
       <Timer
-        className="text-red"
+        className="timer text-red"
         startedAt={parseISO(timedActivity.timer_started_at)}
         offset={timedActivity.seconds}
-        style={{ fontSize: "60px", display: "inline-block" }}
+        style={{ fontSize: "48px", display: "inline-block" }}
       />
       <button className="moco-bx-btn btn-stop-timer" onClick={handleStopTimer}>
-        Timer Stoppen
+        Stopp
       </button>
     </div>
   )
