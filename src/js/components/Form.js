@@ -1,7 +1,12 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import Select from "components/Select"
+import TimeInputParser from "utils/TimeInputParser"
 import cn from "classnames"
+
+function parseHours(hours) {
+  return new TimeInputParser(hours).parseSeconds()
+}
 
 class Form extends Component {
   static propTypes = {
@@ -104,7 +109,7 @@ class Form extends Component {
         </div>
 
         <button type="submit" className="moco-bx-btn" disabled={!this.isValid()}>
-          OK
+          {parseHours(changeset.hours) > 0 ? "OK" : "Timer starten"}
         </button>
       </form>
     )
