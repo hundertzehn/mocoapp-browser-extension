@@ -94,10 +94,37 @@ html {
 
         .moco-bx-timer-view {
           text-align: center;
-          margin-top: 4rem;
+          margin-top: 3rem;
+
+          h1 {
+            font-weight: normal;
+            line-height: 1.2;
+            margin: 0;
+          }
+
+          p {
+            margin-top: 0.6rem;
+          }
+
+          .text-secondary {
+            color: $gray-base;
+          }
+
+          .timer {
+            margin-top: 2.5rem;
+          }
 
           .btn-stop-timer {
             margin-top: 3rem;
+            background-color: $red;
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+
+            &:focus {
+              outline: none;
+            }
           }
         }
       }
