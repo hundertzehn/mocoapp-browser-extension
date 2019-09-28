@@ -9,14 +9,16 @@ function getStyles(errorType) {
     width: "516px",
     height:
       errorType === ERROR_UNAUTHORIZED
-        ? "834px"
+        ? "590px"
         : errorType === ERROR_UPGRADE_REQUIRED
         ? isChrome()
-          ? "369px"
-          : "461px"
+          ? "429px"
+          : "472px"
         : errorType === ERROR_UNKNOWN
-        ? "550px"
-        : "558px",
+        ? "408px"
+        : isChrome()
+        ? "558px"
+        : "574px",
   }
 }
 
