@@ -1,41 +1,24 @@
-import React, { Component } from "react"
+import React, { useEffect, useRef } from "react"
 import PropTypes from "prop-types"
 import queryString from "query-string"
-import { ERROR_UNKNOWN, ERROR_UNAUTHORIZED, ERROR_UPGRADE_REQUIRED, serializeProps } from "utils"
-import { isChrome } from "utils/browser"
+import { serializeProps } from "utils"
 
-function getStyles(errorType) {
-  return {
-    width: "516px",
-    height:
-      errorType === ERROR_UNAUTHORIZED
-        ? "590px"
-        : errorType === ERROR_UPGRADE_REQUIRED
-        ? isChrome()
-          ? "429px"
-          : "472px"
-        : errorType === ERROR_UNKNOWN
-        ? "408px"
-        : isChrome()
-        ? "558px"
-        : "574px",
-  }
-}
+function Popup(props) {
+  const iFrameRef = useRef()
 
-class Popup extends Component {
-  static propTypes = {
-    service: PropTypes.object,
-    errorType: PropTypes.string,
-    onRequestClose: PropTypes.func.isRequired,
-  }
-
-  handleRequestClose = event => {
+  const handleRequestClose = event => {
     if (event.target.classList.contains("moco-bx-popup")) {
-      this.props.onRequestClose()
+      props.onRequestClose()
     }
   }
 
-  componentDidMount() {
+  const handleMessage = event => {
+    if (iFrameRef.current) {
+      iFrameRef.current.style.height = `${event.data}px`
+    }
+  }
+
+  useEffect(() => {
     // Document might lose focus when clicking the browser action.
     // Document might be out of focus when hitting the shortcut key.
     // This puts the focus back to the document and ensures that:
@@ -43,39 +26,45 @@ class Popup extends Component {
     // - the ESC key closes the popup without closing anything else
     window.focus()
     document.activeElement?.blur()
-  }
+    window.addEventListener("message", handleMessage)
+    return () => {
+      window.removeEventListener("message", handleMessage)
+    }
+  }, [])
 
-  render() {
-    const serializedProps = serializeProps([
-      "loading",
-      "service",
-      "subdomain",
-      "projects",
-      "activities",
-      "schedules",
-      "timedActivity",
-      "lastProjectId",
-      "lastTaskId",
-      "fromDate",
-      "toDate",
-      "errorType",
-      "errorMessage",
-    ])(this.props)
+  const serializedProps = serializeProps([
+    "loading",
+    "service",
+    "subdomain",
+    "projects",
+    "activities",
+    "schedules",
+    "timedActivity",
+    "lastProjectId",
+    "lastTaskId",
+    "fromDate",
+    "toDate",
+    "errorType",
+    "errorMessage",
+  ])(props)
 
-    const styles = getStyles(this.props.errorType)
-
-    return (
-      <div className="moco-bx-popup" onClick={this.handleRequestClose}>
-        <div className="moco-bx-popup-content" style={styles}>
-          <iframe
-            src={chrome.extension.getURL(`popup.html?${queryString.stringify(serializedProps)}`)}
-            width={styles.width}
-            height={styles.height}
-          />
-        </div>
+  return (
+    <div className="moco-bx-popup" onClick={handleRequestClose}>
+      <div className="moco-bx-popup-content" style={{ width: "516px", minHeight: "300px" }}>
+        <iframe
+          ref={iFrameRef}
+          src={chrome.extension.getURL(`popup.html?${queryString.stringify(serializedProps)}`)}
+          width="516px"
+        />
       </div>
-    )
-  }
+    </div>
+  )
+}
+
+Popup.propTypes = {
+  service: PropTypes.object,
+  errorType: PropTypes.string,
+  onRequestClose: PropTypes.func.isRequired,
 }
 
 export default Popup

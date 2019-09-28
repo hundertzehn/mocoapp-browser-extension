@@ -13,6 +13,8 @@ html {
 
     #moco-bx-root {
       min-width: 516px;
+      min-height: 300px;
+      transition: height 2s ease-out;
 
       h1 {
         font-weight: normal;
@@ -99,11 +101,16 @@ html {
           text-align: center;
           margin-top: 3rem;
 
-          h1 {
-            margin-bottom: 0;
+          h2 {
+            font-weight: normal;
+            font-size: 24px;
+            line-height: 1.2;
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
           }
+
           p {
-            margin-top: 0.6rem;
+            margin-top: 0.5rem;
           }
 
           .timer {
@@ -134,7 +141,6 @@ html {
         img {
           margin-top: 1.5rem;
           margin-bottom: 2rem;
-          width: 44%;
 
           &.moco-bx-logo {
             width: 48px;

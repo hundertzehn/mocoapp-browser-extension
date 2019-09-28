@@ -110,6 +110,9 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
+    console.log(window.document.body.scrollHeight)
+    console.log(window.document.body)
+    parent.postMessage(window.document.body.scrollHeight, "*")
     chrome.runtime.onMessage.addListener(this.handleSetFormErrors)
   }
 
