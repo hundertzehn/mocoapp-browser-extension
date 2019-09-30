@@ -60,6 +60,7 @@
     "prettier": "^1.16.4",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
+    "svg-inline-loader": "^0.8.0",
     "uuid": "^3.3.2",
     "webpack": "^4.15.0",
     "webpack-cli": "^3.0.8",
