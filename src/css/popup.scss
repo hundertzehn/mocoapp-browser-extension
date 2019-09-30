@@ -17,6 +17,7 @@ html {
       transition: height 2s ease-out;
 
       h1 {
+        font-size: 24px;
         font-weight: normal;
         line-height: 1.2;
         margin-top: 1rem;
@@ -100,14 +101,6 @@ html {
         .moco-bx-timer-view {
           text-align: center;
           margin-top: 3rem;
-
-          h2 {
-            font-weight: normal;
-            font-size: 24px;
-            line-height: 1.2;
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-          }
 
           p {
             margin-top: 0.5rem;
