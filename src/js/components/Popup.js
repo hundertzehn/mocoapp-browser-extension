@@ -50,7 +50,7 @@ const Popup = forwardRef((props, ref) => {
 
   return (
     <div ref={ref} className="moco-bx-popup" onClick={handleRequestClose}>
-      <div className="moco-bx-popup-content" style={{ width: "516px", minHeight: "300px" }}>
+      <div className="moco-bx-popup-content" style={{ width: "516px", minHeight: "420px" }}>
         <iframe
           ref={iFrameRef}
           src={chrome.extension.getURL(`popup.html?${queryString.stringify(serializedProps)}`)}

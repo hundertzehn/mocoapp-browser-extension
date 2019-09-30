@@ -9,7 +9,7 @@ import stopWatch from "images/icons/stopwatch-light.svg"
 const StopWatch = () => (
   <i
     dangerouslySetInnerHTML={{ __html: stopWatch }}
-    style={{ width: "24px", color: "white", display: "inline-block" }}
+    style={{ width: "22px", color: "white", display: "inline-block" }}
   />
 )
 
@@ -53,7 +53,6 @@ class Form extends Component {
   buttonStyle() {
     const styleMap = {
       true: {
-        backgroundColor: "#a3a3a3",
         border: "none",
         borderRadius: "50%",
         width: "60px",
