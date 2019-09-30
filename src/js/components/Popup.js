@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, forwardRef } from "react"
 import PropTypes from "prop-types"
 import queryString from "query-string"
 import { serializeProps } from "utils"
 
-function Popup(props) {
+const Popup = forwardRef((props, ref) => {
   const iFrameRef = useRef()
 
   const handleRequestClose = event => {
@@ -49,7 +49,7 @@ function Popup(props) {
   ])(props)
 
   return (
-    <div className="moco-bx-popup" onClick={handleRequestClose}>
+    <div ref={ref} className="moco-bx-popup" onClick={handleRequestClose}>
       <div className="moco-bx-popup-content" style={{ width: "516px", minHeight: "300px" }}>
         <iframe
           ref={iFrameRef}
@@ -59,7 +59,9 @@ function Popup(props) {
       </div>
     </div>
   )
-}
+})
+
+Popup.displayName = "Popup"
 
 Popup.propTypes = {
   service: PropTypes.object,
