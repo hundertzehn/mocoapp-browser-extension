@@ -100,7 +100,7 @@ class App extends Component {
       task_id: this.task?.value,
       billable: this.billable,
       hours: "",
-      seconds: this.changeset.hours && new TimeInputParser(this.changeset.hours).parseSeconds(),
+      seconds: new TimeInputParser(this.changeset.hours).parseSeconds(),
       description: service?.description,
       tag: "",
     }
@@ -110,8 +110,6 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
-    console.log(window.document.body.scrollHeight)
-    console.log(window.document.body)
     parent.postMessage(window.document.body.scrollHeight, "*")
     chrome.runtime.onMessage.addListener(this.handleSetFormErrors)
   }

@@ -2,11 +2,16 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import Select from "components/Select"
 import TimeInputParser from "utils/TimeInputParser"
+import { formatDate } from "utils"
 import cn from "classnames"
+import stopWatch from "images/icons/stopwatch-light.svg"
 
-function parseHours(hours) {
-  return new TimeInputParser(hours).parseSeconds()
-}
+const StopWatch = () => (
+  <i
+    dangerouslySetInnerHTML={{ __html: stopWatch }}
+    style={{ width: "24px", color: "white", display: "inline-block" }}
+  />
+)
 
 class Form extends Component {
   static propTypes = {
@@ -32,9 +37,40 @@ class Form extends Component {
     inline: true,
   }
 
-  isValid = () => {
+  isValid() {
     const { changeset } = this.props
     return ["assignment_id", "task_id"].map(prop => changeset[prop]).every(Boolean)
+  }
+
+  get isTimerStartable() {
+    const {
+      changeset: { hours, date },
+    } = this.props
+    const duration = new TimeInputParser(hours).parseSeconds()
+    return date === formatDate(new Date()) && duration === 0
+  }
+
+  buttonStyle() {
+    const styleMap = {
+      true: {
+        backgroundColor: "#a3a3a3",
+        border: "none",
+        borderRadius: "50%",
+        width: "60px",
+        height: "60px",
+        marginTop: "22px",
+        transition: "all 0.2s ease-in-out",
+      },
+      false: {
+        border: "none",
+        width: "50px",
+        height: "36px",
+        marginTop: "35px",
+        transition: "all 0.2s ease-in-out",
+      },
+    }
+
+    return styleMap[this.isTimerStartable]
   }
 
   handleTextareaKeyDown = event => {
@@ -108,8 +144,13 @@ class Form extends Component {
           ) : null}
         </div>
 
-        <button type="submit" className="moco-bx-btn" disabled={!this.isValid()}>
-          {parseHours(changeset.hours) > 0 ? "OK" : "Timer starten"}
+        <button
+          type="submit"
+          className="moco-bx-btn"
+          disabled={!this.isValid()}
+          style={this.buttonStyle()}
+        >
+          {this.isTimerStartable ? <StopWatch /> : "OK"}
         </button>
       </form>
     )
