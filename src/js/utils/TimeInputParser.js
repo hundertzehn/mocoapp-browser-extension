@@ -2,11 +2,13 @@ export default class TimeInputParser {
   #input
 
   constructor(input) {
-    this.#input = input.toLowerCase().replace(/[\s()]/g, "")
+    this.#input = (input ?? "").toLowerCase().replace(/[\s()]/g, "")
   }
 
   parseSeconds() {
-    if (this.#isDecimal()) {
+    if (this.#input === "") {
+      return 0
+    } else if (this.#isDecimal()) {
       return Math.round(parseFloat(this.#parseDecimal()) * 3600)
     } else if (this.#isTime()) {
       return this.#parseTimeAsSeconds()
