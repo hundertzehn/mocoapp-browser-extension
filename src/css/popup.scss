@@ -13,7 +13,7 @@ html {
 
     #moco-bx-root {
       min-width: 516px;
-      min-height: 300px;
+      min-height: 420px;
       transition: height 2s ease-out;
 
       h1 {
@@ -102,8 +102,13 @@ html {
           text-align: center;
           margin-top: 3rem;
 
+          h1 {
+            margin: 0.75rem;
+            line-height: 1.2;
+          }
+
           p {
-            margin-top: 0.5rem;
+            margin-top: 0.75rem;
           }
 
           .timer {
