@@ -1,7 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import Select from "components/Select"
-import TimeInputParser from "utils/TimeInputParser"
 import { formatDate } from "utils"
 import cn from "classnames"
 import stopWatch from "images/icons/stopwatch-light.svg"
@@ -39,15 +38,18 @@ class Form extends Component {
 
   isValid() {
     const { changeset } = this.props
-    return ["assignment_id", "task_id"].map(prop => changeset[prop]).every(Boolean)
+    return (
+      ["assignment_id", "task_id"].map(prop => changeset[prop]).every(Boolean) &&
+      (changeset.date === formatDate(new Date()) || changeset.seconds > 0)
+    )
   }
 
   get isTimerStartable() {
     const {
-      changeset: { hours, date },
+      changeset: { seconds, date },
     } = this.props
-    const duration = new TimeInputParser(hours).parseSeconds()
-    return date === formatDate(new Date()) && duration === 0
+
+    return date === formatDate(new Date()) && seconds === 0
   }
 
   buttonStyle() {
