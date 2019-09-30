@@ -13,8 +13,8 @@ const Popup = forwardRef((props, ref) => {
   }
 
   const handleMessage = event => {
-    if (iFrameRef.current) {
-      iFrameRef.current.style.height = `${event.data}px`
+    if (iFrameRef.current && event.data?.__mocoBX?.iFrameHeight > 300) {
+      iFrameRef.current.style.height = `${event.data.__mocoBX.iFrameHeight}px`
     }
   }
 
@@ -50,11 +50,11 @@ const Popup = forwardRef((props, ref) => {
 
   return (
     <div ref={ref} className="moco-bx-popup" onClick={handleRequestClose}>
-      <div className="moco-bx-popup-content" style={{ width: "516px", minHeight: "420px" }}>
+      <div className="moco-bx-popup-content" style={{ width: "516px" }}>
         <iframe
           ref={iFrameRef}
           src={chrome.extension.getURL(`popup.html?${queryString.stringify(serializedProps)}`)}
-          width="516px"
+          style={{ width: "516px", height: "576px", transition: "height 0.1s ease-in-out" }}
         />
       </div>
     </div>
