@@ -10,8 +10,8 @@ export default function TimerView({ timedActivity, onStopTimer }) {
 
   return (
     <div className="moco-bx-timer-view">
-      <h2>{timedActivity.assignment_name}</h2>
-      <h2>{timedActivity.task_name}</h2>
+      <h1>{timedActivity.assignment_name}</h1>
+      <h1>{timedActivity.task_name}</h1>
       <p className="text-secondary">{timedActivity.customer_name}</p>
       <Timer
         className="timer text-red"
