@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import Timer from "components/shared/Timer"
 import { parseISO } from "date-fns"
+import StopWatch from "components/shared/StopWatch"
 
 export default function TimerView({ timedActivity, onStopTimer }) {
   const handleStopTimer = () => {
@@ -20,7 +21,7 @@ export default function TimerView({ timedActivity, onStopTimer }) {
         style={{ fontSize: "48px", display: "inline-block" }}
       />
       <button className="moco-bx-btn btn-stop-timer" onClick={handleStopTimer}>
-        Stopp
+        <StopWatch />
       </button>
     </div>
   )

@@ -3,14 +3,7 @@ import PropTypes from "prop-types"
 import Select from "components/Select"
 import { formatDate } from "utils"
 import cn from "classnames"
-import stopWatch from "images/icons/stopwatch-light.svg"
-
-const StopWatch = () => (
-  <i
-    dangerouslySetInnerHTML={{ __html: stopWatch }}
-    style={{ width: "22px", color: "white", display: "inline-block" }}
-  />
-)
+import StopWatch from "components/shared/StopWatch"
 
 class Form extends Component {
   static propTypes = {
