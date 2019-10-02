@@ -2,22 +2,30 @@ import "@babel/polyfill"
 import ApiClient from "api/Client"
 import { isChrome, getCurrentTab, getSettings, isBrowserTab } from "utils/browser"
 import { BackgroundMessenger } from "utils/messaging"
-import { tabUpdated, settingsChanged, togglePopup } from "utils/messageHandlers"
+import { tabUpdated, settingsChanged, togglePopup, openPopup } from "utils/messageHandlers"
 
 const messenger = new BackgroundMessenger()
 
-function resetBubble({ tab, apiClient, service }) {
-  messenger.postMessage(tab, { type: "closePopup" })
-  apiClient.activitiesStatus(service).then(({ data }) => {
-    messenger.postMessage(tab, {
-      type: "showBubble",
-      payload: {
-        bookedSeconds: data.seconds,
-        timedActivity: data.timed_activity,
-        service,
-      },
+function resetBubble({ tab, apiClient, service }, closePopup = true) {
+  apiClient
+    .activitiesStatus(service)
+    .then(({ data }) => {
+      messenger.postMessage(tab, {
+        type: "showBubble",
+        payload: {
+          bookedSeconds: data.seconds,
+          timedActivity: data.timed_activity,
+          service,
+        },
+      })
     })
-  })
+    .then(() => {
+      if (closePopup) {
+        messenger.postMessage(tab, { type: "closePopup" })
+      } else {
+        openPopup(tab, { service, messenger })
+      }
+    })
 }
 
 messenger.on("togglePopup", () => {
@@ -65,7 +73,7 @@ chrome.runtime.onMessage.addListener(action => {
         const apiClient = new ApiClient(settings)
         apiClient
           .stopTimer(timedActivity)
-          .then(() => resetBubble({ tab, apiClient, service }))
+          .then(() => resetBubble({ tab, apiClient, service }, false))
           .catch(() => null)
       })
     })

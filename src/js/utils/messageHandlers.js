@@ -10,7 +10,7 @@ import {
 import { get, forEach, reject, isNil } from "lodash/fp"
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
-import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
+import { queryTabs, isBrowserTab, getSettings } from "utils/browser"
 
 const matcher = createMatcher(remoteServices)
 
@@ -76,7 +76,7 @@ export function togglePopup(tab, { messenger }) {
   }
 }
 
-async function openPopup(tab, { service, messenger }) {
+export async function openPopup(tab, { service, messenger }) {
   messenger.postMessage(tab, { type: "openPopup", payload: { loading: true } })
 
   const fromDate = getStartOfWeek()
