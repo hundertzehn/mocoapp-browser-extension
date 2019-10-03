@@ -3,10 +3,15 @@ import ApiClient from "api/Client"
 import { isChrome, getCurrentTab, getSettings, isBrowserTab } from "utils/browser"
 import { BackgroundMessenger } from "utils/messaging"
 import { tabUpdated, settingsChanged, togglePopup, openPopup } from "utils/messageHandlers"
+import { isNil } from "lodash"
 
 const messenger = new BackgroundMessenger()
 
-function resetBubble({ tab, apiClient, service }, closePopup = true) {
+function timerStoppedForCurrentService(service, timedActivity) {
+  return timedActivity.service_id && timedActivity.service_id === service?.id
+}
+
+function resetBubble({ tab, apiClient, service, timedActivity }) {
   apiClient
     .activitiesStatus(service)
     .then(({ data }) => {
@@ -20,7 +25,7 @@ function resetBubble({ tab, apiClient, service }, closePopup = true) {
       })
     })
     .then(() => {
-      if (closePopup) {
+      if (isNil(timedActivity) || timerStoppedForCurrentService(service, timedActivity)) {
         messenger.postMessage(tab, { type: "closePopup" })
       } else {
         openPopup(tab, { service, messenger })
@@ -73,7 +78,7 @@ chrome.runtime.onMessage.addListener(action => {
         const apiClient = new ApiClient(settings)
         apiClient
           .stopTimer(timedActivity)
-          .then(() => resetBubble({ tab, apiClient, service }, false))
+          .then(() => resetBubble({ tab, apiClient, service, timedActivity }))
           .catch(() => null)
       })
     })
