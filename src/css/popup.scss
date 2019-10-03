@@ -17,9 +17,16 @@ html {
       h1 {
         font-size: 24px;
         font-weight: normal;
-        line-height: 1.2;
+        line-height: 1.5;
         margin-top: 1rem;
         margin-bottom: 3rem;
+      }
+
+      h2 {
+        font-size: 20px;
+        font-weight: normal;
+        line-height: 1.5;
+        margin-top: 1rem;
       }
 
       .text-red {
@@ -100,21 +107,24 @@ html {
           text-align: center;
           margin-top: 3rem;
 
-          h1 {
-            margin: 0.75rem;
-            line-height: 1.2;
+          h2 {
+            max-height: 90px;
+            overflow: hidden;
           }
 
           p {
-            margin-top: 0.75rem;
+            margin-top: 0;
+            margin-bottom: 1rem;
+            max-height: 16px;
+            overflow: hidden;
           }
 
           .timer {
-            margin-top: 2.5rem;
+            margin-top: 2rem;
           }
 
           .btn-stop-timer {
-            margin-top: 3rem;
+            margin-top: 1.5rem;
             background-color: $red;
             border: none;
             border-radius: 50%;

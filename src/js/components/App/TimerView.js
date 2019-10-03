@@ -11,14 +11,17 @@ export default function TimerView({ timedActivity, onStopTimer }) {
 
   return (
     <div className="moco-bx-timer-view">
-      <h1>{timedActivity.assignment_name}</h1>
-      <h1>{timedActivity.task_name}</h1>
-      <p className="text-secondary">{timedActivity.customer_name}</p>
+      <p className="text-secondary" style={{ marginBottom: "0.5rem" }}>
+        {timedActivity.customer_name}
+      </p>
+      <p>{timedActivity.assignment_name}</p>
+      <p>{timedActivity.task_name}</p>
+      <h2>{timedActivity.description}</h2>
       <Timer
         className="timer text-red"
         startedAt={parseISO(timedActivity.timer_started_at)}
         offset={timedActivity.seconds}
-        style={{ fontSize: "48px", display: "inline-block" }}
+        style={{ fontSize: "36px", display: "inline-block" }}
       />
       <button className="moco-bx-btn btn-stop-timer" onClick={handleStopTimer}>
         <StopWatch />
@@ -32,6 +35,7 @@ TimerView.propTypes = {
     customer_name: PropTypes.string.isRequired,
     assignment_name: PropTypes.string.isRequired,
     task_name: PropTypes.string.isRequired,
+    description: PropTypes.string,
     timer_started_at: PropTypes.string.isRequired,
     seconds: PropTypes.number.isRequired,
   }).isRequired,
