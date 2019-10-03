@@ -101,7 +101,7 @@ class App extends Component {
       billable: this.billable,
       hours: "",
       seconds: new TimeInputParser(this.changeset.hours).parseSeconds(),
-      description: service?.description,
+      description: service?.description || "",
       tag: "",
     }
 
