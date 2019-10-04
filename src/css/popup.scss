@@ -27,6 +27,7 @@ html {
         font-weight: normal;
         line-height: 1.5;
         margin-top: 1rem;
+        margin-bottom: 3rem;
       }
 
       .text-red {
@@ -108,14 +109,20 @@ html {
           margin-top: 3rem;
 
           h2 {
+            margin-top: 2rem;
             max-height: 90px;
             overflow: hidden;
           }
 
           p {
-            margin-top: 0;
+            margin-top: 1rem;
             margin-bottom: 1rem;
-            max-height: 16px;
+            line-height: 1.2rem;
+          }
+
+          span.moco-bx-single-line {
+            display: inline-block;
+            max-height: 19px;
             overflow: hidden;
           }
 

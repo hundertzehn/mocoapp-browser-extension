@@ -11,11 +11,13 @@ export default function TimerView({ timedActivity, onStopTimer }) {
 
   return (
     <div className="moco-bx-timer-view">
-      <p className="text-secondary" style={{ marginBottom: "0.5rem" }}>
-        {timedActivity.customer_name}
+      <p>
+        <span className="moco-bx-single-line text-secondary">{timedActivity.customer_name}</span>
+        <br />
+        <span className="moco-bx-single-line">{timedActivity.assignment_name}</span>
+        <br />
+        <span className="moco-bx-single-line">{timedActivity.task_name}</span>
       </p>
-      <p>{timedActivity.assignment_name}</p>
-      <p>{timedActivity.task_name}</p>
       <h2>{timedActivity.description}</h2>
       <Timer
         className="timer text-red"
