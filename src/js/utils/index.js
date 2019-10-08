@@ -122,7 +122,7 @@ export const extractAndSetTag = changeset => {
 
 export const formatDuration = (
   durationInSeconds,
-  { settingTimeTrackingHHMM = true, showSeconds = true },
+  { settingTimeTrackingHHMM = true, showSeconds = true } = {},
 ) => {
   if (settingTimeTrackingHHMM) {
     const hours = Math.floor(durationInSeconds / 3600)
