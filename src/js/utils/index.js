@@ -23,6 +23,7 @@ export const ERROR_UNKNOWN = "unknown"
 
 export const noop = () => null
 export const asArray = input => (Array.isArray(input) ? input : [input])
+export const removeNonAlphanumChars = input => String(input ?? "").replace(/[\W_]/g, "")
 
 export const findProjectBy = prop => val => projects => {
   if (!val) {
@@ -30,7 +31,11 @@ export const findProjectBy = prop => val => projects => {
   }
 
   return compose(
-    find(pathEq(prop, val)),
+    find(
+      project =>
+        project[prop] === val ||
+        removeNonAlphanumChars(project[prop]) === removeNonAlphanumChars(val),
+    ),
     flatMap(get("options")),
   )(projects)
 }
