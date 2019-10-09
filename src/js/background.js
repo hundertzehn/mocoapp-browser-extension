@@ -11,7 +11,8 @@ function timerStoppedForCurrentService(service, timedActivity) {
   return timedActivity.service_id && timedActivity.service_id === service?.id
 }
 
-function resetBubble({ tab, apiClient, service, timedActivity }) {
+function resetBubble({ tab, settings, service, timedActivity }) {
+  const apiClient = new ApiClient(settings)
   apiClient
     .activitiesStatus(service)
     .then(({ data }) => {
@@ -20,6 +21,7 @@ function resetBubble({ tab, apiClient, service, timedActivity }) {
         payload: {
           bookedSeconds: data.seconds,
           timedActivity: data.timed_activity,
+          settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
           service,
         },
       })
@@ -58,7 +60,7 @@ chrome.runtime.onMessage.addListener(action => {
         const apiClient = new ApiClient(settings)
         apiClient
           .createActivity(activity)
-          .then(() => resetBubble({ tab, apiClient, service, settings }))
+          .then(() => resetBubble({ tab, settings, service }))
           .catch(error => {
             if (error.response?.status === 422) {
               chrome.runtime.sendMessage({
@@ -78,7 +80,7 @@ chrome.runtime.onMessage.addListener(action => {
         const apiClient = new ApiClient(settings)
         apiClient
           .stopTimer(timedActivity)
-          .then(() => resetBubble({ tab, apiClient, service, timedActivity }))
+          .then(() => resetBubble({ tab, settings, service, timedActivity }))
           .catch(() => null)
       })
     })
