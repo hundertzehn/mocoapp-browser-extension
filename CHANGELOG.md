@@ -10,11 +10,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for starting/stopping a timer
 - Show hours as HH:MM or decimal in the Bubble, depending on setting in MOCO
 
-## [1.3.0-alpha] - 2019-09-28
+## [1.3.0] - 2019-10-11
 
 ### Changed
 
 - Start a new timer or stop a running timer
+- Format time as set in time tracking
+- Add support for project identifier in Github Issue, Trello, Wunderlist, Youtrack
+- Find projects by identifier without alphanumerical characters
 
 ## [1.2.4] - 2019-09-20
 
