@@ -36,6 +36,11 @@ export default {
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
     description: (document, service, { org, repo, id }) =>
       document.querySelector(".js-issue-title")?.textContent?.trim(),
+    projectId: document =>
+      document
+        .querySelector(".js-issue-title")
+        ?.textContent?.trim()
+        ?.match(projectRegex)?.[1],
   },
 
   jira: {
@@ -82,12 +87,22 @@ export default {
     urlPatterns: ["https\\://trello.com/c/:id/:title"],
     description: (document, service, { title }) =>
       document.querySelector(".js-title-helper")?.textContent?.trim() || title,
+    projectId: document =>
+      document
+        .querySelector(".js-title-helper")
+        ?.textContent?.trim()
+        ?.match(projectRegex)?.[1],
   },
 
   youtrack: {
     name: "youtrack",
     urlPatterns: ["https\\://:org.myjetbrains.com/youtrack/issue/:id"],
     description: document => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
+    projectId: document =>
+      document
+        .querySelector("yt-issue-body h1")
+        ?.textContent?.trim()
+        ?.match(projectRegex)?.[1],
   },
 
   wrike: {
@@ -116,5 +131,10 @@ export default {
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
         ?.textContent?.trim(),
+    projectId: document =>
+      document
+        .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
+        ?.textContent?.trim()
+        ?.match(projectRegex)?.[1],
   },
 }
