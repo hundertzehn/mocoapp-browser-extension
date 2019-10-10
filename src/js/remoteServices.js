@@ -11,28 +11,23 @@ export default {
       document.querySelector(".ItemRow--highlighted textarea")?.textContent?.trim() ||
       document.querySelector(".ItemRow--focused textarea")?.textContent?.trim() ||
       document.querySelector(".SingleTaskPane textarea")?.textContent?.trim(),
-    projectId: document => {
-      const match = document
+    projectId: document =>
+      document
         .querySelector(".TaskProjectPill-projectName")
         ?.textContent?.trim()
-        ?.match(projectRegex)
-      return match && match[1]
-    },
+        ?.match(projectRegex)?.[1],
   },
 
   "github-pr": {
     name: "github",
     urlPatterns: ["https\\://github.com/:org/:repo/pull/:id(/:tab)"],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
-    description: (document, service, { org, repo, id }) =>
-      document.querySelector(".js-issue-title")?.textContent?.trim(),
-    projectId: document => {
-      const match = document
+    description: document => document.querySelector(".js-issue-title")?.textContent?.trim(),
+    projectId: document =>
+      document
         .querySelector(".js-issue-title")
         ?.textContent.trim()
-        ?.match(projectRegex)
-      return match && match[1]
-    },
+        ?.match(projectRegex)?.[1],
   },
 
   "github-issue": {
@@ -107,13 +102,11 @@ export default {
       id: ["t", "ot"],
     },
     description: document => document.querySelector(".title-field-ghost")?.textContent?.trim(),
-    projectId: document => {
-      const match = document
+    projectId: document =>
+      document
         .querySelector(".header-title__main")
         ?.textContent?.trim()
-        ?.match(projectRegex)
-      return match && match[1]
-    },
+        ?.match(projectRegex)?.[1],
   },
 
   wunderlist: {
