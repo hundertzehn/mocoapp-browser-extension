@@ -1,6 +1,6 @@
 import React from "react"
 import PropTypes from "prop-types"
-import logoUrl from "images/logo.png"
+import logoUrl from "images/moco-159x159.png"
 
 const Header = ({ subdomain }) => (
   <div className="moco-bx-logo__container">

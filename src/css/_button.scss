@@ -7,17 +7,21 @@ button.moco-bx-btn {
   white-space: nowrap;
   color: white;
   background-image: none;
-  background-color: #7dc332;
-  border-color: #7dc332;
+  background-color: $green;
+  border-color: $green;
   border-radius: 0;
   border-style: solid;
   box-shadow: none;
   font-size: 100%;
   cursor: pointer;
 
+  &:focus {
+    outline: none;
+  }
+
   &:hover:not(:disabled) {
-    background-color: #639a28;
-    border-color: #639a28;
+    background-color: $green-dark;
+    border-color: $green-dark;
   }
 
   &:disabled {

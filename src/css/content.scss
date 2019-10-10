@@ -6,6 +6,10 @@
   color: $font-color;
   pointer-events: all;
 
+  .text-red {
+    color: $red;
+  }
+
   .moco-bx-bubble {
     box-sizing: content-box;
     position: fixed;

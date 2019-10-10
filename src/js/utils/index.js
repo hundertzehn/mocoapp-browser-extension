@@ -12,7 +12,9 @@ import {
   pick,
   head,
   defaultTo,
+  padCharsStart,
 } from "lodash/fp"
+import { startOfWeek, endOfWeek } from "date-fns"
 import { format } from "date-fns"
 
 const nilToArray = input => input || []
@@ -105,6 +107,8 @@ export const trace = curry((tag, value) => {
 
 export const weekStartsOn = 1
 export const formatDate = date => format(date, "yyyy-MM-dd")
+export const getStartOfWeek = () => startOfWeek(new Date(), { weekStartsOn })
+export const getEndOfWeek = () => endOfWeek(new Date(), { weekStartsOn })
 
 export const extensionSettingsUrl = () => `chrome://extensions/?id=${chrome.runtime.id}`
 
@@ -118,5 +122,24 @@ export const extractAndSetTag = changeset => {
     ...changeset,
     description: description.replace(/^#\S+\s/, ""),
     tag: match[1],
+  }
+}
+
+export const formatDuration = (
+  durationInSeconds,
+  { settingTimeTrackingHHMM = true, showSeconds = true } = {},
+) => {
+  if (settingTimeTrackingHHMM) {
+    const hours = Math.floor(durationInSeconds / 3600)
+    const minutes = Math.floor((durationInSeconds % 3600) / 60)
+    const result = `${hours}:${padCharsStart("0", 2, minutes)}`
+    if (!showSeconds) {
+      return result
+    } else {
+      const seconds = durationInSeconds % 60
+      return result + `:${padCharsStart("0", 2, seconds)}`
+    }
+  } else {
+    return (durationInSeconds / 3600).toFixed(2)
   }
 }

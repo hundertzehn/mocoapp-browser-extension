@@ -54,6 +54,10 @@ module.exports = env => {
           },
           exclude: /node_modules/,
         },
+        {
+          test: /\.svg$/,
+          loader: "svg-inline-loader",
+        },
       ],
     },
     plugins: [

@@ -4,34 +4,35 @@ import {
   ERROR_UPGRADE_REQUIRED,
   ERROR_UNKNOWN,
   groupedProjectOptions,
-  weekStartsOn,
+  getStartOfWeek,
+  getEndOfWeek,
 } from "utils"
 import { get, forEach, reject, isNil } from "lodash/fp"
-import { startOfWeek, endOfWeek } from "date-fns"
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
-import { queryTabs, isBrowserTab, getSettings } from "utils/browser"
+import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
 
-const getStartOfWeek = () => startOfWeek(new Date(), { weekStartsOn })
-const getEndOfWeek = () => endOfWeek(new Date(), { weekStartsOn })
 const matcher = createMatcher(remoteServices)
 
 export function tabUpdated(tab, { messenger, settings }) {
   messenger.connectTab(tab)
 
   const service = matcher(tab.url)
+  const apiClient = new ApiClient(settings)
+
   if (service?.match?.id) {
     messenger.postMessage(tab, { type: "requestService" })
 
     messenger.once("newService", ({ payload: { service } }) => {
-      const apiClient = new ApiClient(settings)
       apiClient
-        .bookedHours(service)
+        .activitiesStatus(service)
         .then(({ data }) => {
           messenger.postMessage(tab, {
             type: "showBubble",
             payload: {
-              bookedHours: parseFloat(data[0]?.hours) || 0,
+              bookedSeconds: data.seconds,
+              settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
+              timedActivity: data.timed_activity,
               service,
             },
           })
@@ -40,7 +41,8 @@ export function tabUpdated(tab, { messenger, settings }) {
           messenger.postMessage(tab, {
             type: "showBubble",
             payload: {
-              bookedHours: 0,
+              bookedSeconds: 0,
+              settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
               service,
             },
           })
@@ -76,25 +78,36 @@ export function togglePopup(tab, { messenger }) {
   }
 }
 
-async function openPopup(tab, { service, messenger }) {
+export async function openPopup(tab, { service, messenger }) {
   messenger.postMessage(tab, { type: "openPopup", payload: { loading: true } })
 
   const fromDate = getStartOfWeek()
   const toDate = getEndOfWeek()
   const settings = await getSettings()
   const apiClient = new ApiClient(settings)
+  const responses = []
   try {
-    const responses = await Promise.all([
-      apiClient.login(service),
-      apiClient.projects(),
-      apiClient.activities(fromDate, toDate),
-      apiClient.schedules(fromDate, toDate),
-    ])
+    responses.push(await apiClient.login(service))
+    // we can forgo the following calls if a timed activity exists
+    if (!responses[0].data.timed_activity) {
+      responses.push(
+        ...(await Promise.all([
+          apiClient.projects(),
+          apiClient.activities(fromDate, toDate),
+          apiClient.schedules(fromDate, toDate),
+        ])),
+      )
+    }
+
+    const settingTimeTrackingHHMM = get("[0].data.setting_time_tracking_hh_mm", responses)
+    !isNil(settingTimeTrackingHHMM) && setStorage({ settingTimeTrackingHHMM })
+
     const action = {
       type: "openPopup",
       payload: {
         service,
         subdomain: settings.subdomain,
+        timedActivity: get("[0].data.timed_activity", responses),
         lastProjectId: get("[0].data.last_project_id", responses),
         lastTaskId: get("[0].data.last_task_id", responses),
         roundTimeEntries: get("[0].data.round_time_entries", responses),

@@ -2,9 +2,38 @@ import "@babel/polyfill"
 import ApiClient from "api/Client"
 import { isChrome, getCurrentTab, getSettings, isBrowserTab } from "utils/browser"
 import { BackgroundMessenger } from "utils/messaging"
-import { tabUpdated, settingsChanged, togglePopup } from "utils/messageHandlers"
+import { tabUpdated, settingsChanged, togglePopup, openPopup } from "utils/messageHandlers"
+import { isNil } from "lodash"
 
 const messenger = new BackgroundMessenger()
+
+function timerStoppedForCurrentService(service, timedActivity) {
+  return timedActivity.service_id && timedActivity.service_id === service?.id
+}
+
+function resetBubble({ tab, settings, service, timedActivity }) {
+  const apiClient = new ApiClient(settings)
+  apiClient
+    .activitiesStatus(service)
+    .then(({ data }) => {
+      messenger.postMessage(tab, {
+        type: "showBubble",
+        payload: {
+          bookedSeconds: data.seconds,
+          timedActivity: data.timed_activity,
+          settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
+          service,
+        },
+      })
+    })
+    .then(() => {
+      if (isNil(timedActivity) || timerStoppedForCurrentService(service, timedActivity)) {
+        messenger.postMessage(tab, { type: "closePopup" })
+      } else {
+        openPopup(tab, { service, messenger })
+      }
+    })
+}
 
 messenger.on("togglePopup", () => {
   getCurrentTab().then(tab => {
@@ -31,18 +60,7 @@ chrome.runtime.onMessage.addListener(action => {
         const apiClient = new ApiClient(settings)
         apiClient
           .createActivity(activity)
-          .then(() => {
-            messenger.postMessage(tab, { type: "closePopup" })
-            apiClient.bookedHours(service).then(({ data }) => {
-              messenger.postMessage(tab, {
-                type: "showBubble",
-                payload: {
-                  bookedHours: parseFloat(data[0]?.hours) || 0,
-                  service,
-                },
-              })
-            })
-          })
+          .then(() => resetBubble({ tab, settings, service }))
           .catch(error => {
             if (error.response?.status === 422) {
               chrome.runtime.sendMessage({
@@ -51,6 +69,19 @@ chrome.runtime.onMessage.addListener(action => {
               })
             }
           })
+      })
+    })
+  }
+
+  if (action.type === "stopTimer") {
+    const { timedActivity, service } = action.payload
+    getCurrentTab().then(tab => {
+      getSettings().then(settings => {
+        const apiClient = new ApiClient(settings)
+        apiClient
+          .stopTimer(timedActivity)
+          .then(() => resetBubble({ tab, settings, service, timedActivity }))
+          .catch(() => null)
       })
     })
   }

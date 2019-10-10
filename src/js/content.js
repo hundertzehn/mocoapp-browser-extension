@@ -25,7 +25,7 @@ chrome.runtime.onConnect.addListener(function(port) {
     document.removeEventListener("click", clickHandler, true)
   })
 
-  function updateBubble({ service, bookedHours } = {}) {
+  function updateBubble({ service, bookedSeconds, settingTimeTrackingHHMM, timedActivity } = {}) {
     if (!document.getElementById("moco-bx-root")) {
       const domRoot = document.createElement("div")
       domRoot.setAttribute("id", "moco-bx-root")
@@ -47,7 +47,12 @@ chrome.runtime.onConnect.addListener(function(port) {
           // eslint-disable-next-line react/display-name
           (props => (
             <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
-              <Bubble key={service.url} bookedHours={bookedHours} />
+              <Bubble
+                key={service.url}
+                bookedSeconds={bookedSeconds}
+                settingTimeTrackingHHMM={settingTimeTrackingHHMM}
+                timedActivity={timedActivity}
+              />
             </animated.div>
           ))
         }
@@ -86,8 +91,8 @@ chrome.runtime.onConnect.addListener(function(port) {
     })
   })
 
-  messenger.on("showBubble", ({ payload: { service, bookedHours } }) => {
-    updateBubble({ service, bookedHours })
+  messenger.on("showBubble", ({ payload }) => {
+    updateBubble(payload)
   })
 
   messenger.on("hideBubble", () => {
@@ -99,10 +104,6 @@ chrome.runtime.onConnect.addListener(function(port) {
   })
 
   messenger.on("closePopup", () => {
-    closePopup()
-  })
-
-  messenger.on("activityCreated", () => {
     closePopup()
   })
 })

@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import Spinner from "components/Spinner"
 import Form from "components/Form"
 import Calendar from "components/Calendar"
+import TimerView from "components/App/TimerView"
 import { observable, computed } from "mobx"
 import { Observer, observer } from "mobx-react"
 import { Spring, animated, config } from "react-spring/renderprops"
@@ -41,9 +42,15 @@ class App extends Component {
     activities: PropTypes.array,
     schedules: PropTypes.array,
     projects: PropTypes.array,
+    timedActivity: PropTypes.shape({
+      customer_name: PropTypes.string.isRequired,
+      assignment_name: PropTypes.string.isRequired,
+      task_name: PropTypes.string.isRequired,
+      timer_started_at: PropTypes.string.isRequired,
+      seconds: PropTypes.number.isRequired,
+    }),
     lastProjectId: PropTypes.number,
     lastTaskId: PropTypes.number,
-    roundTimeEntries: PropTypes.bool,
     fromDate: PropTypes.string,
     toDate: PropTypes.string,
     errorType: PropTypes.string,
@@ -54,7 +61,6 @@ class App extends Component {
     activities: [],
     schedules: [],
     projects: [],
-    roundTimeEntries: false,
   }
 
   @observable changeset = {}
@@ -94,8 +100,8 @@ class App extends Component {
       task_id: this.task?.value,
       billable: this.billable,
       hours: "",
-      seconds: this.changeset.hours && new TimeInputParser(this.changeset.hours).parseSeconds(),
-      description: service?.description,
+      seconds: new TimeInputParser(this.changeset.hours).parseSeconds(),
+      description: service?.description || "",
       tag: "",
     }
 
@@ -104,6 +110,7 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
+    parent.postMessage({ __mocoBX: { iFrameHeight: window.document.body.scrollHeight } }, "*")
     chrome.runtime.onMessage.addListener(this.handleSetFormErrors)
   }
 
@@ -128,6 +135,15 @@ class App extends Component {
 
   handleSelectDate = date => {
     this.changeset.date = formatDate(date)
+  }
+
+  handleStopTimer = timedActivity => {
+    const { service } = this.props
+
+    chrome.runtime.sendMessage({
+      type: "stopTimer",
+      payload: { timedActivity, service },
+    })
   }
 
   handleSubmit = event => {
@@ -161,6 +177,7 @@ class App extends Component {
       loading,
       subdomain,
       projects,
+      timedActivity,
       activities,
       schedules,
       fromDate,
@@ -191,25 +208,29 @@ class App extends Component {
           <animated.div className="moco-bx-app-container" style={props}>
             <Header subdomain={subdomain} />
             <Observer>
-              {() => (
-                <>
-                  <Calendar
-                    fromDate={parseISO(fromDate)}
-                    toDate={parseISO(toDate)}
-                    activities={activities}
-                    schedules={schedules}
-                    selectedDate={new Date(this.changesetWithDefaults.date)}
-                    onChange={this.handleSelectDate}
-                  />
-                  <Form
-                    changeset={this.changesetWithDefaults}
-                    projects={projects}
-                    errors={this.formErrors}
-                    onChange={this.handleChange}
-                    onSubmit={this.handleSubmit}
-                  />
-                </>
-              )}
+              {() =>
+                timedActivity ? (
+                  <TimerView timedActivity={timedActivity} onStopTimer={this.handleStopTimer} />
+                ) : (
+                  <>
+                    <Calendar
+                      fromDate={parseISO(fromDate)}
+                      toDate={parseISO(toDate)}
+                      activities={activities}
+                      schedules={schedules}
+                      selectedDate={new Date(this.changesetWithDefaults.date)}
+                      onChange={this.handleSelectDate}
+                    />
+                    <Form
+                      changeset={this.changesetWithDefaults}
+                      projects={projects}
+                      errors={this.formErrors}
+                      onChange={this.handleChange}
+                      onSubmit={this.handleSubmit}
+                    />
+                  </>
+                )
+              }
             </Observer>
           </animated.div>
         )}

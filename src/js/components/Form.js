@@ -1,13 +1,22 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import Select from "components/Select"
+import { formatDate } from "utils"
 import cn from "classnames"
+import StopWatch from "components/shared/StopWatch"
 
 class Form extends Component {
   static propTypes = {
     changeset: PropTypes.shape({
-      project: PropTypes.object,
-      task: PropTypes.object,
+      assignment_id: PropTypes.number.isRequired,
+      billable: PropTypes.bool.isRequired,
+      date: PropTypes.string.isRequired,
+      task_id: PropTypes.number.isRequired,
+      description: PropTypes.string,
+      remote_id: PropTypes.string,
+      remote_service: PropTypes.string,
+      remote_url: PropTypes.string,
+      seconds: PropTypes.number,
       hours: PropTypes.string,
     }).isRequired,
     errors: PropTypes.object,
@@ -20,9 +29,42 @@ class Form extends Component {
     inline: true,
   }
 
-  isValid = () => {
+  isValid() {
     const { changeset } = this.props
-    return ["assignment_id", "task_id", "hours"].map(prop => changeset[prop]).every(Boolean)
+    return (
+      ["assignment_id", "task_id"].map(prop => changeset[prop]).every(Boolean) &&
+      (changeset.date === formatDate(new Date()) || changeset.seconds > 0)
+    )
+  }
+
+  get isTimerStartable() {
+    const {
+      changeset: { seconds, date },
+    } = this.props
+
+    return date === formatDate(new Date()) && seconds === 0
+  }
+
+  buttonStyle() {
+    const styleMap = {
+      true: {
+        border: "none",
+        borderRadius: "50%",
+        width: "60px",
+        height: "60px",
+        marginTop: "22px",
+        transition: "all 0.2s ease-in-out",
+      },
+      false: {
+        border: "none",
+        width: "50px",
+        height: "36px",
+        marginTop: "35px",
+        transition: "all 0.2s ease-in-out",
+      },
+    }
+
+    return styleMap[this.isTimerStartable]
   }
 
   handleTextareaKeyDown = event => {
@@ -96,8 +138,13 @@ class Form extends Component {
           ) : null}
         </div>
 
-        <button className="moco-bx-btn" disabled={!this.isValid()}>
-          OK
+        <button
+          type="submit"
+          className="moco-bx-btn"
+          disabled={!this.isValid()}
+          style={this.buttonStyle()}
+        >
+          {this.isTimerStartable ? <StopWatch /> : "OK"}
         </button>
       </form>
     )

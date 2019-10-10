@@ -1,12 +1,17 @@
 import React from "react"
 import { isChrome } from "utils/browser"
-import logo from "images/logo.png"
+import logo from "images/moco-159x159.png"
 import firefoxAddons from "images/firefox_addons.png"
 
 const UpgradeRequiredError = () => (
   <div className="moco-bx-error-container">
-    <img className="moco-bx-logo" src={logo} alt="MOCO logo" />
-    <h1>Upgrade erforderlich</h1>
+    <img
+      className="moco-bx-logo"
+      src={logo}
+      style={{ width: "48px", height: "48px" }}
+      alt="MOCO logo"
+    />
+    <h1>Bitte aktualisieren</h1>
     <p>Die installierte MOCO Browser-Erweiterung ist veraltet &mdash; bitte aktualisieren.</p>
     {isChrome() ? (
       <button
@@ -17,9 +22,13 @@ const UpgradeRequiredError = () => (
       </button>
     ) : (
       <>
-        <br />
         <p>Unter folgender URL:</p>
-        <img className="firefox-addons" src={firefoxAddons} alt="about:addons" />
+        <img
+          className="firefox-addons"
+          src={firefoxAddons}
+          style={{ width: "292px", height: "40px" }}
+          alt="about:addons"
+        />
       </>
     )}
   </div>
