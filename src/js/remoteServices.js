@@ -11,28 +11,23 @@ export default {
       document.querySelector(".ItemRow--highlighted textarea")?.textContent?.trim() ||
       document.querySelector(".ItemRow--focused textarea")?.textContent?.trim() ||
       document.querySelector(".SingleTaskPane textarea")?.textContent?.trim(),
-    projectId: document => {
-      const match = document
+    projectId: document =>
+      document
         .querySelector(".TaskProjectPill-projectName")
         ?.textContent?.trim()
-        ?.match(projectRegex)
-      return match && match[1]
-    },
+        ?.match(projectRegex)?.[1],
   },
 
   "github-pr": {
     name: "github",
     urlPatterns: ["https\\://github.com/:org/:repo/pull/:id(/:tab)"],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
-    description: (document, service, { org, repo, id }) =>
-      document.querySelector(".js-issue-title")?.textContent?.trim(),
-    projectId: document => {
-      const match = document
+    description: document => document.querySelector(".js-issue-title")?.textContent?.trim(),
+    projectId: document =>
+      document
         .querySelector(".js-issue-title")
         ?.textContent.trim()
-        ?.match(projectRegex)
-      return match && match[1]
-    },
+        ?.match(projectRegex)?.[1],
   },
 
   "github-issue": {
@@ -41,6 +36,11 @@ export default {
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
     description: (document, service, { org, repo, id }) =>
       document.querySelector(".js-issue-title")?.textContent?.trim(),
+    projectId: document =>
+      document
+        .querySelector(".js-issue-title")
+        ?.textContent?.trim()
+        ?.match(projectRegex)?.[1],
   },
 
   jira: {
@@ -87,12 +87,22 @@ export default {
     urlPatterns: ["https\\://trello.com/c/:id/:title"],
     description: (document, service, { title }) =>
       document.querySelector(".js-title-helper")?.textContent?.trim() || title,
+    projectId: document =>
+      document
+        .querySelector(".js-title-helper")
+        ?.textContent?.trim()
+        ?.match(projectRegex)?.[1],
   },
 
   youtrack: {
     name: "youtrack",
     urlPatterns: ["https\\://:org.myjetbrains.com/youtrack/issue/:id"],
     description: document => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
+    projectId: document =>
+      document
+        .querySelector("yt-issue-body h1")
+        ?.textContent?.trim()
+        ?.match(projectRegex)?.[1],
   },
 
   wrike: {
@@ -107,13 +117,11 @@ export default {
       id: ["t", "ot"],
     },
     description: document => document.querySelector(".title-field-ghost")?.textContent?.trim(),
-    projectId: document => {
-      const match = document
+    projectId: document =>
+      document
         .querySelector(".header-title__main")
         ?.textContent?.trim()
-        ?.match(projectRegex)
-      return match && match[1]
-    },
+        ?.match(projectRegex)?.[1],
   },
 
   wunderlist: {
@@ -123,5 +131,10 @@ export default {
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
         ?.textContent?.trim(),
+    projectId: document =>
+      document
+        .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
+        ?.textContent?.trim()
+        ?.match(projectRegex)?.[1],
   },
 }
