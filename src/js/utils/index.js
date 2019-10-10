@@ -127,7 +127,7 @@ export const formatDuration = (
   if (settingTimeTrackingHHMM) {
     const hours = Math.floor(durationInSeconds / 3600)
     const minutes = Math.floor((durationInSeconds % 3600) / 60)
-    const result = `${padCharsStart("0", 2, hours)}:${padCharsStart("0", 2, minutes)}`
+    const result = `${hours}:${padCharsStart("0", 2, minutes)}`
     if (!showSeconds) {
       return result
     } else {
