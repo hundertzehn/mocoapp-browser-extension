@@ -25,7 +25,7 @@ chrome.runtime.onConnect.addListener(function(port) {
     document.removeEventListener("click", clickHandler, true)
   })
 
-  function updateBubble({ service, bookedSeconds, timedActivity } = {}) {
+  function updateBubble({ service, bookedSeconds, settingTimeTrackingHHMM, timedActivity } = {}) {
     if (!document.getElementById("moco-bx-root")) {
       const domRoot = document.createElement("div")
       domRoot.setAttribute("id", "moco-bx-root")
@@ -50,6 +50,7 @@ chrome.runtime.onConnect.addListener(function(port) {
               <Bubble
                 key={service.url}
                 bookedSeconds={bookedSeconds}
+                settingTimeTrackingHHMM={settingTimeTrackingHHMM}
                 timedActivity={timedActivity}
               />
             </animated.div>

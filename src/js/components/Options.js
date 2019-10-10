@@ -25,7 +25,11 @@ class Options extends Component {
   handleSubmit = _event => {
     this.isSuccess = false
     this.errorMessage = null
-    setStorage({ subdomain: this.subdomain, apiKey: this.apiKey }).then(() => {
+    setStorage({
+      subdomain: this.subdomain,
+      apiKey: this.apiKey,
+      settingTimeTrackingHHMM: false,
+    }).then(() => {
       const { version } = chrome.runtime.getManifest()
       const apiClient = new ApiClient({
         subdomain: this.subdomain,
@@ -34,6 +38,9 @@ class Options extends Component {
       })
       apiClient
         .login()
+        .then(({ data }) =>
+          setStorage({ settingTimeTrackingHHMM: data.setting_time_tracking_hh_mm }),
+        )
         .then(() => {
           this.isSuccess = true
           this.closeWindow()

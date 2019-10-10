@@ -6,6 +6,7 @@ import {
   defaultTask,
   groupedProjectOptions,
   extractAndSetTag,
+  formatDuration,
 } from "../../src/js/utils"
 import { map, compose } from "lodash/fp"
 
@@ -140,6 +141,23 @@ describe("utils", () => {
       }
 
       expect(extractAndSetTag(changeset)).toEqual(changeset)
+    })
+  })
+
+  describe("formatDuration", () => {
+    it("format with defaults", () => {
+      expect(formatDuration(3600)).toBe("1:00:00")
+      expect(formatDuration(3661)).toBe("1:01:01")
+    })
+
+    it("format without seconds", () => {
+      expect(formatDuration(3600, { showSeconds: false })).toBe("1:00")
+      expect(formatDuration(3661, { showSeconds: false })).toBe("1:01")
+    })
+
+    it("format in decimals", () => {
+      expect(formatDuration(3600, { settingTimeTrackingHHMM: false })).toBe("1.00")
+      expect(formatDuration(3661, { settingTimeTrackingHHMM: false })).toBe("1.02")
     })
   })
 })
