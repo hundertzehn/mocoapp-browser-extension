@@ -19,6 +19,10 @@ button.moco-bx-btn {
     outline: none;
   }
 
+  &::-moz-focus-inner {
+    border: 0;
+  }
+
   &:hover:not(:disabled) {
     background-color: $green-dark;
     border-color: $green-dark;
