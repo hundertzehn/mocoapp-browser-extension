@@ -19,13 +19,6 @@ const Popup = forwardRef((props, ref) => {
   }
 
   useEffect(() => {
-    // Document might lose focus when clicking the browser action.
-    // Document might be out of focus when hitting the shortcut key.
-    // This puts the focus back to the document and ensures that:
-    // - the autofocus on the hours input field is triggered
-    // - the ESC key closes the popup without closing anything else
-    window.focus()
-    document.activeElement?.blur()
     window.addEventListener("message", handleMessage)
     return () => {
       window.removeEventListener("message", handleMessage)

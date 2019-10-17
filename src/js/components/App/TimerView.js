@@ -25,7 +25,7 @@ export default function TimerView({ timedActivity, onStopTimer }) {
         offset={timedActivity.seconds}
         style={{ fontSize: "36px", display: "inline-block" }}
       />
-      <button className="moco-bx-btn btn-stop-timer" onClick={handleStopTimer}>
+      <button className="moco-bx-btn btn-stop-timer" onClick={handleStopTimer} autoFocus>
         <StopWatch />
       </button>
     </div>
