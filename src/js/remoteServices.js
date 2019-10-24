@@ -91,6 +91,10 @@ export default {
       document
         .querySelector(".js-title-helper")
         ?.textContent?.trim()
+        ?.match(projectRegex)?.[1] ||
+      document
+        .querySelector(".js-board-editing-target")
+        ?.textContent?.trim()
         ?.match(projectRegex)?.[1],
   },
 
