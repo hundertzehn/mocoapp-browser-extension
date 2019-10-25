@@ -1,5 +1,11 @@
 const projectRegex = /\[([\w-]+)\]/
 
+const projectIdentifierBySelector = selector => document =>
+  document
+    .querySelector(selector)
+    ?.textContent?.trim()
+    ?.match(projectRegex)?.[1]
+
 export default {
   asana: {
     name: "asana",
@@ -11,11 +17,7 @@ export default {
       document.querySelector(".ItemRow--highlighted textarea")?.textContent?.trim() ||
       document.querySelector(".ItemRow--focused textarea")?.textContent?.trim() ||
       document.querySelector(".SingleTaskPane textarea")?.textContent?.trim(),
-    projectId: document =>
-      document
-        .querySelector(".TaskProjectPill-projectName")
-        ?.textContent?.trim()
-        ?.match(projectRegex)?.[1],
+    projectId: projectIdentifierBySelector(".TaskProjectPill-projectName"),
   },
 
   "github-pr": {
@@ -23,11 +25,7 @@ export default {
     urlPatterns: ["https\\://github.com/:org/:repo/pull/:id(/:tab)"],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
     description: document => document.querySelector(".js-issue-title")?.textContent?.trim(),
-    projectId: document =>
-      document
-        .querySelector(".js-issue-title")
-        ?.textContent.trim()
-        ?.match(projectRegex)?.[1],
+    projectId: projectIdentifierBySelector(".js-issue-title"),
   },
 
   "github-issue": {
@@ -36,11 +34,7 @@ export default {
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
     description: (document, service, { org, repo, id }) =>
       document.querySelector(".js-issue-title")?.textContent?.trim(),
-    projectId: document =>
-      document
-        .querySelector(".js-issue-title")
-        ?.textContent?.trim()
-        ?.match(projectRegex)?.[1],
+    projectId: projectIdentifierBySelector(".js-issue-title"),
   },
 
   jira: {
@@ -88,21 +82,15 @@ export default {
     description: (document, service, { title }) =>
       document.querySelector(".js-title-helper")?.textContent?.trim() || title,
     projectId: document =>
-      document
-        .querySelector(".js-title-helper")
-        ?.textContent?.trim()
-        ?.match(projectRegex)?.[1],
+      projectIdentifierBySelector(".js-title-helper")(document) ||
+      projectIdentifierBySelector(".js-board-editing-target")(document),
   },
 
   youtrack: {
     name: "youtrack",
     urlPatterns: ["https\\://:org.myjetbrains.com/youtrack/issue/:id"],
     description: document => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
-    projectId: document =>
-      document
-        .querySelector("yt-issue-body h1")
-        ?.textContent?.trim()
-        ?.match(projectRegex)?.[1],
+    projectId: projectIdentifierBySelector("yt-issue-body h1"),
   },
 
   wrike: {
@@ -117,11 +105,7 @@ export default {
       id: ["t", "ot"],
     },
     description: document => document.querySelector(".title-field-ghost")?.textContent?.trim(),
-    projectId: document =>
-      document
-        .querySelector(".header-title__main")
-        ?.textContent?.trim()
-        ?.match(projectRegex)?.[1],
+    projectId: projectIdentifierBySelector(".header-title__main"),
   },
 
   wunderlist: {
@@ -131,10 +115,6 @@ export default {
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
         ?.textContent?.trim(),
-    projectId: document =>
-      document
-        .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
-        ?.textContent?.trim()
-        ?.match(projectRegex)?.[1],
+    projectId: projectIdentifierBySelector(".taskItem.selected .taskItem-titleWrapper-title"),
   },
 }
