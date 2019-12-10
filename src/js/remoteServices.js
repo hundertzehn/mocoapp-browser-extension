@@ -17,7 +17,7 @@ export default {
       document.querySelector(".ItemRow--highlighted textarea")?.textContent?.trim() ||
       document.querySelector(".ItemRow--focused textarea")?.textContent?.trim() ||
       document.querySelector(".SingleTaskPane textarea")?.textContent?.trim(),
-    projectId: projectIdentifierBySelector(".TaskProjectPill-projectName"),
+    projectId: projectIdentifierBySelector(".TopbarPageHeaderStructure-titleRow h1"),
   },
 
   "github-pr": {
