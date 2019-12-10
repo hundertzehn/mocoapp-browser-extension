@@ -5,7 +5,7 @@ const baseURL = subdomain => {
   if (process.env.NODE_ENV === "production") {
     return `https://${encodeURIComponent(subdomain)}.mocoapp.com/api/browser_extensions`
   } else {
-    return `http://${encodeURIComponent(subdomain)}.mocoapp.localhost:3001/api/browser_extensions`
+    return `http://${encodeURIComponent(subdomain)}.mocoapp.localhost:3000/api/browser_extensions`
   }
 }
 
