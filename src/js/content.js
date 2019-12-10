@@ -22,7 +22,7 @@ chrome.runtime.onConnect.addListener(function(port) {
   }
   port.onDisconnect.addListener(() => {
     messenger.stop()
-    document.removeEventListener("click", clickHandler, true)
+    window.removeEventListener("click", clickHandler, true)
   })
 
   function updateBubble({ service, bookedSeconds, settingTimeTrackingHHMM, timedActivity } = {}) {
@@ -30,7 +30,7 @@ chrome.runtime.onConnect.addListener(function(port) {
       const domRoot = document.createElement("div")
       domRoot.setAttribute("id", "moco-bx-root")
       document.body.appendChild(domRoot)
-      document.addEventListener("click", clickHandler, true)
+      window.addEventListener("click", clickHandler, true)
     }
 
     ReactDOM.render(

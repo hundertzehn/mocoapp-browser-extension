@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.3] - 019-10-17
+
+### Fixed
+
+- Fix an issue on Trello where the card closes when clicking the MOCO bubble
+- Asana: read project title from page heading
+
 ## [1.3.2] - 2019-10-24
 
 ### Added
