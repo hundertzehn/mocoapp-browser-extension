@@ -16,7 +16,8 @@ export default {
     description: document =>
       document.querySelector(".ItemRow--highlighted textarea")?.textContent?.trim() ||
       document.querySelector(".ItemRow--focused textarea")?.textContent?.trim() ||
-      document.querySelector(".SingleTaskPane textarea")?.textContent?.trim(),
+      document.querySelector(".SingleTaskPane textarea")?.textContent?.trim() ||
+      document.querySelector(".SingleTaskTitleInput-taskName textarea")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".TopbarPageHeaderStructure-titleRow h1"),
   },
 
