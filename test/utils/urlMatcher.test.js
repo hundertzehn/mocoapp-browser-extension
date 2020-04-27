@@ -108,6 +108,43 @@ describe("utils", () => {
           ).id,
         ).toEqual("1234")
       })
+
+      it("should match gitlab-mergerequest url", () => {
+        const service = matcher(
+          "https://gitlab.com/testorganisatzion/testproject/-/merge_requests/1",
+        )
+        expect(service.id).toEqual("1")
+        expect(service.match.id).toEqual("1")
+        expect(service.name).toEqual("gitlab")
+        expect(service.projectId).toEqual("testproject")
+      })
+      it("should match gitlab-mergerequest url with group", () => {
+        const service = matcher(
+          "https://gitlab.com/testorganisatzion/test-group/testproject/-/merge_requests/1",
+        )
+        expect(service.id).toEqual("1")
+        expect(service.match.id).toEqual("1")
+        expect(service.name).toEqual("gitlab")
+        expect(service.projectId).toEqual("testproject")
+      })
+
+      it("should match gitlab-issue url", () => {
+        const service = matcher("https://gitlab.com/testorganisatzion/testproject/-/issues/1")
+        expect(service.id).toEqual("1")
+        expect(service.match.id).toEqual("1")
+        expect(service.name).toEqual("gitlab")
+        expect(service.projectId).toEqual("testproject")
+      })
+
+      it("should match gitlab-issue url with group", () => {
+        const service = matcher(
+          "https://gitlab.com/testorganisatzion/test-group/testproject/-/issues/1",
+        )
+        expect(service.id).toEqual("1")
+        expect(service.match.id).toEqual("1")
+        expect(service.name).toEqual("gitlab")
+        expect(service.projectId).toEqual("testproject")
+      })
     })
 
     describe("createEnhancer", () => {

@@ -118,4 +118,28 @@ export default {
         ?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".taskItem.selected .taskItem-titleWrapper-title"),
   },
+
+  "gitlab-mr": {
+    name: "gitlab",
+    urlPatterns: [
+      "https\\://gitlab.com/:org/:group/:projectId/-/merge_requests/:id",
+      "https\\://gitlab.com/:org/:projectId/-/merge_requests/:id",
+    ],
+    description: (document, service, { id }) => {
+      const title = document.querySelector("h2.title")?.textContent?.trim()
+      return `#${id} ${title || ""}`.trim()
+    },
+  },
+
+  "gitlab-issues": {
+    name: "gitlab",
+    urlPatterns: [
+      "https\\://gitlab.com/:org/:group/:projectId/-/issues/:id",
+      "https\\://gitlab.com/:org/:projectId/-/issues/:id",
+    ],
+    description: (document, service, { id }) => {
+      const title = document.querySelector("h2.title")?.textContent?.trim()
+      return `#${id} ${title || ""}`.trim()
+    },
+  },
 }
