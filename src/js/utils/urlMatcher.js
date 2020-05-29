@@ -1,5 +1,5 @@
 import UrlPattern from "url-pattern"
-import { isFunction, isUndefined, compose, toPairs, map, pipe, isNil } from "lodash/fp"
+import { isFunction, isUndefined, compose, toPairs, map, pipe, isNil, convert } from "lodash/fp"
 import { asArray } from "./index"
 import queryString from "query-string"
 
@@ -39,15 +39,36 @@ const createEvaluator = args => fnOrValue => {
   return fnOrValue
 }
 
+const prepareHostForRegExp = (host) => {
+  if (isUndefined(host)) {
+    return
+  }
+
+  return host.replace(":", "\\:")//.replace(/\//g, "\\/")
+}
+
+const replaceHostInPattern = (host, pattern) => {
+  if(typeof pattern === "string") {
+    return pattern.replace("__HOST__", prepareHostForRegExp(host))
+  } else if(pattern instanceof RegExp) {
+    return new RegExp(pattern.source.replace("__HOST__", prepareHostForRegExp(host)))
+  } else {
+    console.error("Invalid type for pattern %v, no host replacement performed", pattern)
+    return pattern
+  }
+}
+
 const parseServices = compose(
   map(([key, config]) => ({
     ...config,
     key,
     patterns: config.urlPatterns.map(pattern => {
       if (Array.isArray(pattern)) {
-        return new UrlPattern(...pattern)
+        return new UrlPattern(
+          ...pattern.map((p, index) => (index === 0 ? replaceHostInPattern(config.host, p) : p)),
+        )
       }
-      return new UrlPattern(pattern)
+      return new UrlPattern(replaceHostInPattern(config.host, pattern))
     }),
   })),
   toPairs,
@@ -72,8 +93,28 @@ export const createEnhancer = document => service => {
   }
 }
 
-export const createMatcher = remoteServices => {
-  const services = parseServices(remoteServices)
+const applyHostOverrides = (remoteServices, hostOverrides) => {
+  let appliedRemoteServices = Object.assign(remoteServices)
+  if (isUndefined(hostOverrides)) {
+    console.error("No overrides found.")
+    return remoteServices
+  }
+
+  Object.keys(remoteServices).forEach((key) => {
+    const remoteService = remoteServices[key];
+    appliedRemoteServices[key] = {
+      ...remoteService,
+      key,
+      host: (hostOverrides && hostOverrides[key]) || remoteService.host,
+    }
+  })
+
+  return appliedRemoteServices
+}
+
+export const createMatcher = (remoteServices, hostOverrides) => {
+  const services = parseServices(applyHostOverrides(remoteServices, hostOverrides))
+
   return tabUrl => {
     const { origin, pathname, hash, query } = parseUrl(tabUrl)
     const url = `${origin}${pathname}${hash}`
@@ -99,8 +140,8 @@ export const createMatcher = remoteServices => {
   }
 }
 
-export const createServiceFinder = remoteServices => document => {
-  const matcher = createMatcher(remoteServices)
+export const createServiceFinder = (remoteServices, hostOverrides) => document => {
+  const matcher = createMatcher(remoteServices, hostOverrides)
   const enhancer = createEnhancer(document)
   return pipe(
     matcher,

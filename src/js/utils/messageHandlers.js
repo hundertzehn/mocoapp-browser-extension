@@ -11,8 +11,13 @@ import { get, forEach, reject, isNil } from "lodash/fp"
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
 import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
+import { getHostOverridesFromSettings } from "./settings"
 
-const matcher = createMatcher(remoteServices)
+let matcher
+getSettings().then((settings) => {
+  const hostOverrides = getHostOverridesFromSettings(settings, true)
+  matcher = createMatcher(remoteServices, hostOverrides)
+})
 
 export function tabUpdated(tab, { messenger, settings }) {
   messenger.connectTab(tab)

@@ -1,11 +1,14 @@
 import { head } from "lodash/fp"
+import remoteServices from "../remoteServices"
+
 export const isChrome = () => typeof browser === "undefined" && chrome
 export const isFirefox = () => typeof browser !== "undefined" && chrome
 
 const DEFAULT_SUBDOMAIN = "unset"
 
 export const getSettings = (withDefaultSubdomain = true) => {
-  const keys = ["subdomain", "apiKey", "settingTimeTrackingHHMM"]
+  const keys = ["subdomain", "apiKey", "settingTimeTrackingHHMM",
+    ...Object.keys(remoteServices).map(key => `hostOverrides:${key}`)]
   const { version } = chrome.runtime.getManifest()
   if (isChrome()) {
     return new Promise(resolve => {

@@ -7,11 +7,18 @@ import { createServiceFinder } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
 import { ContentMessenger } from "utils/messaging"
 import "../css/content.scss"
+import { getSettings } from "./utils/browser"
+import { getHostOverridesFromSettings } from "./utils/settings"
 
 const popupRef = createRef()
-const findService = createServiceFinder(remoteServices)(document)
 
-chrome.runtime.onConnect.addListener(function(port) {
+let findService
+getSettings().then((settings) => {
+  const hostOverrides = getHostOverridesFromSettings(settings, true)
+  findService = createServiceFinder(remoteServices, hostOverrides)(document)
+})
+
+chrome.runtime.onConnect.addListener(function (port) {
   const messenger = new ContentMessenger(port)
 
   function clickHandler(event) {
@@ -42,10 +49,10 @@ chrome.runtime.onConnect.addListener(function(port) {
         leave={{ opacity: "0" }}
         config={config.stiff}
       >
-        {service =>
+        {(service) =>
           service &&
           // eslint-disable-next-line react/display-name
-          (props => (
+          ((props) => (
             <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
               <Bubble
                 key={service.url}
