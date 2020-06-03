@@ -101,11 +101,11 @@ const applyHostOverrides = (remoteServices, hostOverrides) => {
   }
 
   Object.keys(remoteServices).forEach((key) => {
-    const remoteService = remoteServices[key];
+    const remoteService = remoteServices[key]
     appliedRemoteServices[key] = {
       ...remoteService,
       key,
-      host: (hostOverrides && hostOverrides[key]) || remoteService.host,
+      host: (hostOverrides && hostOverrides[remoteService.name]) || remoteService.host,
     }
   })
 

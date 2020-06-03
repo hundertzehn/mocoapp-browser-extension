@@ -8,7 +8,7 @@ const DEFAULT_SUBDOMAIN = "unset"
 
 export const getSettings = (withDefaultSubdomain = true) => {
   const keys = ["subdomain", "apiKey", "settingTimeTrackingHHMM",
-    ...Object.keys(remoteServices).map(key => `hostOverrides:${key}`)]
+    ...Object.values(remoteServices).map(remoteService => `hostOverrides:${remoteService.name}`)]
   const { version } = chrome.runtime.getManifest()
   if (isChrome()) {
     return new Promise(resolve => {

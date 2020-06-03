@@ -3,8 +3,8 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import { isChrome, getSettings, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
-import remoteServices from "../remoteServices";
-import { map } from "lodash"
+import remoteServices from "../remoteServices"
+import { map, sortedUniqBy, filter } from "lodash"
 import { getHostOverridesFromSettings } from "../utils/settings"
 
 @observer
@@ -14,8 +14,25 @@ class Options extends Component {
   @observable hostOverrides = {}
   @observable errorMessage = null
   @observable isSuccess = false
+  @observable servicesHostOverrideList = []
+  @observable showHostOverrideOptions = false
 
   componentDidMount() {
+    this.servicesHostOverrideList = sortedUniqBy(
+      map(
+        filter(remoteServices, (remoteService) => {
+          return remoteService.allowHostOverride
+        }),
+        (remoteService) => {
+          return {
+            name: remoteService.name,
+            host: remoteService.host,
+          }
+        },
+      ),
+      "name",
+    )
+
     getSettings(false).then((storeData) => {
       this.subdomain = storeData.subdomain || ""
       this.apiKey = storeData.apiKey || ""
@@ -23,15 +40,20 @@ class Options extends Component {
     })
   }
 
-  onChange = event => {
+  onChange = (event) => {
     this[event.target.name] = event.target.value.trim()
   }
 
-  onChangeHostOverrides = event => {
-    this.hostOverrides[event.target.name] = event.target.value.trim()
+  onChangeHostOverrides = (event) => {
+    // ensure to remove path (and trailing slash) from URL, as this can cause problems otherwise
+    this.hostOverrides[event.target.name] = this.removePathFromUrl(event.target.value.trim())
   }
 
-  handleSubmit = _event => {
+  toggleHostOverrideOptions = (event) => {
+    this.showHostOverrideOptions = !this.showHostOverrideOptions
+  }
+
+  handleSubmit = (_event) => {
     this.isSuccess = false
     this.errorMessage = null
 
@@ -56,13 +78,17 @@ class Options extends Component {
           this.isSuccess = true
           this.closeWindow()
         })
-        .catch(error => {
+        .catch((error) => {
           this.errorMessage = error.response?.data?.message || "Anmeldung fehlgeschlagen"
         })
     })
   }
 
-  handleInputKeyDown = event => {
+  removePathFromUrl = (url) => {
+    return url.replace(/(\.[a-z]+)\/.*$/, "$1")
+  }
+
+  handleInputKeyDown = (event) => {
     if (event.key === "Enter") {
       this.handleSubmit()
     }
@@ -105,23 +131,26 @@ class Options extends Component {
           </p>
         </div>
         <hr />
-        {map(
-          remoteServices,
-          (remoteService, remoteServiceKey) =>
-            remoteService.allowHostOverride && (
-              <div className="form-group" key={remoteServiceKey}>
-                <label>Override Host: {remoteServiceKey}</label>
-                <input
-                  type="text"
-                  name={`hostOverrides:${remoteServiceKey}`}
-                  value={this.hostOverrides[`hostOverrides:${remoteServiceKey}`]}
-                  placeholder={remoteService.host}
-                  onKeyDown={this.handleInputKeyDown}
-                  onChange={this.onChangeHostOverrides}
-                />
-              </div>
-            ),
+        {!this.showHostOverrideOptions && (
+          <div className="moco-bx-override-hosts-container">
+            <span className="moco-bx-override-hosts-btn" onClick={this.toggleHostOverrideOptions}>Zeige Optionen zum Überschreiben<br />der Service Hosts</span>
+          </div>
         )}
+        {this.showHostOverrideOptions &&
+          this.servicesHostOverrideList.map((remoteService) => (
+            <div className="form-group" key={remoteService.name}>
+              <label>Host URL: {remoteService.name}</label>
+              <input
+                type="text"
+                name={`hostOverrides:${remoteService.name}`}
+                value={this.hostOverrides[`hostOverrides:${remoteService.name}`]}
+                placeholder={remoteService.host}
+                onKeyDown={this.handleInputKeyDown}
+                onChange={this.onChangeHostOverrides}
+              />
+            </div>
+          ))}
+        <hr />
         <button className="moco-bx-btn" onClick={this.handleSubmit}>
           OK
         </button>

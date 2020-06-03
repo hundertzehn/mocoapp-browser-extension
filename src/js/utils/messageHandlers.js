@@ -14,9 +14,14 @@ import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
 import { getHostOverridesFromSettings } from "./settings"
 
 let matcher
-getSettings().then((settings) => {
+
+const initMatcher = (settings) => {
   const hostOverrides = getHostOverridesFromSettings(settings, true)
   matcher = createMatcher(remoteServices, hostOverrides)
+}
+
+getSettings().then((settings) => {
+  initMatcher(settings)
 })
 
 export function tabUpdated(tab, { messenger, settings }) {
@@ -59,6 +64,8 @@ export function tabUpdated(tab, { messenger, settings }) {
 }
 
 export function settingsChanged(settings, { messenger }) {
+  initMatcher(settings)
+
   queryTabs({ currentWindow: true })
     .then(reject(isBrowserTab))
     .then(
