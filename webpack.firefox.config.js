@@ -9,7 +9,7 @@ module.exports = (env) => {
 
   config.plugins.unshift(
     new CopyWebpackPlugin({
-      pattern: [
+      patterns: [
         {
           from: "src/manifest.json",
           transform: function (content, _path) {
