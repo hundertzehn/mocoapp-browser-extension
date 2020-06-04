@@ -23,7 +23,7 @@
     "dotenv": "^8.2.0",
     "lodash": "^4.17.11",
     "mobx": "^5.15.4",
-    "mobx-react": "^6.1.8",
+    "mobx-react": "^6.2.2",
     "prop-types": "^15.6.2",
     "query-string": "^6.12.1",
     "react": "^16.13.1",
