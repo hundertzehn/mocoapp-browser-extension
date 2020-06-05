@@ -1,3 +1,4 @@
+import "mobx-react-lite/batchingForReactDom"
 import React, { createRef } from "react"
 import ReactDOM from "react-dom"
 import { Transition, animated, config } from "react-spring/renderprops"
@@ -11,7 +12,7 @@ import "../css/content.scss"
 const popupRef = createRef()
 const findService = createServiceFinder(remoteServices)(document)
 
-chrome.runtime.onConnect.addListener(function(port) {
+chrome.runtime.onConnect.addListener(function (port) {
   const messenger = new ContentMessenger(port)
 
   function clickHandler(event) {
@@ -42,10 +43,10 @@ chrome.runtime.onConnect.addListener(function(port) {
         leave={{ opacity: "0" }}
         config={config.stiff}
       >
-        {service =>
+        {(service) =>
           service &&
           // eslint-disable-next-line react/display-name
-          (props => (
+          ((props) => (
             <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
               <Bubble
                 key={service.url}
