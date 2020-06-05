@@ -7,7 +7,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ZipPlugin = require("zip-webpack-plugin")
 
-module.exports = env => {
+module.exports = (env) => {
   const config = {
     entry: {
       background: "./src/js/background.js",
@@ -73,17 +73,17 @@ module.exports = env => {
       }),
       new HtmlWebpackPlugin({
         template: path.join(__dirname, "src", "background.html"),
-        filename: "background.html",
+        filename: path.resolve(`build/${env.browser}`, "background.html"),
         chunks: ["background"],
       }),
       new HtmlWebpackPlugin({
         template: path.join(__dirname, "src", "popup.html"),
-        filename: "popup.html",
+        filename: path.resolve(`build/${env.browser}`, "popup.html"),
         chunks: ["popup"],
       }),
       new HtmlWebpackPlugin({
         template: path.join(__dirname, "src", "options.html"),
-        filename: "options.html",
+        filename: path.resolve(`build/${env.browser}`, "options.html"),
         chunks: ["options"],
       }),
     ],
