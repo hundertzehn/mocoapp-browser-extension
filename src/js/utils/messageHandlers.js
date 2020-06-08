@@ -11,13 +11,11 @@ import { get, forEach, reject, isNil } from "lodash/fp"
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
 import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
-import { getHostOverridesFromSettings } from "./settings"
 
 let matcher
 
 const initMatcher = (settings) => {
-  const hostOverrides = getHostOverridesFromSettings(settings, true)
-  matcher = createMatcher(remoteServices, hostOverrides)
+  matcher = createMatcher(remoteServices, settings.hostOverrides)
 }
 
 getSettings().then((settings) => {

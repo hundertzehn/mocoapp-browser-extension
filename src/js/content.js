@@ -8,14 +8,12 @@ import remoteServices from "./remoteServices"
 import { ContentMessenger } from "utils/messaging"
 import "../css/content.scss"
 import { getSettings } from "./utils/browser"
-import { getHostOverridesFromSettings } from "./utils/settings"
 
 const popupRef = createRef()
 
 let findService
 getSettings().then((settings) => {
-  const hostOverrides = getHostOverridesFromSettings(settings, true)
-  findService = createServiceFinder(remoteServices, hostOverrides)(document)
+  findService = createServiceFinder(remoteServices, settings.hostOverrides)(document)
 })
 
 chrome.runtime.onConnect.addListener(function (port) {

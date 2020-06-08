@@ -4,8 +4,7 @@ import { observer } from "mobx-react"
 import { isChrome, getSettings, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
 import remoteServices from "../remoteServices"
-import { map, sortedUniqBy, filter } from "lodash"
-import { getHostOverridesFromSettings } from "../utils/settings"
+import { pipe, prop, map, sortedUniqBy, filter } from "lodash/fp"
 
 @observer
 class Options extends Component {
@@ -18,25 +17,19 @@ class Options extends Component {
   @observable showHostOverrideOptions = false
 
   componentDidMount() {
-    this.servicesHostOverrideList = sortedUniqBy(
-      map(
-        filter(remoteServices, (remoteService) => {
-          return remoteService.allowHostOverride
-        }),
-        (remoteService) => {
-          return {
-            name: remoteService.name,
-            host: remoteService.host,
-          }
-        },
-      ),
-      "name",
-    )
+    this.servicesHostOverrideList = pipe(
+      filter(prop("allowHostOverride")),
+      map((remoteService) => ({
+        name: remoteService.name,
+        host: remoteService.host,
+      })),
+      sortedUniqBy("name"),
+    )(remoteServices)
 
     getSettings(false).then((storeData) => {
       this.subdomain = storeData.subdomain || ""
       this.apiKey = storeData.apiKey || ""
-      this.hostOverrides = getHostOverridesFromSettings(storeData) || {}
+      this.hostOverrides = storeData.hostOverrides || {}
     })
   }
 
@@ -49,7 +42,7 @@ class Options extends Component {
     this.hostOverrides[event.target.name] = this.removePathFromUrl(event.target.value.trim())
   }
 
-  toggleHostOverrideOptions = (event) => {
+  toggleHostOverrideOptions = () => {
     this.showHostOverrideOptions = !this.showHostOverrideOptions
   }
 
@@ -61,7 +54,7 @@ class Options extends Component {
       subdomain: this.subdomain,
       apiKey: this.apiKey,
       settingTimeTrackingHHMM: false,
-      ...this.hostOverrides,
+      hostOverrides: this.hostOverrides,
     }).then(() => {
       const { version } = chrome.runtime.getManifest()
       const apiClient = new ApiClient({
@@ -142,8 +135,8 @@ class Options extends Component {
               <label>Host URL: {remoteService.name}</label>
               <input
                 type="text"
-                name={`hostOverrides:${remoteService.name}`}
-                value={this.hostOverrides[`hostOverrides:${remoteService.name}`]}
+                name={remoteService.name}
+                value={this.hostOverrides[remoteService.name] || ""}
                 placeholder={remoteService.host}
                 onKeyDown={this.handleInputKeyDown}
                 onChange={this.onChangeHostOverrides}

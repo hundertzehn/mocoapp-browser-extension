@@ -44,7 +44,7 @@ const prepareHostForRegExp = (host) => {
     return
   }
 
-  return host.replace(":", "\\:")//.replace(/\//g, "\\/")
+  return host.replace(":", "\\:")
 }
 
 const replaceHostInPattern = (host, pattern) => {
