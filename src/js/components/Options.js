@@ -4,7 +4,24 @@ import { observer } from "mobx-react"
 import { isChrome, getSettings, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
 import remoteServices from "../remoteServices"
-import { pipe, prop, map, sortedUniqBy, filter } from "lodash/fp"
+import { pipe, toPairs, fromPairs, prop, map, sortedUniqBy, filter } from "lodash/fp"
+
+function upperCaseFirstLetter(input) {
+  return input[0].toUpperCase() + input.slice(1)
+}
+
+function removePathFromUrl(url) {
+  return url.replace(/(\.[a-z]+)\/.*$/, "$1")
+}
+
+const overridableRemoveServices = pipe(
+  filter(prop("allowHostOverride")),
+  map((remoteService) => ({
+    name: remoteService.name,
+    host: remoteService.host,
+  })),
+  sortedUniqBy("name"),
+)(remoteServices)
 
 @observer
 class Options extends Component {
@@ -13,33 +30,22 @@ class Options extends Component {
   @observable hostOverrides = {}
   @observable errorMessage = null
   @observable isSuccess = false
-  @observable servicesHostOverrideList = []
   @observable showHostOverrideOptions = false
 
   componentDidMount() {
-    this.servicesHostOverrideList = pipe(
-      filter(prop("allowHostOverride")),
-      map((remoteService) => ({
-        name: remoteService.name,
-        host: remoteService.host,
-      })),
-      sortedUniqBy("name"),
-    )(remoteServices)
-
     getSettings(false).then((storeData) => {
       this.subdomain = storeData.subdomain || ""
       this.apiKey = storeData.apiKey || ""
-      this.hostOverrides = storeData.hostOverrides || {}
+      this.hostOverrides = storeData.hostOverrides
     })
   }
 
-  onChange = (event) => {
+  handleChange = (event) => {
     this[event.target.name] = event.target.value.trim()
   }
 
-  onChangeHostOverrides = (event) => {
-    // ensure to remove path (and trailing slash) from URL, as this can cause problems otherwise
-    this.hostOverrides[event.target.name] = this.removePathFromUrl(event.target.value.trim())
+  handleChangeHostOverrides = (event) => {
+    this.hostOverrides[event.target.name] = event.target.value.trim()
   }
 
   toggleHostOverrideOptions = () => {
@@ -54,7 +60,11 @@ class Options extends Component {
       subdomain: this.subdomain,
       apiKey: this.apiKey,
       settingTimeTrackingHHMM: false,
-      hostOverrides: this.hostOverrides,
+      hostOverrides: pipe(
+        toPairs,
+        map(([key, url]) => [key, removePathFromUrl(url)]),
+        fromPairs,
+      )(this.hostOverrides),
     }).then(() => {
       const { version } = chrome.runtime.getManifest()
       const apiClient = new ApiClient({
@@ -75,10 +85,6 @@ class Options extends Component {
           this.errorMessage = error.response?.data?.message || "Anmeldung fehlgeschlagen"
         })
     })
-  }
-
-  removePathFromUrl = (url) => {
-    return url.replace(/(\.[a-z]+)\/.*$/, "$1")
   }
 
   handleInputKeyDown = (event) => {
@@ -105,9 +111,9 @@ class Options extends Component {
               name="subdomain"
               value={this.subdomain}
               onKeyDown={this.handleInputKeyDown}
-              onChange={this.onChange}
+              onChange={this.handleChange}
             />
-            <span className="input-group-addon">.mocoapp.com</span>
+            <span className="input-group-addon input-group-addon--right">.mocoapp.com</span>
           </div>
         </div>
         <div className="form-group">
@@ -117,33 +123,44 @@ class Options extends Component {
             name="apiKey"
             value={this.apiKey}
             onKeyDown={this.handleInputKeyDown}
-            onChange={this.onChange}
+            onChange={this.handleChange}
           />
           <p className="text-muted">
             Den API-Schlüssel findest du in deinem Profil unter &quot;Integrationen&quot;.
           </p>
         </div>
-        <hr />
         {!this.showHostOverrideOptions && (
-          <div className="moco-bx-override-hosts-container">
-            <span className="moco-bx-override-hosts-btn" onClick={this.toggleHostOverrideOptions}>Zeige Optionen zum Überschreiben<br />der Service Hosts</span>
+          <div className="moco-bx-options__host-overrides">
+            <a href="#" className="moco-bx-btn__secondary" onClick={this.toggleHostOverrideOptions}>
+              URLs für Dienste anpassen?
+            </a>
           </div>
         )}
-        {this.showHostOverrideOptions &&
-          this.servicesHostOverrideList.map((remoteService) => (
-            <div className="form-group" key={remoteService.name}>
-              <label>Host URL: {remoteService.name}</label>
-              <input
-                type="text"
-                name={remoteService.name}
-                value={this.hostOverrides[remoteService.name] || ""}
-                placeholder={remoteService.host}
-                onKeyDown={this.handleInputKeyDown}
-                onChange={this.onChangeHostOverrides}
-              />
-            </div>
-          ))}
-        <hr />
+        {this.showHostOverrideOptions && (
+          <div style={{ marginBottom: "1rem" }}>
+            <h3>URLs für Dienste</h3>
+            {overridableRemoveServices.map((remoteService) => (
+              <div className="form-group" key={remoteService.name} style={{ margin: "0.5rem 0" }}>
+                <div className="input-group">
+                  <span
+                    className="input-group-addon input-group-addon--left"
+                    style={{ display: "inline-block", width: "70px", textAlign: "left" }}
+                  >
+                    {upperCaseFirstLetter(remoteService.name)}
+                  </span>
+                  <input
+                    type="text"
+                    name={remoteService.name}
+                    value={this.hostOverrides[remoteService.name] || ""}
+                    placeholder={remoteService.host}
+                    onKeyDown={this.handleInputKeyDown}
+                    onChange={this.handleChangeHostOverrides}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         <button className="moco-bx-btn" onClick={this.handleSubmit}>
           OK
         </button>

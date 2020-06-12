@@ -63,8 +63,13 @@ input {
       text-align: center;
       background-color: #eeeeee;
       border: 1px solid #cccccc;
-      border-left: none;
       line-height: 18px;
+      &--right {
+        border-left: none;
+      }
+      &--left {
+        border-right: none;
+      }
     }
   }
 }

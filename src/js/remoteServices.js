@@ -1,10 +1,7 @@
 const projectRegex = /\[([\w-]+)\]/
 
-const projectIdentifierBySelector = selector => document =>
-  document
-    .querySelector(selector)
-    ?.textContent?.trim()
-    ?.match(projectRegex)?.[1]
+const projectIdentifierBySelector = (selector) => (document) =>
+  document.querySelector(selector)?.textContent?.trim()?.match(projectRegex)?.[1]
 
 export default {
   asana: {
@@ -14,7 +11,7 @@ export default {
       [/^__HOST__\/0\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
       [/^__HOST__\/0\/search\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
     ],
-    description: document =>
+    description: (document) =>
       document.querySelector(".ItemRow--highlighted textarea")?.textContent?.trim() ||
       document.querySelector(".ItemRow--focused textarea")?.textContent?.trim() ||
       document.querySelector(".SingleTaskPane textarea")?.textContent?.trim() ||
@@ -28,7 +25,7 @@ export default {
     host: "https://github.com",
     urlPatterns: ["__HOST__/:org/:repo/pull/:id(/:tab)"],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
-    description: document => document.querySelector(".js-issue-title")?.textContent?.trim(),
+    description: (document) => document.querySelector(".js-issue-title")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".js-issue-title"),
     allowHostOverride: true,
   },
@@ -73,12 +70,12 @@ export default {
     name: "meistertask",
     host: "https://www.meistertask.com",
     urlPatterns: ["/app/task/:id/:slug"],
-    description: document => {
+    description: (document) => {
       const json = document.getElementById("mt-toggl-data")?.dataset?.togglJson || "{}"
       const data = JSON.parse(json)
       return data.taskName
     },
-    projectId: document => {
+    projectId: (document) => {
       const json = document.getElementById("mt-toggl-data")?.dataset?.togglJson || "{}"
       const data = JSON.parse(json)
       const match = data.taskName?.match(projectRegex) || data.projectName?.match(projectRegex)
@@ -93,7 +90,7 @@ export default {
     urlPatterns: ["__HOST__/c/:id/:title"],
     description: (document, service, { title }) =>
       document.querySelector(".js-title-helper")?.textContent?.trim() || title,
-    projectId: document =>
+    projectId: (document) =>
       projectIdentifierBySelector(".js-title-helper")(document) ||
       projectIdentifierBySelector(".js-board-editing-target")(document),
     allowHostOverride: false,
@@ -103,7 +100,7 @@ export default {
     name: "youtrack",
     host: "https://:org.myjetbrains.com",
     urlPatterns: ["__HOST__/youtrack/issue/:id"],
-    description: document => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
+    description: (document) => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
     projectId: projectIdentifierBySelector("yt-issue-body h1"),
     allowHostOverride: true,
   },
@@ -120,7 +117,7 @@ export default {
     queryParams: {
       id: ["t", "ot"],
     },
-    description: document => document.querySelector(".title-field-ghost")?.textContent?.trim(),
+    description: (document) => document.querySelector(".title-field-ghost")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".header-title__main"),
     allowHostOverride: false,
   },
@@ -129,7 +126,7 @@ export default {
     name: "wunderlist",
     host: "https://www.wunderlist.com",
     urlPatterns: ["__HOST__/(webapp)#/tasks/:id(/*)"],
-    description: document =>
+    description: (document) =>
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
         ?.textContent?.trim(),

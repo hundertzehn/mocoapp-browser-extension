@@ -20,6 +20,11 @@
       margin: 1rem 0 2rem;
     }
 
+    h3 {
+      font-size: 1.1rem;
+      margin: 1rem 0 1rem;
+    }
+
     label {
       font-weight: normal;
       margin-bottom: 5px;
@@ -39,15 +44,10 @@
       color: $red;
     }
 
-    .moco-bx-override-hosts {
-      &-container {
-        padding: 0 20px;
-        text-align: center;
-      }
-      &-btn {
-        cursor: pointer;
-        text-decoration: underline;
-      }
+    &__host-overrides {
+      padding-bottom: 1rem;
+      text-align: center;
+      font-weight: normal;
     }
   }
 }

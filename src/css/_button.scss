@@ -48,3 +48,17 @@ button.moco-bx-btn {
     margin-left: 0.5rem;
   }
 }
+
+.moco-bx-btn__secondary {
+  color: $blue;
+  border: none;
+  background: none;
+  text-decoration: none;
+
+  &:hover {
+    cursor: pointer;
+    color: $blue;
+    border: none;
+    background-color: transparent;
+  }
+}
