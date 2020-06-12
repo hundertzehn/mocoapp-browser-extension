@@ -8,9 +8,14 @@ import { createServiceFinder } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
 import { ContentMessenger } from "utils/messaging"
 import "../css/content.scss"
+import { getSettings } from "./utils/browser"
 
 const popupRef = createRef()
-const findService = createServiceFinder(remoteServices)(document)
+
+let findService
+getSettings().then((settings) => {
+  findService = createServiceFinder(remoteServices, settings.hostOverrides)(document)
+})
 
 chrome.runtime.onConnect.addListener(function (port) {
   const messenger = new ContentMessenger(port)

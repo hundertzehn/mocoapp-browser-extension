@@ -6,7 +6,7 @@ describe("utils", () => {
     let matcher
 
     beforeEach(() => {
-      matcher = createMatcher(remoteServices)
+      matcher = createMatcher(remoteServices, {})
     })
 
     describe("createMatcher", () => {
@@ -159,6 +159,29 @@ describe("utils", () => {
         expect(enhancedService.description).toEqual("[4321] Foo")
         expect(enhancedService.projectId).toEqual("4321")
         expect(enhancedService.taskId).toBe(undefined)
+      })
+    })
+  })
+
+  describe("urlMatcher with overrideHosts", () => {
+    let matcher
+
+    beforeEach(() => {
+      matcher = createMatcher(remoteServices, {
+        github: "https://my-custom-github-url.com",
+      })
+    })
+
+    describe("createMatcher", () => {
+      it("matches overridden host and path", () => {
+        const service = matcher("https://my-custom-github-url.com/hundertzehn/mocoapp/pull/123")
+        expect(service.key).toEqual("github-pr")
+        expect(service.name).toEqual("github")
+      })
+
+      it("doesn't match default host and path", () => {
+        const service = matcher("https://github.com/hundertzehn/mocoapp/pull/123")
+        expect(service).toBe(undefined)
       })
     })
   })

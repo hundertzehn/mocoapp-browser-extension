@@ -38,5 +38,16 @@
     .text-danger {
       color: $red;
     }
+
+    .moco-bx-override-hosts {
+      &-container {
+        padding: 0 20px;
+        text-align: center;
+      }
+      &-btn {
+        cursor: pointer;
+        text-decoration: underline;
+      }
+    }
   }
 }
