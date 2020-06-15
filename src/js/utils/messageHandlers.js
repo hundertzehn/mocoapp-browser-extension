@@ -12,7 +12,15 @@ import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
 import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
 
-const matcher = createMatcher(remoteServices)
+let matcher
+
+const initMatcher = (settings) => {
+  matcher = createMatcher(remoteServices, settings.hostOverrides)
+}
+
+getSettings().then((settings) => {
+  initMatcher(settings)
+})
 
 export function tabUpdated(tab, { messenger, settings }) {
   messenger.connectTab(tab)
@@ -54,6 +62,8 @@ export function tabUpdated(tab, { messenger, settings }) {
 }
 
 export function settingsChanged(settings, { messenger }) {
+  initMatcher(settings)
+
   queryTabs({ currentWindow: true })
     .then(reject(isBrowserTab))
     .then(

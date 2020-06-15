@@ -1,34 +1,53 @@
-import { head } from "lodash/fp"
-export const isChrome = () => typeof browser === "undefined" && chrome
-export const isFirefox = () => typeof browser !== "undefined" && chrome
+import { head, pick, reduce, filter, prop, pipe } from "lodash/fp"
+import remoteServices from "../remoteServices"
 
 const DEFAULT_SUBDOMAIN = "unset"
 
+export const isChrome = () => typeof browser === "undefined" && chrome
+export const isFirefox = () => typeof browser !== "undefined" && chrome
+
+export const defaultHostOverrides = pipe(
+  filter(prop("allowHostOverride")),
+  reduce((acc, remoteService) => {
+    acc[remoteService.name] = remoteService.host
+    return acc
+  }, {}),
+)(remoteServices)
+
+// We pick only the keys defined in `defaultHostOverrides`, so that
+// deleted host overrides get cleared from the settings
+const getHostOverrides = (settings) => ({
+  ...defaultHostOverrides,
+  ...pick(Object.keys(defaultHostOverrides), settings.hostOverrides || {}),
+})
+
 export const getSettings = (withDefaultSubdomain = true) => {
-  const keys = ["subdomain", "apiKey", "settingTimeTrackingHHMM"]
+  const keys = ["subdomain", "apiKey", "settingTimeTrackingHHMM", "hostOverrides"]
   const { version } = chrome.runtime.getManifest()
   if (isChrome()) {
-    return new Promise(resolve => {
-      chrome.storage.sync.get(keys, data => {
+    return new Promise((resolve) => {
+      chrome.storage.sync.get(keys, (settings) => {
         if (withDefaultSubdomain) {
-          data.subdomain = data.subdomain || DEFAULT_SUBDOMAIN
+          settings.subdomain = settings.subdomain || DEFAULT_SUBDOMAIN
         }
-        resolve({ ...data, version })
+        settings.hostOverrides = getHostOverrides(settings)
+        resolve({ ...settings, version })
       })
     })
   } else {
-    return browser.storage.sync.get(keys).then(data => {
+    return browser.storage.sync.get(keys).then((settings) => {
       if (withDefaultSubdomain) {
-        data.subdomain = data.subdomain || DEFAULT_SUBDOMAIN
+        settings.subdomain = settings.subdomain || DEFAULT_SUBDOMAIN
       }
-      return { ...data, version }
+      settings.hostOverrides = getHostOverrides(settings)
+      return { ...settings, version }
     })
   }
 }
 
-export const setStorage = items => {
+export const setStorage = (items) => {
   if (isChrome()) {
-    return new Promise(resolve => {
+    return new Promise((resolve) => {
       chrome.storage.sync.set(items, resolve)
     })
   } else {
@@ -36,9 +55,9 @@ export const setStorage = items => {
   }
 }
 
-export const queryTabs = queryInfo => {
+export const queryTabs = (queryInfo) => {
   if (isChrome()) {
-    return new Promise(resolve => chrome.tabs.query(queryInfo, resolve))
+    return new Promise((resolve) => chrome.tabs.query(queryInfo, resolve))
   } else {
     return browser.tabs.query(queryInfo)
   }
@@ -48,4 +67,4 @@ export const getCurrentTab = () => {
   return queryTabs({ currentWindow: true, active: true }).then(head)
 }
 
-export const isBrowserTab = tab => /^(?:chrome|about):/.test(tab.url)
+export const isBrowserTab = (tab) => /^(?:chrome|about):/.test(tab.url)
