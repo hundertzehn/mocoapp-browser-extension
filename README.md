@@ -2,33 +2,34 @@
 
 ## Development
 
-* run `yarn`
-* run `yarn start:chrome` or `yarn start:firefox` (`yarn start` is an alias for `yarn start:chrome`)
-* load extension into browser:
-  * Chrome: visit `chrome://extensions` and load unpacked extension from `build/chrome`
-  * Firefox: visit `about:debugging` and load temporary Add-on from `build/firefox`
-* reload browser extension after change
+- run `yarn`
+- run `yarn start:chrome` or `yarn start:firefox` (`yarn start` is an alias for `yarn start:chrome`)
+- load extension into browser:
+  - Chrome: visit `chrome://extensions` and load unpacked extension from `build/chrome`
+  - Firefox: visit `about:debugging` and load temporary Add-on from `build/firefox`
+- reload browser extension after change
 
 ## Production Build
 
-* bump version in `package.json`
-* run `yarn build`
-* The Chrome and Firefox extensions are available as ZIP-files in `build/chrome` and `build/firefox` respectively
+- bump version in `package.json`
+- Update `CHANGELOG.md`
+- run `yarn build`
+- The Chrome and Firefox extensions are available as ZIP-files in `build/chrome` and `build/firefox` respectively
 
 ## Install Local Builds
 
 ### Chrome
 
-1. `yarn build:chrome`
-1. Visit `chrome://extensions`
-2. Enable `Developer mode`
-3. `Load unpacked` and select the `build/chrome` folder.
+- `yarn build:chrome`
+- Visit `chrome://extensions`
+- Enable `Developer mode`
+- `Load unpacked` and select the `build/chrome` folder.
 
 ### Firefox
 
-1. `yarn build:firefox`
-1. Visit `about:debugging`
-2. Click on `Load temporary Add-on` and select the ZIP-file in `build/firefox`
+- `yarn build:firefox`
+- Visit `about:debugging`
+- Click on `Load temporary Add-on` and select the ZIP-file in `build/firefox`
 
 Only signed extensions can be permantly installed in Firefox (unless you are using <em>Firefox Developer Edition</em>). To sign the build, proceed as described in [Getting started with web-ext](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Getting_started_with_web-ext).
 
@@ -36,7 +37,7 @@ You can keep the extension settings between builds by providing a stable `APPLIC
 
 `APPLICATION_ID=my-custom-moco-extension@mycompany.com yarn build:firefox`
 
-## Remote Service Configuration 
+## Remote Service Configuration
 
 Remote services are configured in `src/js/remoteServices.js`.
 
@@ -46,9 +47,10 @@ A remote service is configured as follows:
 {
   service_key: {
     name: "service_name",
+    host: "https://:subdomain.example.com",
     urlPatterns: [
-      "https:\\://:subdomain.example.com/card/:id",
-      [/^https:\/\/(\w+).example.com\/card\/(\d+), ["subdomain", "id"]],
+      ":host:/card/:id",
+      [/^:host:\/card\/(\d+), ["subdomain", "id"]],
     ],
     queryParams: {
       projectId: "currentList"
@@ -59,24 +61,25 @@ A remote service is configured as follows:
         ?.textContent
         ?.trim()
       return `#${id} ${service.key} ${title || ""}`
-    },  
+    },
     projectId: (document, service, { subdomain, id, projectId }) => {
       return projectId
     },
-    position: { left: "50%", transform: "translate(-50%)" }
+    position: { left: "50%", transform: "translate(-50%)" },
+    allowHostOverride: false,
   }
 }
 ```
 
-| Parameter    | Description |
-|--------------|:-------------|
-| service_key  | `string` &mdash; Unique identifier for the service |
-| service_name | `string` &mdash; Must be one of the registered services `trello`, `jira`, `asana`, `wunderlist`, `github` or `youtrack` |
-| urlPatterns  | `string` \| `RegEx` &mdash; A valid URL pattern or regular expression, as described in the [url-pattern](https://www.npmjs.com/package/url-pattern) package. |
-| queryParams  | `Object` &mdash; The object value is the name of the query parameter and the key the property it will available on, e.g. the value of the query parameter `currentList` will be available under `projectId`. Matches in `urlPatterns` have precedence over matches in `queryParams`. |
-| description  | `undefined` \| `string` \| `function` &mdash; The default description of the service. If it is a function, it will receive `window.document`, the current `service` and an object with the URL `matches` as arguments, and the return value set as the default description. |
+| Parameter    | Description                                                                                                                                                                                                                                                                                                              |
+| ------------ | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| service_key  | `string` &mdash; Unique identifier for the service                                                                                                                                                                                                                                                                       |
+| service_name | `string` &mdash; Must be one of the registered services `trello`, `jira`, `asana`, `wunderlist`, `github` or `youtrack`                                                                                                                                                                                                  |
+| urlPatterns  | `string` \| `RegEx` &mdash; A valid URL pattern or regular expression, as described in the [url-pattern](https://www.npmjs.com/package/url-pattern) package. `:host:` will be replaced with the configured host before applying the pattern (can be configured in the settings if `allowHostOverride` is true.           |
+| queryParams  | `Object` &mdash; The object value is the name of the query parameter and the key the property it will available on, e.g. the value of the query parameter `currentList` will be available under `projectId`. Matches in `urlPatterns` have precedence over matches in `queryParams`.                                     |
+| description  | `undefined` \| `string` \| `function` &mdash; The default description of the service. If it is a function, it will receive `window.document`, the current `service` and an object with the URL `matches` as arguments, and the return value set as the default description.                                              |
 | projectId    | `undefined` \| `string` \| `function` &mdash; The pre-selected project of the service matching the MOCO project identifier. If it is a function, it will receive `window.document`, the current `service` and an object with the URL `matches` as arguments, and must return the MOCO project identifier or `undefined`. |
-| position     | `Object` &mdash; CSS properties as object styles for position the bubble. Defaults to `{ right: calc(4rem + 5px)` |
+| position     | `Object` &mdash; CSS properties as object styles for position the bubble. Defaults to `{ right: calc(4rem + 5px)`                                                                                                                                                                                                        |
 
 ## Adding a Custom Service
 
