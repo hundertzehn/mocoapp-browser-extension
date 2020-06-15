@@ -3,8 +3,7 @@ import { observable } from "mobx"
 import { observer } from "mobx-react"
 import { isChrome, getSettings, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
-import remoteServices from "../remoteServices"
-import { pipe, toPairs, fromPairs, prop, map, sortedUniqBy, filter } from "lodash/fp"
+import { pipe, toPairs, fromPairs, map } from "lodash/fp"
 
 function upperCaseFirstLetter(input) {
   return input[0].toUpperCase() + input.slice(1)
@@ -13,15 +12,6 @@ function upperCaseFirstLetter(input) {
 function removePathFromUrl(url) {
   return url.replace(/(\.[a-z]+)\/.*$/, "$1")
 }
-
-const overridableRemoveServices = pipe(
-  filter(prop("allowHostOverride")),
-  map((remoteService) => ({
-    name: remoteService.name,
-    host: remoteService.host,
-  })),
-  sortedUniqBy("name"),
-)(remoteServices)
 
 @observer
 class Options extends Component {
@@ -33,10 +23,10 @@ class Options extends Component {
   @observable showHostOverrideOptions = false
 
   componentDidMount() {
-    getSettings(false).then((storeData) => {
-      this.subdomain = storeData.subdomain || ""
-      this.apiKey = storeData.apiKey || ""
-      this.hostOverrides = storeData.hostOverrides
+    getSettings(false).then((settings) => {
+      this.subdomain = settings.subdomain || ""
+      this.apiKey = settings.apiKey || ""
+      this.hostOverrides = settings.hostOverrides
     })
   }
 
@@ -132,27 +122,42 @@ class Options extends Component {
         {!this.showHostOverrideOptions && (
           <div className="moco-bx-options__host-overrides">
             <a href="#" className="moco-bx-btn__secondary" onClick={this.toggleHostOverrideOptions}>
-              URLs für Dienste anpassen?
+              Service-URLs überschreiben?
             </a>
           </div>
         )}
         {this.showHostOverrideOptions && (
-          <div style={{ marginBottom: "1rem" }}>
-            <h3>URLs für Dienste</h3>
-            {overridableRemoveServices.map((remoteService) => (
-              <div className="form-group" key={remoteService.name} style={{ margin: "0.5rem 0" }}>
+          <div style={{ marginBottom: "1.5rem" }}>
+            <h3 style={{ marginBottom: 0 }}>Service-URLs</h3>
+            <small>
+              Doppelpunkt für Platzhalter verwenden, z.B.{" "}
+              <span style={{ backgroundColor: "rgba(100, 100, 100, 0.1)" }}>:org</span>. Siehe{" "}
+              <a
+                href="https://github.com/hundertzehn/mocoapp-browser-extension#remote-service-configuration"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Online-Doku
+              </a>
+              .
+            </small>
+            <br />
+            {pipe(
+              Object.entries,
+              Array.from,
+            )(this.hostOverrides).map(([name, host]) => (
+              <div className="form-group" key={name} style={{ margin: "0.5rem 0" }}>
                 <div className="input-group">
                   <span
                     className="input-group-addon input-group-addon--left"
                     style={{ display: "inline-block", width: "70px", textAlign: "left" }}
                   >
-                    {upperCaseFirstLetter(remoteService.name)}
+                    {upperCaseFirstLetter(name)}
                   </span>
                   <input
                     type="text"
-                    name={remoteService.name}
-                    value={this.hostOverrides[remoteService.name] || ""}
-                    placeholder={remoteService.host}
+                    name={name}
+                    value={host}
                     onKeyDown={this.handleInputKeyDown}
                     onChange={this.handleChangeHostOverrides}
                   />

@@ -11,6 +11,11 @@
   .moco-bx-options {
     padding: 0rem 2rem 2rem;
 
+    a {
+      color: $blue;
+      text-decoration: none;
+    }
+
     p {
       margin: 0.5rem 0;
     }
@@ -45,9 +50,13 @@
     }
 
     &__host-overrides {
-      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
       text-align: center;
       font-weight: normal;
+    }
+
+    small {
+      font-size: 0.8rem;
     }
   }
 }

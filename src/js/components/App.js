@@ -119,7 +119,7 @@ class App extends Component {
     chrome.runtime.onMessage.removeListener(this.handleSetFormErrors)
   }
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { projects } = this.props
     const {
       target: { name, value },
@@ -133,11 +133,11 @@ class App extends Component {
     }
   }
 
-  handleSelectDate = date => {
+  handleSelectDate = (date) => {
     this.changeset.date = formatDate(date)
   }
 
-  handleStopTimer = timedActivity => {
+  handleStopTimer = (timedActivity) => {
     const { service } = this.props
 
     chrome.runtime.sendMessage({
@@ -146,7 +146,7 @@ class App extends Component {
     })
   }
 
-  handleSubmit = event => {
+  handleSubmit = (event) => {
     event.preventDefault()
     const { service } = this.props
 
@@ -159,7 +159,7 @@ class App extends Component {
     })
   }
 
-  handleKeyDown = event => {
+  handleKeyDown = (event) => {
     if (event.keyCode === 27) {
       event.stopPropagation()
       chrome.runtime.sendMessage({ type: "closePopup" })
@@ -204,7 +204,7 @@ class App extends Component {
 
     return (
       <Spring native from={{ opacity: 0 }} to={{ opacity: 1 }} config={config.stiff}>
-        {props => (
+        {(props) => (
           <animated.div className="moco-bx-app-container" style={props}>
             <Header subdomain={subdomain} />
             <Observer>

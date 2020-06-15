@@ -8,8 +8,8 @@ export default {
     name: "asana",
     host: "https://app.asana.com",
     urlPatterns: [
-      [/^__HOST__\/0\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
-      [/^__HOST__\/0\/search\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
+      [/^:host:\/0\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
+      [/^:host:\/0\/search\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
     ],
     description: (document) =>
       document.querySelector(".ItemRow--highlighted textarea")?.textContent?.trim() ||
@@ -23,32 +23,32 @@ export default {
   "github-pr": {
     name: "github",
     host: "https://github.com",
-    urlPatterns: ["__HOST__/:org/:repo/pull/:id(/:tab)"],
+    urlPatterns: [":host:/:org/:repo/pull/:id(/:tab)"],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
     description: (document) => document.querySelector(".js-issue-title")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".js-issue-title"),
-    allowHostOverride: true,
+    allowHostOverride: false,
   },
 
   "github-issue": {
     name: "github",
     host: "https://github.com",
-    urlPatterns: ["__HOST__/:org/:repo/issues/:id"],
+    urlPatterns: [":host:/:org/:repo/issues/:id"],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
     description: (document, service, { org, repo, id }) =>
       document.querySelector(".js-issue-title")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".js-issue-title"),
-    allowHostOverride: true,
+    allowHostOverride: false,
   },
 
   jira: {
     name: "jira",
     host: "https://:org.atlassian.net",
     urlPatterns: [
-      "__HOST__/secure/RapidBoard.jspa",
-      "__HOST__/browse/:id",
-      "__HOST__/jira/software/projects/:projectId/boards/:board",
-      "__HOST__/jira/software/projects/:projectId/boards/:board/backlog",
+      ":host:/secure/RapidBoard.jspa",
+      ":host:/browse/:id",
+      ":host:/jira/software/projects/:projectId/boards/:board",
+      ":host:/jira/software/projects/:projectId/boards/:board/backlog",
     ],
     queryParams: {
       id: "selectedIssue",
@@ -69,7 +69,7 @@ export default {
   meistertask: {
     name: "meistertask",
     host: "https://www.meistertask.com",
-    urlPatterns: ["/app/task/:id/:slug"],
+    urlPatterns: [":host:/app/task/:id/:slug"],
     description: (document) => {
       const json = document.getElementById("mt-toggl-data")?.dataset?.togglJson || "{}"
       const data = JSON.parse(json)
@@ -87,7 +87,7 @@ export default {
   trello: {
     name: "trello",
     host: "https://trello.com",
-    urlPatterns: ["__HOST__/c/:id/:title"],
+    urlPatterns: [":host:/c/:id/:title"],
     description: (document, service, { title }) =>
       document.querySelector(".js-title-helper")?.textContent?.trim() || title,
     projectId: (document) =>
@@ -99,7 +99,7 @@ export default {
   youtrack: {
     name: "youtrack",
     host: "https://:org.myjetbrains.com",
-    urlPatterns: ["__HOST__/youtrack/issue/:id"],
+    urlPatterns: [":host:/youtrack/issue/:id"],
     description: (document) => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
     projectId: projectIdentifierBySelector("yt-issue-body h1"),
     allowHostOverride: true,
@@ -109,8 +109,8 @@ export default {
     name: "wrike",
     host: "https://www.wrike.com",
     urlPatterns: [
-      "__HOST__/workspace.htm#path=mywork",
-      "__HOST__/workspace.htm#path=folder",
+      ":host:/workspace.htm#path=mywork",
+      ":host:/workspace.htm#path=folder",
       "https\\://app-eu.wrike.com/workspace.htm#path=mywork",
       "https\\://app-eu.wrike.com/workspace.htm#path=folder",
     ],
@@ -125,7 +125,7 @@ export default {
   wunderlist: {
     name: "wunderlist",
     host: "https://www.wunderlist.com",
-    urlPatterns: ["__HOST__/(webapp)#/tasks/:id(/*)"],
+    urlPatterns: [":host:/(webapp)#/tasks/:id(/*)"],
     description: (document) =>
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
@@ -138,8 +138,8 @@ export default {
     name: "gitlab",
     host: "https://gitlab.com",
     urlPatterns: [
-      "__HOST__/:org/:group/:projectId/-/merge_requests/:id",
-      "__HOST__/:org/:projectId/-/merge_requests/:id",
+      ":host:/:org/:group/:projectId/-/merge_requests/:id",
+      ":host:/:org/:projectId/-/merge_requests/:id",
     ],
     description: (document, service, { id }) => {
       const title = document.querySelector("h2.title")?.textContent?.trim()
@@ -152,8 +152,8 @@ export default {
     name: "gitlab",
     host: "https://gitlab.com",
     urlPatterns: [
-      "__HOST__/:org/:group/:projectId/-/issues/:id",
-      "__HOST__/:org/:projectId/-/issues/:id",
+      ":host:/:org/:group/:projectId/-/issues/:id",
+      ":host:/:org/:projectId/-/issues/:id",
     ],
     description: (document, service, { id }) => {
       const title = document.querySelector("h2.title")?.textContent?.trim()

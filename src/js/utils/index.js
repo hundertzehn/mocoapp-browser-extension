@@ -17,41 +17,30 @@ import {
 import { startOfWeek, endOfWeek } from "date-fns"
 import { format } from "date-fns"
 
-const nilToArray = input => input || []
+const nilToArray = (input) => input || []
 
 export const ERROR_UNAUTHORIZED = "unauthorized"
 export const ERROR_UPGRADE_REQUIRED = "upgrade-required"
 export const ERROR_UNKNOWN = "unknown"
 
 export const noop = () => null
-export const asArray = input => (Array.isArray(input) ? input : [input])
+export const asArray = (input) => (Array.isArray(input) ? input : [input])
 
-export const findProjectBy = prop => val => projects => {
+export const findProjectBy = (prop) => (val) => (projects) => {
   if (!val) {
     return undefined
   }
 
-  return compose(
-    find(pathEq(prop, val)),
-    flatMap(get("options")),
-  )(projects)
+  return compose(find(pathEq(prop, val)), flatMap(get("options")))(projects)
 }
 
 export const findProjectByIdentifier = findProjectBy("identifier")
 export const findProjectByValue = findProjectBy("value")
 
-export const findTask = id =>
-  compose(
-    find(pathEq("value", Number(id))),
-    get("tasks"),
-  )
+export const findTask = (id) => compose(find(pathEq("value", Number(id))), get("tasks"))
 
-export const defaultTask = tasks =>
-  compose(
-    defaultTo(head(tasks)),
-    find(pathEq("isDefault", true)),
-    nilToArray,
-  )(tasks)
+export const defaultTask = (tasks) =>
+  compose(defaultTo(head(tasks)), find(pathEq("isDefault", true)), nilToArray)(tasks)
 
 function taskOptions(tasks) {
   return tasks.map(({ id, name, billable, default: isDefault }) => ({
@@ -63,7 +52,7 @@ function taskOptions(tasks) {
 }
 
 export function projectOptions(projects) {
-  return projects.map(project => ({
+  return projects.map((project) => ({
     value: project.id,
     label: project.intern ? `(${project.name})` : project.name,
     identifier: project.identifier,
@@ -82,17 +71,9 @@ export const groupedProjectOptions = compose(
   nilToArray,
 )
 
-export const serializeProps = attrs =>
-  compose(
-    mapValues(JSON.stringify),
-    pick(attrs),
-  )
+export const serializeProps = (attrs) => compose(mapValues(JSON.stringify), pick(attrs))
 
-export const parseProps = attrs =>
-  compose(
-    mapValues(JSON.parse),
-    pick(attrs),
-  )
+export const parseProps = (attrs) => compose(mapValues(JSON.parse), pick(attrs))
 
 export const trace = curry((tag, value) => {
   // eslint-disable-next-line no-console
@@ -101,13 +82,13 @@ export const trace = curry((tag, value) => {
 })
 
 export const weekStartsOn = 1
-export const formatDate = date => format(date, "yyyy-MM-dd")
+export const formatDate = (date) => format(date, "yyyy-MM-dd")
 export const getStartOfWeek = () => startOfWeek(new Date(), { weekStartsOn })
 export const getEndOfWeek = () => endOfWeek(new Date(), { weekStartsOn })
 
 export const extensionSettingsUrl = () => `chrome://extensions/?id=${chrome.runtime.id}`
 
-export const extractAndSetTag = changeset => {
+export const extractAndSetTag = (changeset) => {
   let { description } = changeset
   const match = description.match(/^#(\S+)/)
   if (!match) {
