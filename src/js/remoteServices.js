@@ -164,7 +164,7 @@ export default {
 
   monday: {
     name: "monday",
-    host: "https://nahketing.monday.com",
+    host: "https://:org.monday.com",
     urlPatterns: [
       ":host:/boards/:board/pulses/:task",
     ],
