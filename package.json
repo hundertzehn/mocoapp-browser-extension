@@ -16,7 +16,7 @@
     "test:watch": "node_modules/.bin/jest --watch"
   },
   "dependencies": {
-    "@babel/polyfill": "^7.10.1",
+    "@babel/polyfill": "^7.10.4",
     "axios": "^0.19.2",
     "classnames": "^2.2.6",
     "date-fns": "^2.14.0",
