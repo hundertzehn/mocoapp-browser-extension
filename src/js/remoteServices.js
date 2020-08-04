@@ -165,13 +165,9 @@ export default {
   monday: {
     name: "monday",
     host: "https://:org.monday.com",
-    urlPatterns: [
-      ":host:/boards/:board/pulses/:task",
-    ],
+    urlPatterns: [":host:/boards/:board/pulses/:id"],
     description: (document, service, { id }) => {
-      const title = document.querySelector('.multiline-ellipsis-component')?.textContent?.trim();
-      const url = document.location.href;
-      return `${title || ""} ${url}`
+      return document.querySelector(".pulse_title")?.textContent?.trim()
     },
     allowHostOverride: false,
   },
