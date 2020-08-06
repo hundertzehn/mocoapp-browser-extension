@@ -1,7 +1,7 @@
 {
   "name": "moco-browser-extensions",
   "description": "Browser plugin for MOCO",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "license": "MIT",
   "scripts": {
     "start": "yarn start:chrome",
@@ -47,7 +47,7 @@
     "copy-webpack-plugin": "^6.0.2",
     "copyfiles": "^2.3.0",
     "css-loader": "^4.2.0",
-    "eslint": "^6.8.0",
+    "eslint": "7.6.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-jest": "^23.13.2",
     "eslint-plugin-prettier": "^3.1.3",

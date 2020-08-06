@@ -161,4 +161,14 @@ export default {
     },
     allowHostOverride: true,
   },
+
+  monday: {
+    name: "monday",
+    host: "https://:org.monday.com",
+    urlPatterns: [":host:/boards/:board/pulses/:id"],
+    description: (document, service, { id }) => {
+      return document.querySelector(".pulse_title")?.textContent?.trim()
+    },
+    allowHostOverride: false,
+  },
 }
