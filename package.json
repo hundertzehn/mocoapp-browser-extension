@@ -21,7 +21,7 @@
     "classnames": "^2.2.6",
     "date-fns": "^2.15.0",
     "dotenv": "^8.2.0",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.20",
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
     "prop-types": "^15.6.2",
