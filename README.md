@@ -6,8 +6,8 @@
 - run `yarn start:chrome` or `yarn start:firefox` (`yarn start` is an alias for `yarn start:chrome`)
 - load extension into browser:
   - Chrome: visit `chrome://extensions` and load unpacked extension from `build/chrome`
-  - Firefox: visit `about:debugging` and load temporary Add-on from `build/firefox`
-- reload browser extension after change
+  - Firefox: visit `about:debugging` and load temporary Add-on from `build/firefox/manifest.json`
+- the browser should automatically pick up your changes but from time to time it may be useful to reload the extension
 
 ## Production Build
 
