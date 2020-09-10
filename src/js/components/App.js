@@ -25,6 +25,7 @@ import UnknownError from "components/Errors/UnknownError"
 import Header from "./shared/Header"
 import { head } from "lodash"
 import TimeInputParser from "utils/TimeInputParser"
+import {get} from "lodash/fp";
 
 @observer
 class App extends Component {
@@ -68,11 +69,12 @@ class App extends Component {
 
   @computed get project() {
     const { service, projects, lastProjectId } = this.props
+
     return (
       findProjectByValue(this.changeset.assignment_id)(projects) ||
-      findProjectByIdentifier(service?.projectId)(projects) ||
       findProjectByValue(Number(lastProjectId))(projects) ||
-      head(projects)
+      findProjectByIdentifier(service?.projectId)(projects) ||
+      head(projects.flatMap(get("options")))
     )
   }
 
