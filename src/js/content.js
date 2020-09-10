@@ -1,4 +1,3 @@
-import "mobx-react-lite/batchingForReactDom"
 import React, { createRef } from "react"
 import ReactDOM from "react-dom"
 import { Transition, animated, config } from "react-spring/renderprops"
