@@ -25,7 +25,7 @@
     "mobx": "^5.15.4",
     "mobx-react": "^6.2.2",
     "prop-types": "^15.6.2",
-    "query-string": "^6.12.1",
+    "query-string": "^6.13.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-select": "^3.1.0",
