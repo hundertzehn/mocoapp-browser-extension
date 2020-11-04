@@ -1,0 +1,80 @@
+[
+  {
+    "name": "testGitlab",
+    "host": "https://gitlab.com",
+    "urlPatterns": [
+      ":host:/test/customers/testcustomer/testprojekt/-/issues/:id"
+    ],
+    "query": [
+      {
+        "name": "title",
+        "type": "FIELD_IDENTIFIER",
+        "selector": "#content-body > div.issue-details.issuable-details > div.detail-page-description.content-block > div:nth-child(1) > div > div.title-container > h2"
+      },
+      {
+        "name": "projectId",
+        "type": "FIELD_IDENTIFIER",
+        "selector": "#content-body > div.issue-details.issuable-details > div.detail-page-description.content-block > div:nth-child(1) > div > div.description.js-task-list-container.is-task-list-enabled > div.md > p:nth-child(2) > em"
+      },
+      {
+        "name": "id",
+        "type": "URL_PARAM",
+        "selector": "id"
+      }
+    ],
+    "allowHostOverride": true,
+    "descriptionFormat": "#:id :title"
+  },
+  {
+    "name": "testAtlassianRapidBoard",
+    "host": "https://test.atlassian.net",
+    "urlPatterns": [
+      ":host:/secure/RapidBoard.jspa"
+    ],
+    "query": [
+      {
+        "name": "title",
+        "type": "FIELD_IDENTIFIER",
+        "selector": "#jira > div.atlaskit-portal-container > div:nth-child(3) > div > div:nth-child(3) > div.css-yo0qgw.e1pwmxs01 > div > div > div.sc-dtPURA.dCshqi > div > div > div.sc-dpzcke.ihqNRO > div > div.sc-lEDTX.gMkILc > div.sc-ciodno.bVflpV > div > div.sc-dZWBBA.eHznEF > div > div.sc-doUfgd.bFYaur > div > div > div > div.ContentWrapper-kdagst-0.fPLsyX > div > div > div > div > div > h1"
+      },
+      {
+        "name": "projectId",
+        "type": "FIELD_IDENTIFIER",
+        "selector": "#jira > div.atlaskit-portal-container > div:nth-child(3) > div > div:nth-child(3) > div.css-yo0qgw.e1pwmxs01 > div > div > div.sc-dtPURA.dCshqi > div > div > div.sc-dpzcke.ihqNRO > div > div.sc-lEDTX.gMkILc > div.sc-ciodno.bVflpV > div > div.sc-dZWBBA.gNupAy > div > div > div:nth-child(2) > div.sc-eEOpXj.VIXAL > div:nth-child(6) > div.sc-bscRGj.LgXZm > div > div > div.ContentWrapper-kdagst-0.fPLsyX > div > div > div > div > div > div"
+      },
+      {
+        "name": "id",
+        "type": "FIELD_IDENTIFIER",
+        "selector": "#jira-issue-header > div > div > div > div > div > div > div.sc-guztPN.gimUyy.sc-fCPvlr.ePPaTc > div > div > div > div:nth-child(1) > div > div > a > span > span"
+      }
+    ],
+    "allowHostOverride": true,
+    "descriptionFormat": "#:id :title"
+  },
+  {
+    "name": "testAtlassianBrowse",
+    "host": "https://test.atlassian.net",
+    "urlPatterns": [
+      ":host:/browse/:id"
+    ],
+    "query": [
+      {
+        "name": "title",
+        "type": "FIELD_IDENTIFIER",
+        "selector": "#helpPanelContainer > div > div > div.css-e48442 > div.sc-jWBwVP.lcvVTX > div > div.sc-bHwgHz.dkHycT > div.sc-cMOKGX.ghLXmN > div > div.sc-hLYIQQ.dwakSn > div.sc-dUjcNx.ihAcrP > div > div.sc-cROsgo.fsrnXA > div > div.sc-fXchrD.dhvDUL > div > div > div > div.ContentWrapper-kdagst-0.fPLsyX > div > div > div > div > div > h1"
+      },
+      {
+        "name": "projectId",
+        "type": "FIELD_IDENTIFIER",
+        "selector": "#helpPanelContainer > div > div > div.css-e48442 > div.sc-jWBwVP.lcvVTX > div > div.sc-bHwgHz.dkHycT > div.sc-cMOKGX.ghLXmN > div > div.sc-hLYIQQ.dwakSn > div.sc-dUjcNx.ihAcrP > div > div.sc-cROsgo.krYqOq > div > div.sc-ksfqlt.bnzHCu > div:nth-child(2) > div.sc-dUZuEM.fgULcy > div:nth-child(6) > div.sc-hvvHee.gkDrJu > div > div > div.ContentWrapper-kdagst-0.fPLsyX > div > div > div > div > div > div"
+      },
+      {
+        "name": "id",
+        "type": "URL_PARAM",
+        "selector": "id"
+      }
+    ],
+    "allowHostOverride": true,
+    "descriptionFormat": "#:id :title"
+  }
+]

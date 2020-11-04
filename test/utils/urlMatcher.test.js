@@ -1,12 +1,17 @@
 import remoteServices from "../../src/js/remoteServices"
 import { createMatcher, createEnhancer } from "../../src/js/utils/urlMatcher"
+import { customPatterReader } from "../../src/js/customPattern"
 
 describe("utils", () => {
   describe("urlMatcher", () => {
     let matcher
 
     beforeEach(() => {
-      matcher = createMatcher(remoteServices, {})
+      let services = remoteServices
+      customPatterReader().forEach((entry) => {
+        services = { ...entry, ...services }
+      })
+      matcher = createMatcher(services, {})
     })
 
     describe("createMatcher", () => {

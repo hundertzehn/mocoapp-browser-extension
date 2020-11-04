@@ -8,15 +8,20 @@ import remoteServices from "./remoteServices"
 import { ContentMessenger } from "utils/messaging"
 import "../css/content.scss"
 import { getSettings } from "./utils/browser"
+import { customPatterReader } from "./customPattern"
 
 const popupRef = createRef()
 
 let findService
 getSettings().then((settings) => {
-  findService = createServiceFinder(remoteServices, settings.hostOverrides)(document)
+  let services = remoteServices
+  customPatterReader().forEach((entry) => {
+    services = { ...entry, ...services }
+  })
+  findService = createServiceFinder(services, settings.hostOverrides)(document)
 })
 
-chrome.runtime.onConnect.addListener(function (port) {
+chrome.runtime.onConnect.addListener(function(port) {
   const messenger = new ContentMessenger(port)
 
   function clickHandler(event) {
@@ -25,6 +30,7 @@ chrome.runtime.onConnect.addListener(function (port) {
       messenger.postMessage({ type: "togglePopup" })
     }
   }
+
   port.onDisconnect.addListener(() => {
     messenger.stop()
     window.removeEventListener("click", clickHandler, true)
