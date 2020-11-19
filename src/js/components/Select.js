@@ -14,9 +14,9 @@ import {
   isNil,
 } from "lodash/fp"
 
-const hasOptionGroups = options => options.some(option => Boolean(option.options))
+const hasOptionGroups = (options) => options.some((option) => Boolean(option.options))
 
-const customTheme = theme => ({
+const customTheme = (theme) => ({
   ...theme,
   borderRadius: 0,
   spacing: {
@@ -33,16 +33,16 @@ const customTheme = theme => ({
   },
 })
 
-const customStyles = props => ({
+const customStyles = (props) => ({
   control: (base, _state) => ({
     ...base,
     borderColor: props.hasError ? "#fb3a2f" : base.borderColor,
   }),
-  valueContainer: base => ({
+  valueContainer: (base) => ({
     ...base,
     padding: "4px 12px",
   }),
-  input: base => ({
+  input: (base) => ({
     ...base,
     border: "0 !important",
     boxShadow: "0 !important",
@@ -66,7 +66,7 @@ const customStyles = props => ({
 const filterOption = createFilter({
   stringify: compose(
     join(" "),
-    filter(value => isString(value) || isNumber(value)),
+    filter((value) => isString(value) || isNumber(value)),
     values,
     property("data"),
   ),
@@ -96,7 +96,7 @@ export default class Select extends Component {
   }
 
   static findOptionByValue = (selectOptions, value) => {
-    const options = flatMap(option => (option.options ? option.options : option), selectOptions)
+    const options = flatMap((option) => (option.options ? option.options : option), selectOptions)
 
     return options.find(pathEq("value", value)) || null
   }
@@ -106,13 +106,13 @@ export default class Select extends Component {
     this.select = React.createRef()
   }
 
-  handleChange = option => {
+  handleChange = (option) => {
     const { name, onChange } = this.props
     const { value } = option
     onChange({ target: { name, value } })
   }
 
-  handleKeyDown = event => {
+  handleKeyDown = (event) => {
     if (!this.select.current) {
       return
     }

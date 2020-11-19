@@ -67,7 +67,7 @@ export function settingsChanged(settings, { messenger }) {
   queryTabs({ currentWindow: true })
     .then(reject(isBrowserTab))
     .then(
-      forEach(tab => {
+      forEach((tab) => {
         messenger.postMessage(tab, { type: "closePopup" })
         tabUpdated(tab, { settings, messenger })
       }),
@@ -75,7 +75,7 @@ export function settingsChanged(settings, { messenger }) {
 }
 
 export function togglePopup(tab, { messenger }) {
-  return function({ isOpen, service } = {}) {
+  return function ({ isOpen, service } = {}) {
     if (isNil(isOpen)) {
       return
     }
@@ -111,6 +111,8 @@ export async function openPopup(tab, { service, messenger }) {
 
     const settingTimeTrackingHHMM = get("[0].data.setting_time_tracking_hh_mm", responses)
     !isNil(settingTimeTrackingHHMM) && setStorage({ settingTimeTrackingHHMM })
+
+    console.log("login", responses[0])
 
     const action = {
       type: "openPopup",

@@ -1,7 +1,7 @@
 import axios from "axios"
 import { formatDate } from "utils"
 
-const baseURL = subdomain => {
+const baseURL = (subdomain) => {
   if (process.env.NODE_ENV === "production") {
     return `https://${encodeURIComponent(subdomain)}.mocoapp.com/api/browser_extensions`
   } else {
@@ -27,7 +27,7 @@ export default class Client {
     })
   }
 
-  login = service =>
+  login = (service) =>
     this.#client.post("session", {
       api_key: this.#apiKey,
       remote_service: service?.name,
@@ -46,7 +46,7 @@ export default class Client {
       params: { date: `${formatDate(fromDate)}:${formatDate(toDate)}` },
     })
 
-  activitiesStatus = service => {
+  activitiesStatus = (service) => {
     if (!service) {
       return Promise.resolve({ data: { hours: 0 } })
     }
@@ -55,7 +55,7 @@ export default class Client {
     })
   }
 
-  createActivity = activity => this.#client.post("activities", { activity })
+  createActivity = (activity) => this.#client.post("activities", { activity })
 
-  stopTimer = timedActivity => this.#client.get(`activities/${timedActivity.id}/stop_timer`)
+  stopTimer = (timedActivity) => this.#client.get(`activities/${timedActivity.id}/stop_timer`)
 }

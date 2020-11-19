@@ -36,7 +36,7 @@ function resetBubble({ tab, settings, service, timedActivity }) {
 }
 
 messenger.on("togglePopup", () => {
-  getCurrentTab().then(tab => {
+  getCurrentTab().then((tab) => {
     if (tab && !isBrowserTab(tab)) {
       messenger.postMessage(tab, { type: "requestService" })
       messenger.once("newService", ({ payload }) => {
@@ -46,22 +46,22 @@ messenger.on("togglePopup", () => {
   })
 })
 
-chrome.runtime.onMessage.addListener(action => {
+chrome.runtime.onMessage.addListener((action) => {
   if (action.type === "closePopup") {
-    getCurrentTab().then(tab => {
+    getCurrentTab().then((tab) => {
       messenger.postMessage(tab, action)
     })
   }
 
   if (action.type === "createActivity") {
     const { activity, service } = action.payload
-    getCurrentTab().then(tab => {
-      getSettings().then(settings => {
+    getCurrentTab().then((tab) => {
+      getSettings().then((settings) => {
         const apiClient = new ApiClient(settings)
         apiClient
           .createActivity(activity)
           .then(() => resetBubble({ tab, settings, service }))
-          .catch(error => {
+          .catch((error) => {
             if (error.response?.status === 422) {
               chrome.runtime.sendMessage({
                 type: "setFormErrors",
@@ -75,8 +75,8 @@ chrome.runtime.onMessage.addListener(action => {
 
   if (action.type === "stopTimer") {
     const { timedActivity, service } = action.payload
-    getCurrentTab().then(tab => {
-      getSettings().then(settings => {
+    getCurrentTab().then((tab) => {
+      getSettings().then((settings) => {
         const apiClient = new ApiClient(settings)
         apiClient
           .stopTimer(timedActivity)
@@ -106,7 +106,7 @@ chrome.runtime.onMessage.addListener(action => {
 chrome.runtime.onInstalled.addListener(() => {
   chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {
-      getSettings().then(settings => settingsChanged(settings, { messenger }))
+      getSettings().then((settings) => settingsChanged(settings, { messenger }))
     }
   })
 })
@@ -114,20 +114,20 @@ chrome.runtime.onInstalled.addListener(() => {
 chrome.runtime.onStartup.addListener(() => {
   chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {
-      getSettings().then(settings => settingsChanged(settings, { messenger }))
+      getSettings().then((settings) => settingsChanged(settings, { messenger }))
     }
   })
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!isBrowserTab(tab) && changeInfo.status === "complete") {
-    getSettings().then(settings => {
+    getSettings().then((settings) => {
       tabUpdated(tab, { settings, messenger })
     })
   }
 })
 
-chrome.tabs.onCreated.addListener(tab => {
+chrome.tabs.onCreated.addListener((tab) => {
   if (!isBrowserTab(tab)) {
     messenger.connectTab(tab)
   }
@@ -137,11 +137,11 @@ chrome.tabs.onRemoved.addListener(messenger.disconnectTab)
 
 chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
   if (areaName === "sync" && (apiKey || subdomain)) {
-    getSettings().then(settings => settingsChanged(settings, { messenger }))
+    getSettings().then((settings) => settingsChanged(settings, { messenger }))
   }
 })
 
-chrome.browserAction.onClicked.addListener(tab => {
+chrome.browserAction.onClicked.addListener((tab) => {
   if (!isBrowserTab(tab)) {
     messenger.postMessage(tab, { type: "requestService" })
     messenger.once("newService", ({ payload }) => {

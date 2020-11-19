@@ -14,7 +14,7 @@ const hoursAtDate = (date, activities) =>
 
 const Calendar = ({ fromDate, toDate, selectedDate, activities, schedules, onChange }) => (
   <div className="moco-bx-calendar">
-    {eachDayOfInterval({ start: fromDate, end: toDate }).map(date => (
+    {eachDayOfInterval({ start: fromDate, end: toDate }).map((date) => (
       <Day
         key={date}
         date={date}

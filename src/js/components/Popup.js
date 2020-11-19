@@ -6,13 +6,13 @@ import { serializeProps } from "utils"
 const Popup = forwardRef((props, ref) => {
   const iFrameRef = useRef()
 
-  const handleRequestClose = event => {
+  const handleRequestClose = (event) => {
     if (event.target.classList.contains("moco-bx-popup")) {
       props.onRequestClose()
     }
   }
 
-  const handleMessage = event => {
+  const handleMessage = (event) => {
     if (iFrameRef.current && event.data?.__mocoBX?.iFrameHeight > 300) {
       iFrameRef.current.style.height = `${event.data.__mocoBX.iFrameHeight}px`
     }

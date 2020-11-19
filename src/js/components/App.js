@@ -25,7 +25,7 @@ import UnknownError from "components/Errors/UnknownError"
 import Header from "./shared/Header"
 import { head } from "lodash"
 import TimeInputParser from "utils/TimeInputParser"
-import {get} from "lodash/fp";
+import { get } from "lodash/fp"
 
 @observer
 class App extends Component {

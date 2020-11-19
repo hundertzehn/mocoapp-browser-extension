@@ -32,7 +32,7 @@ class Form extends Component {
   isValid() {
     const { changeset } = this.props
     return (
-      ["assignment_id", "task_id"].map(prop => changeset[prop]).every(Boolean) &&
+      ["assignment_id", "task_id"].map((prop) => changeset[prop]).every(Boolean) &&
       (changeset.date === formatDate(new Date()) || changeset.seconds > 0)
     )
   }
@@ -67,7 +67,7 @@ class Form extends Component {
     return styleMap[this.isTimerStartable]
   }
 
-  handleTextareaKeyDown = event => {
+  handleTextareaKeyDown = (event) => {
     const { onSubmit } = this.props
 
     if (event.key === "Enter") {
