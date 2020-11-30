@@ -72,8 +72,8 @@ class App extends Component {
 
     return (
       findProjectByValue(this.changeset.assignment_id)(projects) ||
-      findProjectByValue(Number(lastProjectId))(projects) ||
       findProjectByIdentifier(service?.projectId)(projects) ||
+      findProjectByValue(Number(lastProjectId))(projects) ||
       head(projects.flatMap(get("options")))
     )
   }
