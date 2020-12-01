@@ -1,11 +1,7 @@
 const projectRegex = /\[([\w-]+)\]/
-const projectIdRegex = /P\d{5}/gm
 
 const projectIdentifierBySelector = (selector) => (document) =>
   document.querySelector(selector)?.textContent?.trim()?.match(projectRegex)?.[1]
-
-const projectIdentifierBySelectorAndProjectIdRegex = (selector) => (document) =>
-  document.querySelector(selector)?.textContent?.trim()?.match(projectIdRegex)?.[0]
 
 export default {
   asana: {
@@ -79,10 +75,10 @@ export default {
       return `#${id} ${title || ""}`
     },
     projectId: (document, service, { projectId }) =>
-      projectIdentifierBySelectorAndProjectIdRegex(
+      projectIdentifierBySelector(
         "[data-test-id='issue.views.issue-base.foundation.summary.heading']",
       )(document) ||
-      projectIdentifierBySelectorAndProjectIdRegex("[data-navheader] [data-item-title]")(document) ||
+      projectIdentifierBySelector("[data-navheader] [data-item-title]")(document) ||
       projectId,
     allowHostOverride: true,
   },
