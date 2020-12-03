@@ -112,16 +112,16 @@ export async function openPopup(tab, { service, messenger }) {
     const settingTimeTrackingHHMM = get("[0].data.setting_time_tracking_hh_mm", responses)
     !isNil(settingTimeTrackingHHMM) && setStorage({ settingTimeTrackingHHMM })
 
-    console.log("login", responses[0])
-
     const action = {
       type: "openPopup",
       payload: {
         service,
         subdomain: settings.subdomain,
         timedActivity: get("[0].data.timed_activity", responses),
-        lastProjectId: get("[0].data.last_project_id", responses),
-        lastTaskId: get("[0].data.last_task_id", responses),
+        serviceLastProjectId: get("[0].data.service_last_project_id", responses),
+        userLastProjectId: get("[0].data.user_last_project_id", responses),
+        serviceLastTaskId: get("[0].data.service_last_task_id", responses),
+        userLastTaskId: get("[0].data.user_last_task_id", responses),
         roundTimeEntries: get("[0].data.round_time_entries", responses),
         projects: groupedProjectOptions(get("[1].data.projects", responses)),
         activities: get("[2].data", responses),
