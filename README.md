@@ -1,6 +1,8 @@
 # MOCO Browser Extension
 
-## Development
+## Technical Documentation
+
+### Development
 
 - run `yarn`
 - run `yarn start:chrome` or `yarn start:firefox` (`yarn start` is an alias for `yarn start:chrome`)
@@ -9,14 +11,14 @@
   - Firefox: visit `about:debugging` and load temporary Add-on from `build/firefox/manifest.json`
 - the browser should automatically pick up your changes but from time to time it may be useful to reload the extension
 
-## Production Build
+### Production Build
 
 - bump version in `package.json`
 - Update `CHANGELOG.md`
 - run `yarn build`
 - The Chrome and Firefox extensions are available as ZIP-files in `build/chrome` and `build/firefox` respectively
 
-## Install Local Builds
+### Install Local Builds
 
 ### Chrome
 
@@ -37,7 +39,7 @@ You can keep the extension settings between builds by providing a stable `APPLIC
 
 `APPLICATION_ID=my-custom-moco-extension@mycompany.com yarn build:firefox`
 
-## Remote Service Configuration
+### Remote Service Configuration
 
 Remote services are configured in `src/js/remoteServices.js`.
 
@@ -81,7 +83,7 @@ A remote service is configured as follows:
 | projectId    | `undefined` \| `string` \| `function` &mdash; The pre-selected project of the service matching the MOCO project identifier. If it is a function, it will receive `window.document`, the current `service` and an object with the URL `matches` as arguments, and must return the MOCO project identifier or `undefined`. |
 | position     | `Object` &mdash; CSS properties as object styles for position the bubble. Defaults to `{ right: calc(4rem + 5px)`                                                                                                                                                                                                        |
 
-## Adding a Custom Service
+### Adding a Custom Service
 
 1. Fork and clone this repository
 2. Add your service to `src/removeServices.js`, e.g. for self-hosted Jira copy the entry with the key `jira` and update the `urlPatterns`:
@@ -115,3 +117,14 @@ A remote service is configured as follows:
 
 3. Build the extension (see [Production Build](#production-build)).
 4. Install the extension locally (see [Install Local Builds](#install-local-builds)).
+
+## Specification
+
+### Preselected Project/Task
+
+The preselected project and task is determined in the following order:
+
+1. The last project/task that were booked on the card of the remote service
+2. The project set on the remote service and the projects default task
+3. The last project/task the user has used for time tracking
+4. The first project in the list

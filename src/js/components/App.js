@@ -50,8 +50,10 @@ class App extends Component {
       timer_started_at: PropTypes.string.isRequired,
       seconds: PropTypes.number.isRequired,
     }),
-    lastProjectId: PropTypes.number,
-    lastTaskId: PropTypes.number,
+    serviceLastProjectId: PropTypes.number,
+    userLastProjectId: PropTypes.number,
+    serviceLastTaskId: PropTypes.number,
+    userLastTaskId: PropTypes.number,
     fromDate: PropTypes.string,
     toDate: PropTypes.string,
     errorType: PropTypes.string,
@@ -68,21 +70,23 @@ class App extends Component {
   @observable formErrors = {}
 
   @computed get project() {
-    const { service, projects, lastProjectId } = this.props
+    const { service, projects, serviceLastProjectId, userLastProjectId } = this.props
 
     return (
       findProjectByValue(this.changeset.assignment_id)(projects) ||
-      findProjectByValue(Number(lastProjectId))(projects) ||
+      findProjectByValue(Number(serviceLastProjectId))(projects) ||
       findProjectByIdentifier(service?.projectId)(projects) ||
+      findProjectByValue(Number(userLastProjectId))(projects) ||
       head(projects.flatMap(get("options")))
     )
   }
 
   @computed get task() {
-    const { service, lastTaskId } = this.props
+    const { service, serviceLastTaskId, userLastTaskId } = this.props
     return (
-      findTask(this.changeset.task_id || service?.taskId || lastTaskId)(this.project) ||
-      defaultTask(this.project?.tasks)
+      findTask(this.changeset.task_id || serviceLastTaskId || service?.taskId || userLastTaskId)(
+        this.project,
+      ) || defaultTask(this.project?.tasks)
     )
   }
 
