@@ -1,7 +1,10 @@
 const projectRegex = /\[([\w-]+)\]/
 
-const projectIdentifierBySelector = (selector) => (document) =>
-  document.querySelector(selector)?.textContent?.trim()?.match(projectRegex)?.[1]
+const projectIdentifierBySelector = selector => document =>
+  document
+    .querySelector(selector)
+    ?.textContent?.trim()
+    ?.match(projectRegex)?.[1]
 
 export default {
   asana: {
@@ -11,7 +14,7 @@ export default {
       [/^:host:\/0\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
       [/^:host:\/0\/search\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
     ],
-    description: (document) =>
+    description: document =>
       document.querySelector(".ItemRow--highlighted textarea")?.textContent?.trim() ||
       document.querySelector(".ItemRow--focused textarea")?.textContent?.trim() ||
       document.querySelector(".SingleTaskPane textarea")?.textContent?.trim() ||
@@ -36,7 +39,7 @@ export default {
     host: "https://github.com",
     urlPatterns: [":host:/:org/:repo/pull/:id(/:tab)"],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
-    description: (document) => document.querySelector(".js-issue-title")?.textContent?.trim(),
+    description: document => document.querySelector(".js-issue-title")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".js-issue-title"),
     allowHostOverride: false,
   },
@@ -81,12 +84,12 @@ export default {
     name: "meistertask",
     host: "https://www.meistertask.com",
     urlPatterns: [":host:/app/task/:id/:slug"],
-    description: (document) => {
+    description: document => {
       const json = document.getElementById("mt-toggl-data")?.dataset?.togglJson || "{}"
       const data = JSON.parse(json)
       return data.taskName
     },
-    projectId: (document) => {
+    projectId: document => {
       const json = document.getElementById("mt-toggl-data")?.dataset?.togglJson || "{}"
       const data = JSON.parse(json)
       const match = data.taskName?.match(projectRegex) || data.projectName?.match(projectRegex)
@@ -101,7 +104,7 @@ export default {
     urlPatterns: [":host:/c/:id/:title"],
     description: (document, service, { title }) =>
       document.querySelector(".js-title-helper")?.textContent?.trim() || title,
-    projectId: (document) =>
+    projectId: document =>
       projectIdentifierBySelector(".js-title-helper")(document) ||
       projectIdentifierBySelector(".js-board-editing-target")(document),
     allowHostOverride: false,
@@ -111,7 +114,7 @@ export default {
     name: "youtrack",
     host: "https://:org.myjetbrains.com",
     urlPatterns: [":host:/youtrack/issue/:id"],
-    description: (document) => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
+    description: document => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
     projectId: projectIdentifierBySelector("yt-issue-body h1"),
     allowHostOverride: true,
   },
@@ -128,7 +131,7 @@ export default {
     queryParams: {
       id: ["t", "ot"],
     },
-    description: (document) => document.querySelector(".title-field-ghost")?.textContent?.trim(),
+    description: document => document.querySelector(".title-field-ghost")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".header-title__main"),
     allowHostOverride: false,
   },
@@ -137,7 +140,7 @@ export default {
     name: "wunderlist",
     host: "https://www.wunderlist.com",
     urlPatterns: [":host:/(webapp)#/tasks/:id(/*)"],
-    description: (document) =>
+    description: document =>
       document
         .querySelector(".taskItem.selected .taskItem-titleWrapper-title")
         ?.textContent?.trim(),
@@ -145,26 +148,14 @@ export default {
     allowHostOverride: false,
   },
 
-  "gitlab-mr": {
-    name: "gitlab",
-    host: "https://gitlab.com",
-    urlPatterns: [
-      ":host:/:org/:group/:projectId/-/merge_requests/:id",
-      ":host:/:org/:projectId/-/merge_requests/:id",
-    ],
-    description: (document, service, { id }) => {
-      const title = document.querySelector("h2.title")?.textContent?.trim()
-      return `#${id} ${title || ""}`.trim()
-    },
-    allowHostOverride: true,
-  },
-
-  "gitlab-issues": {
+  gitlab: {
     name: "gitlab",
     host: "https://gitlab.com",
     urlPatterns: [
       ":host:/:org/:group/:projectId/-/issues/:id",
       ":host:/:org/:projectId/-/issues/:id",
+      ":host:/:org/:group/:projectId/-/merge_requests/:id",
+      ":host:/:org/:projectId/-/merge_requests/:id",
     ],
     description: (document, service, { id }) => {
       const title = document.querySelector("h2.title")?.textContent?.trim()
