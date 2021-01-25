@@ -77,6 +77,12 @@ export default {
         document.querySelector(".ghx-selected .ghx-summary")?.textContent?.trim()
       return `#${id} ${title || ""}`
     },
+    projectId: (document, service, { projectId }) =>
+      projectIdentifierBySelector(
+        "[data-test-id='issue.views.issue-base.foundation.summary.heading']",
+      )(document) ||
+      projectIdentifierBySelector("[data-navheader] [data-item-title]")(document) ||
+      projectId,
     allowHostOverride: true,
   },
 
