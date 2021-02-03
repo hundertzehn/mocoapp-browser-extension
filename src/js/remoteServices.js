@@ -158,10 +158,10 @@ export default {
     name: "gitlab",
     host: "https://gitlab.com",
     urlPatterns: [
-      ":host:/:org/:group/:projectId/-/issues/:id",
-      ":host:/:org/:projectId/-/issues/:id",
-      ":host:/:org/:group/:projectId/-/merge_requests/:id",
-      ":host:/:org/:projectId/-/merge_requests/:id",
+      ":host:/:org/:group(/*)/:projectId/-/issues/:id",
+      ":host:/:org(/*)/:projectId/-/issues/:id",
+      ":host:/:org/:group(/*)/:projectId/-/merge_requests/:id",
+      ":host:/:org(/*)/:projectId/-/merge_requests/:id",
     ],
     description: (document, service, { id }) => {
       const title = document.querySelector("h2.title")?.textContent?.trim()
