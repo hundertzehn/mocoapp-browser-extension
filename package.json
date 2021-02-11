@@ -1,7 +1,7 @@
 {
   "name": "moco-browser-extensions",
   "description": "Browser plugin for MOCO",
-  "version": "1.6.1",
+  "version": "1.6.2",
   "license": "MIT",
   "scripts": {
     "start": "yarn start:chrome",
