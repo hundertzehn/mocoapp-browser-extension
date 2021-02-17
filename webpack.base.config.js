@@ -17,6 +17,7 @@ module.exports = (env) => {
     },
     output: {
       path: path.join(__dirname, `build/${env.browser}`),
+      publicPath: "",
       filename: `[name].${process.env.npm_package_version}.js`,
     },
     module: {
@@ -98,7 +99,7 @@ module.exports = (env) => {
   }
 
   if (env.NODE_ENV === "production") {
-    config.devtool = "none"
+    config.devtool = undefined
     config.plugins.push(
       new ZipPlugin({
         filename: `moco-bx-${env.browser}-v${process.env.npm_package_version}.zip`,
