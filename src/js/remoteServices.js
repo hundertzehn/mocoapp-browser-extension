@@ -12,7 +12,17 @@ export default {
       [/^:host:\/0\/search\/([^/]+)\/(\d+)/, ["domainUserId", "id"]],
     ],
     description: (document) =>
-      document.querySelector('[aria-label="Task Name"]')?.textContent?.trim(),
+      [
+        "Task Name",
+        "Aufgabenname",
+        "Nombre de la tarea",
+        "Nom de la tâche",
+        "Nome da tarefa",
+      ].reduce(
+        (description, value) =>
+          description ?? document.querySelector(`[aria-label="${value}"]`)?.textContent?.trim(),
+        null,
+      ),
     projectId: projectIdentifierBySelector(".TopbarPageHeaderStructure-titleRow h1"),
     allowHostOverride: false,
   },
