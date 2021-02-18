@@ -16,9 +16,26 @@ export default function TimerView({ timedActivity, onStopTimer }) {
         <br />
         <span className="moco-bx-single-line">{timedActivity.assignment_name}</span>
         <br />
+
         <span className="moco-bx-single-line">{timedActivity.task_name}</span>
       </p>
-      <h2>{timedActivity.description}</h2>
+      <h2>
+        {timedActivity.tag && (
+          <>
+            <span
+              style={{
+                backgroundColor: "#ccc",
+                color: "white",
+                padding: "2px 5px",
+                fontSize: "0.8em",
+              }}
+            >
+              {timedActivity.tag}
+            </span>{" "}
+          </>
+        )}
+        {timedActivity.description}
+      </h2>
       <Timer
         className="timer text-red"
         startedAt={parseISO(timedActivity.timer_started_at)}
@@ -38,6 +55,7 @@ TimerView.propTypes = {
     assignment_name: PropTypes.string.isRequired,
     task_name: PropTypes.string.isRequired,
     description: PropTypes.string,
+    tag: PropTypes.string,
     timer_started_at: PropTypes.string.isRequired,
     seconds: PropTypes.number.isRequired,
   }).isRequired,
