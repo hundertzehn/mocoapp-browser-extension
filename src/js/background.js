@@ -1,4 +1,3 @@
-import "@babel/polyfill"
 import ApiClient from "api/Client"
 import { isChrome, getCurrentTab, getSettings, isBrowserTab } from "utils/browser"
 import { BackgroundMessenger } from "utils/messaging"
