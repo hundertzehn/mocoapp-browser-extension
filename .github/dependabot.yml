@@ -1,0 +1,40 @@
+version: 2
+updates:
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: monthly
+    time: "06:00"
+    timezone: Europe/Zurich
+  open-pull-requests-limit: 99
+  ignore:
+  - dependency-name: "@babel/plugin-proposal-optional-chaining"
+    versions:
+    - 7.13.8
+  - dependency-name: webpack
+    versions:
+    - 5.24.2
+  - dependency-name: css-loader
+    versions:
+    - 5.1.0
+  - dependency-name: "@babel/plugin-proposal-decorators"
+    versions:
+    - 7.13.5
+  - dependency-name: "@babel/plugin-proposal-nullish-coalescing-operator"
+    versions:
+    - 7.13.8
+  - dependency-name: "@babel/plugin-proposal-class-properties"
+    versions:
+    - 7.13.0
+  - dependency-name: query-string
+    versions:
+    - 6.14.1
+  - dependency-name: "@babel/core"
+    versions:
+    - 7.13.8
+  - dependency-name: "@babel/preset-env"
+    versions:
+    - 7.13.8
+  - dependency-name: lodash
+    versions:
+    - 4.17.21
