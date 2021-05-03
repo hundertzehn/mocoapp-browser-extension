@@ -1,6 +1,6 @@
 import React, { createRef } from "react"
 import ReactDOM from "react-dom"
-import { Transition, animated, config } from "react-spring/renderprops"
+import { Transition, animated, config } from "react-spring"
 import Bubble from "./components/Bubble"
 import Popup from "components/Popup"
 import { createServiceFinder } from "utils/urlMatcher"
@@ -47,19 +47,17 @@ chrome.runtime.onConnect.addListener(function (port) {
         leave={{ opacity: "0" }}
         config={config.stiff}
       >
-        {(service) =>
+        {(props, service) =>
           service &&
           // eslint-disable-next-line react/display-name
-          ((props) => (
-            <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
-              <Bubble
-                key={service.url}
-                bookedSeconds={bookedSeconds}
-                settingTimeTrackingHHMM={settingTimeTrackingHHMM}
-                timedActivity={timedActivity}
-              />
-            </animated.div>
-          ))
+          <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
+            <Bubble
+              key={service.url}
+              bookedSeconds={bookedSeconds}
+              settingTimeTrackingHHMM={settingTimeTrackingHHMM}
+              timedActivity={timedActivity}
+            />
+          </animated.div>
         }
       </Transition>,
       document.getElementById("moco-bx-root"),

@@ -6,7 +6,7 @@ import Calendar from "components/Calendar"
 import TimerView from "components/App/TimerView"
 import { observable, computed } from "mobx"
 import { Observer, observer } from "mobx-react"
-import { Spring, animated, config } from "react-spring/renderprops"
+import { Transition, animated, config } from "react-spring"
 import {
   ERROR_UNKNOWN,
   ERROR_UNAUTHORIZED,
@@ -209,9 +209,16 @@ class App extends Component {
     }
 
     return (
-      <Spring native from={{ opacity: 0 }} to={{ opacity: 1 }} config={config.stiff}>
-        {(props) => (
-          <animated.div className="moco-bx-app-container" style={props}>
+      <Transition
+        native
+        items={timedActivity}
+        from={{ opacity: "0" }}
+        enter={{ opacity: "1" }}
+        leave={{ opacity: "0" }}
+        config={config.stiff}
+      >
+        {(styles, timedActivity) => (
+          <animated.div className="moco-bx-app-container" style={styles}>
             <Header subdomain={subdomain} />
             <Observer>
               {() =>
@@ -240,7 +247,7 @@ class App extends Component {
             </Observer>
           </animated.div>
         )}
-      </Spring>
+      </Transition>
     )
   }
 }
