@@ -1,6 +1,7 @@
 @import "variables";
 @import "form";
 @import "spinner";
+@import "animation";
 
 html {
   overflow: hidden;
@@ -41,6 +42,7 @@ html {
       .moco-bx-app-container {
         width: 324px;
         padding: 3rem 6rem;
+        animation: fadeIn ease-in-out 300ms;
 
         .moco-bx-logo__container {
           margin-bottom: 3rem;

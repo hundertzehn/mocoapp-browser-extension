@@ -1,6 +1,5 @@
 import React, { createRef } from "react"
 import ReactDOM from "react-dom"
-import { Transition, animated, config } from "react-spring"
 import Bubble from "./components/Bubble"
 import Popup from "components/Popup"
 import { createServiceFinder } from "utils/urlMatcher"
@@ -37,31 +36,20 @@ chrome.runtime.onConnect.addListener(function (port) {
       document.body.appendChild(domRoot)
       window.addEventListener("click", clickHandler, true)
     }
-
-    ReactDOM.render(
-      <Transition
-        native
-        items={service}
-        from={{ opacity: "0" }}
-        enter={{ opacity: "1" }}
-        leave={{ opacity: "0" }}
-        config={config.stiff}
-      >
-        {(props, service) =>
-          service &&
-          // eslint-disable-next-line react/display-name
-          <animated.div className="moco-bx-bubble" style={{ ...props, ...service.position }}>
-            <Bubble
-              key={service.url}
-              bookedSeconds={bookedSeconds}
-              settingTimeTrackingHHMM={settingTimeTrackingHHMM}
-              timedActivity={timedActivity}
-            />
-          </animated.div>
-        }
-      </Transition>,
-      document.getElementById("moco-bx-root"),
-    )
+    if (service) {
+      ReactDOM.render(
+        // eslint-disable-next-line react/display-name
+        <div className="moco-bx-bubble" style={{ ...service.position }}>
+          <Bubble
+            key={service.url}
+            bookedSeconds={bookedSeconds}
+            settingTimeTrackingHHMM={settingTimeTrackingHHMM}
+            timedActivity={timedActivity}
+          />
+        </div>,
+        document.getElementById("moco-bx-root"),
+      )
+    }
   }
 
   function openPopup(payload) {

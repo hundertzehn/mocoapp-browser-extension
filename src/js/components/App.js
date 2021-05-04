@@ -6,7 +6,6 @@ import Calendar from "components/Calendar"
 import TimerView from "components/App/TimerView"
 import { observable, computed } from "mobx"
 import { Observer, observer } from "mobx-react"
-import { Transition, animated, config } from "react-spring"
 import {
   ERROR_UNKNOWN,
   ERROR_UNAUTHORIZED,
@@ -209,45 +208,34 @@ class App extends Component {
     }
 
     return (
-      <Transition
-        native
-        items={timedActivity}
-        from={{ opacity: "0" }}
-        enter={{ opacity: "1" }}
-        leave={{ opacity: "0" }}
-        config={config.stiff}
-      >
-        {(styles, timedActivity) => (
-          <animated.div className="moco-bx-app-container" style={styles}>
-            <Header subdomain={subdomain} />
-            <Observer>
-              {() =>
-                timedActivity ? (
-                  <TimerView timedActivity={timedActivity} onStopTimer={this.handleStopTimer} />
-                ) : (
-                  <>
-                    <Calendar
-                      fromDate={parseISO(fromDate)}
-                      toDate={parseISO(toDate)}
-                      activities={activities}
-                      schedules={schedules}
-                      selectedDate={new Date(this.changesetWithDefaults.date)}
-                      onChange={this.handleSelectDate}
-                    />
-                    <Form
-                      changeset={this.changesetWithDefaults}
-                      projects={projects}
-                      errors={this.formErrors}
-                      onChange={this.handleChange}
-                      onSubmit={this.handleSubmit}
-                    />
-                  </>
-                )
-              }
-            </Observer>
-          </animated.div>
-        )}
-      </Transition>
+      <div className="moco-bx-app-container">
+        <Header subdomain={subdomain} />
+        <Observer>
+          {() =>
+            timedActivity ? (
+              <TimerView timedActivity={timedActivity} onStopTimer={this.handleStopTimer} />
+            ) : (
+              <>
+                <Calendar
+                  fromDate={parseISO(fromDate)}
+                  toDate={parseISO(toDate)}
+                  activities={activities}
+                  schedules={schedules}
+                  selectedDate={new Date(this.changesetWithDefaults.date)}
+                  onChange={this.handleSelectDate}
+                />
+                <Form
+                  changeset={this.changesetWithDefaults}
+                  projects={projects}
+                  errors={this.formErrors}
+                  onChange={this.handleChange}
+                  onSubmit={this.handleSubmit}
+                />
+              </>
+            )
+          }
+        </Observer>
+      </div>
     )
   }
 }
