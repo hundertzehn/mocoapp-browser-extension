@@ -25,7 +25,7 @@ export default {
       ),
     projectId: projectIdentifierBySelector(".TopbarPageHeaderStructure-titleRow h1"),
     allowHostOverride: false,
-    position: { right: "calc(2rem + 5px)", bottom: "180px" },
+    position: { right: "50%", transform: "translateX(50%)" },
   },
 
   clickup: {
