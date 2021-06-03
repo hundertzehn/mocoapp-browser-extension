@@ -38,7 +38,6 @@ chrome.runtime.onConnect.addListener(function (port) {
     }
     if (service) {
       ReactDOM.render(
-        // eslint-disable-next-line react/display-name
         <div className="moco-bx-bubble" style={{ ...service.position }}>
           <Bubble
             key={service.url}
@@ -49,6 +48,8 @@ chrome.runtime.onConnect.addListener(function (port) {
         </div>,
         document.getElementById("moco-bx-root"),
       )
+    } else {
+      ReactDOM.unmountComponentAtNode(document.getElementById("moco-bx-root"))
     }
   }
 
