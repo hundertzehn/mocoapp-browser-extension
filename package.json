@@ -64,7 +64,7 @@
     "node-sass": "^6.0.0",
     "prettier": "^2.2.1",
     "sass-loader": "^11.0.1",
-    "style-loader": "^2.0.0",
+    "style-loader": "^3.0.0",
     "svg-inline-loader": "^0.8.2",
     "uuid": "^8.3.0",
     "webpack": "^5.22.0",
