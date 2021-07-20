@@ -166,6 +166,29 @@ describe("utils", () => {
         expect(service.name).toEqual("gitlab")
         expect(service.projectId).toEqual("testproject")
       })
+
+      it("should match asana urls", () => {
+        let service
+        service = matcher("https://app.asana.com/0/inbox/123/675/890")
+        expect(service.id).toEqual("675")
+        expect(service.match.id).toEqual("675")
+        expect(service.name).toEqual("asana")
+
+        service = matcher("https://app.asana.com/0/123/675")
+        expect(service.id).toEqual("675")
+        expect(service.match.id).toEqual("675")
+        expect(service.name).toEqual("asana")
+
+        service = matcher("https://app.asana.com/0/123/675/f")
+        expect(service.id).toEqual("675")
+        expect(service.match.id).toEqual("675")
+        expect(service.name).toEqual("asana")
+
+        service = matcher("https://app.asana.com/0/search/123/675")
+        expect(service.id).toEqual("675")
+        expect(service.match.id).toEqual("675")
+        expect(service.name).toEqual("asana")
+      })
     })
 
     describe("createEnhancer", () => {
