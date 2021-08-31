@@ -77,8 +77,7 @@ export default {
     description: (document, service, { id }) => {
       const title =
         document
-          .querySelector('[aria-label="Edit Summary"]')
-          ?.parentNode?.querySelector("h1")
+          .querySelector('[data-test-id="issue.views.issue-base.foundation.summary.heading"]')
           ?.textContent?.trim() ||
         document.querySelector(".ghx-selected .ghx-summary")?.textContent?.trim()
       return `#${id} ${title || ""}`
