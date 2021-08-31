@@ -143,7 +143,7 @@ export default {
     queryParams: {
       id: ["t", "ot"],
     },
-    description: (document) => document.querySelector(".title-field-ghost")?.textContent?.trim(),
+    description: (document) => document.querySelector(".title__ghost")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".header-title__main"),
     allowHostOverride: false,
   },
