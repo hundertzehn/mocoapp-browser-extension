@@ -184,4 +184,14 @@ export default {
     },
     allowHostOverride: false,
   },
+
+  basecamp3: {
+    name: "basecamp3",
+    host: "https://3.basecamp.com",
+    urlPatterns: [":host:/:instanceId/buckets/:projectId/todos/:todoId"],
+    projectId: (document, service, { projectId }) => projectId,
+    taskId: (document, service, { todoId }) => todoId,
+    description: (document) => document.title,
+    allowHostOverride: true,
+  },
 }
