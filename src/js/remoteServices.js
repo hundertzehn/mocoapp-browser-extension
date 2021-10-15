@@ -188,9 +188,7 @@ export default {
   basecamp3: {
     name: "basecamp3",
     host: "https://3.basecamp.com",
-    urlPatterns: [":host:/:instanceId/buckets/:projectId/todos/:todoId"],
-    projectId: (document, service, { projectId }) => projectId,
-    taskId: (document, service, { todoId }) => todoId,
+    urlPatterns: [":host:/:instanceId/buckets/:projectId/todos/:id"],
     description: (document) => document.title,
     allowHostOverride: true,
   },
