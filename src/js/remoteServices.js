@@ -3,6 +3,8 @@ const projectRegex = /\[([\w-]+)\]/
 const projectIdentifierBySelector = (selector) => (document) =>
   document.querySelector(selector)?.textContent?.trim()?.match(projectRegex)?.[1]
 
+const byMeta = (name) => (document) => document.head.querySelector(`meta[name='${name}']`)?.content
+
 export default {
   asana: {
     name: "asana",
@@ -189,7 +191,7 @@ export default {
     name: "basecamp3",
     host: "https://3.basecamp.com",
     urlPatterns: [":host:/:instanceId/buckets/:projectId/todos/:id"],
-    description: (document) => document.title,
+    description: byMeta("current-recording-title"),
     allowHostOverride: true,
   },
 }
