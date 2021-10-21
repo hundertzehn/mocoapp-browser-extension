@@ -192,7 +192,7 @@ export default {
   basecamp3: {
     name: "basecamp3",
     host: "https://3.basecamp.com",
-    urlPatterns: [":host:/:instanceId/buckets/:projectId/todos/:id"],
+    urlPatterns: [":host:/:instanceId/buckets/:projectId/todos/:id(#:recordId)"],
     description: byMeta("current-recording-title"),
     projectId: projectIdentifierByMeta("current-bucket-name"),
     allowHostOverride: true,
