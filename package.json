@@ -58,7 +58,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "eslint-plugin-react": "^7.20.0",
     "file-loader": "^6.0.0",
-    "html-webpack-plugin": "^5.1.0",
+    "html-webpack-plugin": "^5.5.0",
     "jest": "^27.0.3",
     "mini-css-extract-plugin": "^2.2.0",
     "node-sass": "^6.0.0",
