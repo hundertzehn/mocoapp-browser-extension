@@ -190,7 +190,7 @@ export default {
   basecamp3: {
     name: "basecamp3",
     host: "https://3.basecamp.com",
-    urlPatterns: [":host:/:instanceId/buckets/:projectId/todos/:id"],
+    urlPatterns: [":host:/:instanceId/buckets/:projectId/:bucketType/:id"],
     description: (document) => document.head.querySelector(`meta[name='${name}']`)?.content,
     projectId: projectIdentifierBySelector('meta[name="current-bucket-name"]', "content"),
     allowHostOverride: true,
