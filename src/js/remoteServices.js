@@ -134,13 +134,8 @@ export default {
 
   wrike: {
     name: "wrike",
-    host: "https://www.wrike.com",
-    urlPatterns: [
-      ":host:/workspace.htm#path=mywork",
-      ":host:/workspace.htm#path=folder",
-      "https\\://app-eu.wrike.com/workspace.htm#path=mywork",
-      "https\\://app-eu.wrike.com/workspace.htm#path=folder",
-    ],
+    host: "https://:region.wrike.com",
+    urlPatterns: [":host:/workspace.htm#path=mywork", ":host:/workspace.htm#path=folder"],
     queryParams: {
       id: ["t", "ot"],
     },
