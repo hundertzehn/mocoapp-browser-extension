@@ -21,68 +21,68 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Region support for Wrike
 
-## [1.7.1] - 2020-12-06
+## [1.7.1] - 2021-12-06
 
 ### Changed
 
 - Improvments to basecamp3: (community supported, contribution by Florian Jahn: https://github.com/fjahn)
 
-## [1.7.0] - 2020-11-22
+## [1.7.0] - 2021-11-22
 
 ### Added
 
 - basecamp3 service: (community supported, contribution by Florian Jahn: https://github.com/fjahn)
 
-## [1.6.10] - 2020-08-31
+## [1.6.10] - 2021-08-31
 
 ### Fixed
 
 - Fixed description field for Wrike
 - Fixed description field for Jira
 
-## [1.6.9] - 2020-07-20
+## [1.6.9] - 2021-07-20
 
 ### Fixed
 
 - Fixed URL-patterns for Asana
 
-## [1.6.8] - 2020-06-03
+## [1.6.8] - 2021-06-03
 
 ### Fixed
 
 - Hide Bubble when a service is no longer available
 
-## [1.6.7] - 2020-05-25
+## [1.6.7] - 2021-05-25
 
 ### Changed
 
 - Display bubble in the bottom center in Asana
 
-## [1.6.6] - 2020-05-25
+## [1.6.6] - 2021-05-25
 
 ### Fixed
 
 - Increase bottom position of bubble in Asana so that it no longer overlaps with the controls
 
-## [1.6.5] - 2020-05-11
+## [1.6.5] - 2021-05-11
 
 ### Fixed
 
 - Set the top padding of the popup relative to the window height
 
-## [1.6.4] - 2020-02-18
+## [1.6.4] - 2021-02-18
 
 ### Added
 
 - Show tag of activity on timer view
 
-## [1.6.3] - 2020-02-17
+## [1.6.3] - 2021-02-17
 
 ### Added
 
 - Support different languages on Asana
 
-## [1.6.2] - 2020-02-11
+## [1.6.2] - 2021-02-11
 
 ### Fixed
 
