@@ -69,6 +69,7 @@ export default {
     urlPatterns: [
       ":host:/secure/RapidBoard.jspa",
       ":host:/browse/:id",
+      ":host:/browse/:id#comment-:commentId",
       ":host:/jira/software/projects/:projectId/boards/:board",
       ":host:/jira/software/projects/:projectId/boards/:board/backlog",
     ],
