@@ -143,6 +143,7 @@ export default {
     description: (document) => document.querySelector(".title__ghost")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".header-title__main"),
     allowHostOverride: false,
+    position: { left: "calc(2rem + 5px)" },
   },
 
   wunderlist: {
