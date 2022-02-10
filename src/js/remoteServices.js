@@ -72,6 +72,8 @@ export default {
       ":host:/browse/:id#comment-:commentId",
       ":host:/jira/software/projects/:projectId/boards/:board",
       ":host:/jira/software/projects/:projectId/boards/:board/backlog",
+      ":host:/jira/software/c/projects/:projectId/boards/:board",
+      ":host:/jira/software/c/projects/:projectId/boards/:board/backlog",
     ],
     queryParams: {
       id: "selectedIssue",
