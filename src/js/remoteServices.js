@@ -74,6 +74,7 @@ export default {
       ":host:/jira/software/projects/:projectId/boards/:board/backlog",
       ":host:/jira/software/c/projects/:projectId/boards/:board",
       ":host:/jira/software/c/projects/:projectId/boards/:board/backlog",
+      ":host:/jira/software/projects/:projectId/boards/:board/roadmap",
     ],
     queryParams: {
       id: "selectedIssue",
