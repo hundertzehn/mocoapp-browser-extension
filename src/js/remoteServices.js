@@ -127,7 +127,7 @@ export default {
   youtrack: {
     name: "youtrack",
     host: "https://:org.myjetbrains.com",
-    urlPatterns: [":host:/youtrack/issue/:id"],
+    urlPatterns: [":host:/youtrack/issue/:id", ":host:/issue/:id"],
     description: (document) => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
     projectId: projectIdentifierBySelector("yt-issue-body h1"),
     allowHostOverride: true,
