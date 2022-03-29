@@ -1,9 +1,5 @@
-const projectRegex = /\[([\w-]+)\]/
-
-const projectIdentifierBySelector =
-  (selector, attr = "textContent") =>
-  (document) =>
-    document.querySelector(selector)?.[attr]?.trim()?.match(projectRegex)?.[1]
+import { projectIdentifierBySelector, projectRegex } from "./utils"
+import remoteServicesCommunity from "./remoteServicesCommunity"
 
 export default {
   asana: {
@@ -68,8 +64,7 @@ export default {
     host: "https://:org.atlassian.net",
     urlPatterns: [
       ":host:/secure/RapidBoard.jspa",
-      ":host:/browse/:id",
-      ":host:/browse/:id#comment-:commentId",
+      ":host:/browse/:id(#comment-:commentId)",
       ":host:/jira/software/projects/:projectId/boards/:board",
       ":host:/jira/software/projects/:projectId/boards/:board/backlog",
       ":host:/jira/software/projects/:projectId/boards/:board/roadmap",
@@ -131,7 +126,7 @@ export default {
   youtrack: {
     name: "youtrack",
     host: "https://:org.myjetbrains.com",
-    urlPatterns: [":host:/youtrack/issue/:id"],
+    urlPatterns: [":host:/youtrack/issue/:id", ":host:/issue/:id"],
     description: (document) => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
     projectId: projectIdentifierBySelector("yt-issue-body h1"),
     allowHostOverride: true,
@@ -162,39 +157,5 @@ export default {
     allowHostOverride: false,
   },
 
-  gitlab: {
-    name: "gitlab",
-    host: "https://gitlab.com",
-    urlPatterns: [
-      ":host:/:org/:group(/*)/:projectId/-/issues/:id(#note_:noteId)",
-      ":host:/:org(/*)/:projectId/-/issues/:id(#note_:noteId)",
-      ":host:/:org/:group(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
-      ":host:/:org(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
-    ],
-    description: (document, service, { id, noteId }) => {
-      const title = document.querySelector('.detail-page-description .title')?.textContent?.trim()
-      return `#${id} ${title || ""}`.trim()
-    },
-    allowHostOverride: true,
-  },
-
-  monday: {
-    name: "monday",
-    host: "https://:org.monday.com",
-    urlPatterns: [":host:/boards/:board/pulses/:id"],
-    description: (document, service, { id }) => {
-      return document.querySelector(".pulse_title")?.textContent?.trim()
-    },
-    allowHostOverride: false,
-  },
-
-  basecamp3: {
-    name: "basecamp3",
-    host: "https://3.basecamp.com",
-    urlPatterns: [":host:/:instanceId/buckets/:projectId/:bucketType/:id"],
-    description: (document) =>
-      document.head.querySelector("meta[name='current-recording-title']")?.content,
-    projectId: projectIdentifierBySelector('meta[name="current-bucket-name"]', "content"),
-    allowHostOverride: true,
-  },
+  ...remoteServicesCommunity,
 }

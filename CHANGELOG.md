@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.7] - 2022-03-29
+
+### Fixed
+
+- Gitlab title selector and tracking time on comment URLs (contribution by https://github.com/infabo)
+
+### Added
+
+- Add additional url pattern for Youtrack (":host:/issue/:id")
+
+### Changed
+
+- Community supported services extracted to own module `remoteServicesCommunity.js`
+
 ## [1.7.6] - 2022-03-21
 
 ### Added
@@ -136,7 +150,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add support for Monday
+- Add support for Monday: (community supported, contribution by https://github.com/markusNahketing)
 
 ## [1.5.0] - 2020-06-15
 
@@ -148,7 +162,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add support for Gitlab merge requests and issues
+- Add support for Gitlab merge requests and issues: (community supported, contribution by Adrian Görisch: https://github.com/adrian-goe)
 
 ## [1.3.4] - 2020-01-09
 

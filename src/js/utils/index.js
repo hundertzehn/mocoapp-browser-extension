@@ -119,3 +119,10 @@ export const formatDuration = (
     return (durationInSeconds / 3600).toFixed(2)
   }
 }
+
+export const projectRegex = /\[([\w-]+)\]/
+
+export const projectIdentifierBySelector =
+  (selector, attr = "textContent") =>
+  (document) =>
+    document.querySelector(selector)?.[attr]?.trim()?.match(projectRegex)?.[1]
