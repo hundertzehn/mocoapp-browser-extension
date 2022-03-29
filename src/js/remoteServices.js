@@ -172,7 +172,7 @@ export default {
       ":host:/:org(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
     ],
     description: (document, service, { id, noteId }) => {
-      const title = document.querySelector("h2.title")?.textContent?.trim()
+      const title = document.querySelector('.detail-page-description .title')?.textContent?.trim()
       return `#${id} ${title || ""}`.trim()
     },
     allowHostOverride: true,
