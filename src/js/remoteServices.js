@@ -64,8 +64,7 @@ export default {
     host: "https://:org.atlassian.net",
     urlPatterns: [
       ":host:/secure/RapidBoard.jspa",
-      ":host:/browse/:id",
-      ":host:/browse/:id#comment-:commentId",
+      ":host:/browse/:id(#comment-:commentId)",
       ":host:/jira/software/projects/:projectId/boards/:board",
       ":host:/jira/software/projects/:projectId/boards/:board/backlog",
       ":host:/jira/software/projects/:projectId/boards/:board/roadmap",
