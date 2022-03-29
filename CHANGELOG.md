@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.7.7] - 2022-03-29
 
+### Fixed
+
+- Gitlab title selector and tracking time on comment URLs (contribution by https://github.com/infabo)
+
 ### Added
 
 - Add additional url pattern for Youtrack (":host:/issue/:id")
