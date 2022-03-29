@@ -136,7 +136,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add support for Monday
+- Add support for Monday: (community supported, contribution by https://github.com/markusNahketing)
 
 ## [1.5.0] - 2020-06-15
 
@@ -148,7 +148,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Add support for Gitlab merge requests and issues
+- Add support for Gitlab merge requests and issues: (community supported, contribution by Adrian Görisch: https://github.com/adrian-goe)
 
 ## [1.3.4] - 2020-01-09
 
