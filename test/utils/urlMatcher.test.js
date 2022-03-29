@@ -119,6 +119,17 @@ describe("utils", () => {
         expect(service.projectId).toEqual("testproject")
       })
 
+      it("should match gitlab-mergerequest url with note anchor", () => {
+        const service = matcher(
+            "https://gitlab.com/testorganisatzion/testproject/-/merge_requests/1#note_85524",
+        )
+        expect(service.id).toEqual("1")
+        expect(service.match.id).toEqual("1")
+        expect(service.name).toEqual("gitlab")
+        expect(service.projectId).toEqual("testproject")
+        expect(service.noteId).toEqual("85524")
+      })
+
       it("should match gitlab-mergerequest url with group", () => {
         const service = matcher(
           "https://gitlab.com/testorganisatzion/test-group/testproject/-/merge_requests/1",
@@ -147,6 +158,15 @@ describe("utils", () => {
         expect(service.projectId).toEqual("testproject")
       })
 
+      it("should match gitlab-issue url with note anchor", () => {
+        const service = matcher("https://gitlab.com/testorganisatzion/testproject/-/issues/1#note_85524")
+        expect(service.id).toEqual("1")
+        expect(service.match.id).toEqual("1")
+        expect(service.name).toEqual("gitlab")
+        expect(service.projectId).toEqual("testproject")
+        expect(service.noteId).toEqual("85524")
+      })
+
       it("should match gitlab-issue url with group", () => {
         const service = matcher(
           "https://gitlab.com/testorganisatzion/test-group/testproject/-/issues/1",
@@ -165,6 +185,17 @@ describe("utils", () => {
         expect(service.match.id).toEqual("1")
         expect(service.name).toEqual("gitlab")
         expect(service.projectId).toEqual("testproject")
+      })
+
+      it("should match gitlab-issue url with group and folder and note", () => {
+        const service = matcher(
+            "https://gitlab.com/testorganisatzion/test-group/folder/fodldertwo/folderthree/testproject/-/issues/1#note_87285",
+        )
+        expect(service.id).toEqual("1")
+        expect(service.match.id).toEqual("1")
+        expect(service.name).toEqual("gitlab")
+        expect(service.projectId).toEqual("testproject")
+        expect(service.noteId).toEqual("87285")
       })
 
       it("should match asana urls", () => {

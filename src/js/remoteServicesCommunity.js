@@ -5,12 +5,12 @@ export default {
     name: "gitlab",
     host: "https://gitlab.com",
     urlPatterns: [
-      ":host:/:org/:group(/*)/:projectId/-/issues/:id",
-      ":host:/:org(/*)/:projectId/-/issues/:id",
-      ":host:/:org/:group(/*)/:projectId/-/merge_requests/:id",
-      ":host:/:org(/*)/:projectId/-/merge_requests/:id",
+      ":host:/:org/:group(/*)/:projectId/-/issues/:id(#note_:noteId)",
+      ":host:/:org(/*)/:projectId/-/issues/:id(#note_:noteId)",
+      ":host:/:org/:group(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
+      ":host:/:org(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
     ],
-    description: (document, service, { id }) => {
+    description: (document, service, { id, noteId }) => {
       const title = document.querySelector("h2.title")?.textContent?.trim()
       return `#${id} ${title || ""}`.trim()
     },
