@@ -62,7 +62,7 @@
     "jest": "^27.0.3",
     "mini-css-extract-plugin": "^2.2.0",
     "node-sass": "^7.0.1",
-    "prettier": "^2.2.1",
+    "prettier": "^2.6.1",
     "sass-loader": "^12.1.0",
     "style-loader": "^3.2.1",
     "svg-inline-loader": "^0.8.2",
