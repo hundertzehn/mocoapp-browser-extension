@@ -12,19 +12,6 @@ const Popup = forwardRef((props, ref) => {
     }
   }
 
-  const handleMessage = (event) => {
-    if (iFrameRef.current && event.data?.__mocoBX?.iFrameHeight > 300) {
-      iFrameRef.current.style.height = `${event.data.__mocoBX.iFrameHeight}px`
-    }
-  }
-
-  useEffect(() => {
-    window.addEventListener("message", handleMessage)
-    return () => {
-      window.removeEventListener("message", handleMessage)
-    }
-  }, [])
-
   const serializedProps = serializeProps([
     "loading",
     "service",
