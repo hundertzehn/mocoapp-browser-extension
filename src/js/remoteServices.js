@@ -135,9 +135,13 @@ export default {
   wrike: {
     name: "wrike",
     host: "https://:region.wrike.com",
-    urlPatterns: [":host:/workspace.htm#path=mywork", ":host:/workspace.htm#path=folder"],
+    urlPatterns: [
+      ":host:/workspace.htm#folder*",
+      ":host:/workspace.htm#created-by-me",
+      ":host:/workspace.htm#starred-tasks",
+    ],
     queryParams: {
-      id: ["t", "ot"],
+      id: "sidePanelItemId",
     },
     description: (document) => document.querySelector(".title__ghost")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".header-title__main"),

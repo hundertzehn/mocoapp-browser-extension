@@ -87,7 +87,7 @@ describe("utils", () => {
 
       it("matches query string in the hash", () => {
         const service = matcher(
-          "https://www.wrike.com/workspace.htm?acc=2771711#path=folder&id=342769537&p=342762920&a=2771711&c=board&ot=342769562&so=10&bso=10&sd=0&st=space-342762920",
+          "https://www.wrike.com/workspace.htm?acc=5324893#folder/928360291/list?filters=status%3Dactive&sidePanelItemId=342769562&sortOrder=10&spaceId=836073701&viewId=94334135",
         )
         expect(service.key).toEqual("wrike")
         expect(service.name).toEqual("wrike")
@@ -96,15 +96,23 @@ describe("utils", () => {
       })
 
       it("matches query parameter with different names", () => {
+        const _remoteServices = {
+          ...remoteServices,
+          wrike: {
+            ...remoteServices.wrike,
+            queryParams: { id: ["sidePanelItemId", "overlayEntityId"] },
+          },
+        }
+        matcher = createMatcher(_remoteServices, {})
         expect(
           matcher(
-            "https://www.wrike.com/workspace.htm?acc=2771711#path=mywork&id=342769537&p=342762920&a=2771711&c=board&ot=1234&so=10&bso=10&sd=0&st=space-342762920",
+            "https://www.wrike.com/workspace.htm?acc=5324893#folder/928360291/list?filters=status%3Dactive&sidePanelItemId=1234&sortOrder=10&spaceId=836073701&viewId=94334135",
           ).id,
         ).toEqual("1234")
 
         expect(
           matcher(
-            "https://www.wrike.com/workspace.htm?acc=2771711#path=folder&id=342769537&p=342762920&a=2771711&c=board&t=1234&so=10&bso=10&sd=0&st=space-342762920",
+            "https://www.wrike.com/workspace.htm?acc=5324893#folder/928360291/list?filters=status%3Dactive&overlayEntityId=1234&sortOrder=10&spaceId=836073701&viewId=94334135",
           ).id,
         ).toEqual("1234")
       })
@@ -121,7 +129,7 @@ describe("utils", () => {
 
       it("should match gitlab-mergerequest url with note anchor", () => {
         const service = matcher(
-            "https://gitlab.com/testorganisatzion/testproject/-/merge_requests/1#note_85524",
+          "https://gitlab.com/testorganisatzion/testproject/-/merge_requests/1#note_85524",
         )
         expect(service.id).toEqual("1")
         expect(service.match.id).toEqual("1")
@@ -159,7 +167,9 @@ describe("utils", () => {
       })
 
       it("should match gitlab-issue url with note anchor", () => {
-        const service = matcher("https://gitlab.com/testorganisatzion/testproject/-/issues/1#note_85524")
+        const service = matcher(
+          "https://gitlab.com/testorganisatzion/testproject/-/issues/1#note_85524",
+        )
         expect(service.id).toEqual("1")
         expect(service.match.id).toEqual("1")
         expect(service.name).toEqual("gitlab")
@@ -189,7 +199,7 @@ describe("utils", () => {
 
       it("should match gitlab-issue url with group and folder and note", () => {
         const service = matcher(
-            "https://gitlab.com/testorganisatzion/test-group/folder/fodldertwo/folderthree/testproject/-/issues/1#note_87285",
+          "https://gitlab.com/testorganisatzion/test-group/folder/fodldertwo/folderthree/testproject/-/issues/1#note_87285",
         )
         expect(service.id).toEqual("1")
         expect(service.match.id).toEqual("1")
