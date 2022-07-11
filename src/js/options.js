@@ -1,8 +1,9 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom/client"
 import Options from "./components/Options"
 import "../css/options.scss"
 
 const domContainer = document.querySelector("#moco-bx-root")
+const root = createRoot(domContainer)
 
-ReactDOM.render(<Options />, domContainer)
+root.render(<Options />)

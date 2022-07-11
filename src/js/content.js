@@ -1,5 +1,5 @@
 import React, { createRef } from "react"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom/client"
 import Bubble from "./components/Bubble"
 import Popup from "components/Popup"
 import { createServiceFinder } from "utils/urlMatcher"
@@ -9,6 +9,8 @@ import "../css/content.scss"
 import { getSettings } from "./utils/browser"
 
 const popupRef = createRef()
+
+let bubbleRoot, popupRoot
 
 let findService
 getSettings().then((settings) => {
@@ -36,8 +38,14 @@ chrome.runtime.onConnect.addListener(function (port) {
       document.body.appendChild(domRoot)
       window.addEventListener("click", clickHandler, true)
     }
+
+    const container = document.getElementById("moco-bx-root")
+    if (!bubbleRoot) {
+      bubbleRoot = createRoot(container)
+    }
+
     if (service) {
-      ReactDOM.render(
+      bubbleRoot.render(
         <div className="moco-bx-bubble" style={{ ...service.position }}>
           <Bubble
             key={service.url}
@@ -46,10 +54,9 @@ chrome.runtime.onConnect.addListener(function (port) {
             timedActivity={timedActivity}
           />
         </div>,
-        document.getElementById("moco-bx-root"),
       )
     } else {
-      ReactDOM.unmountComponentAtNode(document.getElementById("moco-bx-root"))
+      bubbleRoot.render(null)
     }
   }
 
@@ -60,23 +67,23 @@ chrome.runtime.onConnect.addListener(function (port) {
       document.body.appendChild(domRoot)
     }
 
-    ReactDOM.render(
-      <Popup ref={popupRef} {...payload} onRequestClose={closePopup} />,
-      document.getElementById("moco-bx-popup-root"),
-    )
+    const container = document.getElementById("moco-bx-popup-root")
+    if (!popupRoot) {
+      popupRoot = createRoot(container)
+    }
+    popupRoot.render(<Popup ref={popupRef} {...payload} onRequestClose={closePopup} />)
   }
 
   function closePopup() {
-    const domRoot = document.getElementById("moco-bx-popup-root")
-
-    if (domRoot) {
-      ReactDOM.unmountComponentAtNode(domRoot)
-      domRoot.remove()
+    if (popupRoot) {
+      popupRoot.render(null)
     }
   }
 
   messenger.on("requestService", () => {
+    console.log("**********")
     const service = findService(window.location.href)
+    console.log("service", service)
     messenger.postMessage({
       type: "newService",
       payload: { isOpen: !!popupRef.current, service },

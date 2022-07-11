@@ -1,5 +1,5 @@
 import React from "react"
-import ReactDOM from "react-dom"
+import { createRoot } from "react-dom/client"
 import App from "./components/App"
 import queryString from "query-string"
 import { parseProps } from "utils"
@@ -23,4 +23,7 @@ const parsedProps = parseProps([
   "errorMessage",
 ])(queryString.parse(location.search))
 
-ReactDOM.render(<App {...parsedProps} />, document.querySelector("#moco-bx-root"))
+const container = document.getElementById("moco-bx-root")
+const root = createRoot(container)
+
+root.render(<App {...parsedProps} />)
