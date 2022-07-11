@@ -81,9 +81,7 @@ chrome.runtime.onConnect.addListener(function (port) {
   }
 
   messenger.on("requestService", () => {
-    console.log("**********")
     const service = findService(window.location.href)
-    console.log("service", service)
     messenger.postMessage({
       type: "newService",
       payload: { isOpen: !!popupRef.current, service },
