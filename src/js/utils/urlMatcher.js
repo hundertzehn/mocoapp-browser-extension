@@ -7,12 +7,13 @@ function parseUrl(url) {
   const urlObject = new URL(url)
   const { origin, pathname, search } = urlObject
   let { hash } = urlObject
+  const hashQueryString = hash.substring(hash.indexOf("?"))
   const query = {
     ...queryString.parse(search),
-    ...queryString.parse(hash),
+    ...queryString.parse(hashQueryString),
   }
   if (hash) {
-    hash = hash.match(/#[^&]+/)[0]
+    hash = hash.match(/#[^?]+/)[0]
   }
   return { origin, pathname, hash, query }
 }
