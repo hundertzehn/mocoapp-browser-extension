@@ -1,12 +1,8 @@
 import axios from "axios"
-import { formatDate, useLocalMoco } from "utils"
+import { formatDate, mocoHost, mocoProtocol } from "utils"
 
 const baseURL = (subdomain) => {
-  if (useLocalMoco()) {
-    return `http://${encodeURIComponent(subdomain)}.mocoapp.localhost:3000/api/browser_extensions`
-  } else {
-    return `https://${encodeURIComponent(subdomain)}.mocoapp.com/api/browser_extensions`
-  }
+  return `${mocoProtocol()}://${encodeURIComponent(subdomain)}.${mocoHost()}/api/browser_extensions`
 }
 
 export default class Client {
