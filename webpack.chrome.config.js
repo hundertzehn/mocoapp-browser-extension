@@ -20,7 +20,9 @@ module.exports = (env) => {
                 ...manifest,
                 permissions: compact([
                   ...manifest.permissions,
-                  env.NODE_ENV === "development" ? "http://*.mocoapp.localhost/*" : null,
+                  env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO
+                    ? "http://*.mocoapp.localhost/*"
+                    : null,
                 ]),
                 options_ui: {
                   ...manifest.options_ui,

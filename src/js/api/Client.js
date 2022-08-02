@@ -2,10 +2,10 @@ import axios from "axios"
 import { formatDate } from "utils"
 
 const baseURL = (subdomain) => {
-  if (process.env.NODE_ENV === "production") {
-    return `https://${encodeURIComponent(subdomain)}.mocoapp.com/api/browser_extensions`
-  } else {
+  if (process.env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO) {
     return `http://${encodeURIComponent(subdomain)}.mocoapp.localhost:3000/api/browser_extensions`
+  } else {
+    return `https://${encodeURIComponent(subdomain)}.mocoapp.com/api/browser_extensions`
   }
 }
 

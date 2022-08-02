@@ -88,6 +88,11 @@ class Options extends Component {
   }
 
   render() {
+    const host =
+      process.env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO
+        ? ".mocoapp.localhost:3000"
+        : ".mocoapp.com"
+
     return (
       <div className="moco-bx-options">
         <h2 style={{ textAlign: "center" }}>Einstellungen</h2>
@@ -103,7 +108,7 @@ class Options extends Component {
               onKeyDown={this.handleInputKeyDown}
               onChange={this.handleChange}
             />
-            <span className="input-group-addon input-group-addon--right">.mocoapp.com</span>
+            <span className="input-group-addon input-group-addon--right">{host}</span>
           </div>
         </div>
         <div className="form-group">
