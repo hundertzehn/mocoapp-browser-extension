@@ -1,12 +1,12 @@
 import React from "react"
 import PropTypes from "prop-types"
 import logoUrl from "images/moco-159x159.png"
+import { useLocalMoco } from "utils"
 
 const Header = ({ subdomain }) => {
-  const target =
-    process.env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO
-      ? `http://${subdomain}.mocoapp.localhost:3000/activities`
-      : `https://${subdomain}.mocoapp.com/activities`
+  const target = useLocalMoco()
+    ? `http://${subdomain}.mocoapp.localhost:3000/activities`
+    : `https://${subdomain}.mocoapp.com/activities`
 
   return (
     <div className="moco-bx-logo__container">

@@ -126,3 +126,6 @@ export const projectIdentifierBySelector =
   (selector, attr = "textContent") =>
   (document) =>
     document.querySelector(selector)?.[attr]?.trim()?.match(projectRegex)?.[1]
+
+export const useLocalMoco = () =>
+  process.env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO

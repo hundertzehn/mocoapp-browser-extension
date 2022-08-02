@@ -1,8 +1,8 @@
 import axios from "axios"
-import { formatDate } from "utils"
+import { formatDate, useLocalMoco } from "utils"
 
 const baseURL = (subdomain) => {
-  if (process.env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO) {
+  if (useLocalMoco()) {
     return `http://${encodeURIComponent(subdomain)}.mocoapp.localhost:3000/api/browser_extensions`
   } else {
     return `https://${encodeURIComponent(subdomain)}.mocoapp.com/api/browser_extensions`

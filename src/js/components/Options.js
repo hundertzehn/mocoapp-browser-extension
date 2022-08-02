@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
+import { useLocalMoco } from "utils"
 import { isChrome, getSettings, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
 import { pipe, toPairs, fromPairs, map } from "lodash/fp"
@@ -88,10 +89,7 @@ class Options extends Component {
   }
 
   render() {
-    const host =
-      process.env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO
-        ? ".mocoapp.localhost:3000"
-        : ".mocoapp.com"
+    const host = useLocalMoco() ? ".mocoapp.localhost:3000" : ".mocoapp.com"
 
     return (
       <div className="moco-bx-options">
