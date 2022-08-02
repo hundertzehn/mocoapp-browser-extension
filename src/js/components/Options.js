@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
+import { mocoHost } from "utils"
 import { isChrome, getSettings, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
 import { pipe, toPairs, fromPairs, map } from "lodash/fp"
@@ -103,7 +104,7 @@ class Options extends Component {
               onKeyDown={this.handleInputKeyDown}
               onChange={this.handleChange}
             />
-            <span className="input-group-addon input-group-addon--right">.mocoapp.com</span>
+            <span className="input-group-addon input-group-addon--right">.{mocoHost()}</span>
           </div>
         </div>
         <div className="form-group">

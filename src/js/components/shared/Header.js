@@ -1,11 +1,12 @@
 import React from "react"
 import PropTypes from "prop-types"
 import logoUrl from "images/moco-159x159.png"
+import { mocoHost, mocoProtocol } from "utils"
 
 const Header = ({ subdomain }) => (
   <div className="moco-bx-logo__container">
     <a
-      href={`https://${subdomain}.mocoapp.com/activities`}
+      href={`${mocoProtocol()}://${encodeURIComponent(subdomain)}.${mocoHost()}/activities`}
       target="_blank"
       rel="noopener noreferrer"
     >

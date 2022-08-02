@@ -67,6 +67,7 @@ module.exports = (env) => {
       }),
       new webpack.DefinePlugin({
         "process.env.NODE_ENV": JSON.stringify(env.NODE_ENV),
+        "process.env.USE_LOCAL_MOCO": process.env.USE_LOCAL_MOCO === "true",
       }),
       new MiniCssExtractPlugin({
         filename: "[name].css",

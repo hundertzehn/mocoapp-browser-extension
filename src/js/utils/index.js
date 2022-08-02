@@ -126,3 +126,11 @@ export const projectIdentifierBySelector =
   (selector, attr = "textContent") =>
   (document) =>
     document.querySelector(selector)?.[attr]?.trim()?.match(projectRegex)?.[1]
+
+export const mocoHost = () =>
+  process.env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO
+    ? "mocoapp.localhost:3000"
+    : "mocoapp.com"
+
+export const mocoProtocol = () =>
+  process.env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO ? "http" : "https"
