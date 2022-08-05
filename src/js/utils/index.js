@@ -120,7 +120,7 @@ export const formatDuration = (
   }
 }
 
-export const projectRegex = /\[([\w-]+)\]/
+export const projectRegex = /\[([\w/-]+)\]/
 
 export const projectIdentifierBySelector =
   (selector, attr = "textContent") =>

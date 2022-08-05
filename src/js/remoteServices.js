@@ -125,10 +125,19 @@ export default {
 
   youtrack: {
     name: "youtrack",
-    host: "https://:org.myjetbrains.com",
-    urlPatterns: [":host:/youtrack/issue/:id", ":host:/issue/:id"],
-    description: (document) => document.querySelector("yt-issue-body h1")?.textContent?.trim(),
-    projectId: projectIdentifierBySelector("yt-issue-body h1"),
+    host: "https://:org.youtrack.cloud",
+    urlPatterns: [":host:/issue/:id(/*)", ":host:/issues", ":host:/search/:filter"],
+    queryParams: {
+      id: "preview",
+    },
+    description: (document) =>
+      document.querySelector('h1[data-test="ticket-summary"]')?.textContent?.trim(),
+    projectId: (document) =>
+      projectIdentifierBySelector("article aside div:first-child span")(document) ||
+      projectIdentifierBySelector(
+        "table[data-test=fields-compact] tr:first-child td:first-child button",
+      )(document) ||
+      projectIdentifierBySelector("h1[data-test=ticket-summary]")(document),
     allowHostOverride: true,
   },
 
