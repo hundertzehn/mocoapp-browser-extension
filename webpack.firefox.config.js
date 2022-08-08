@@ -11,7 +11,8 @@ module.exports = (env) => {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/manifest.json",
+          from: "src/manifest.firefox.json",
+          to: "manifest.json",
           transform: function (content, _path) {
             const manifest = JSON.parse(
               content.toString().replace(/\[version\]/g, process.env.npm_package_version),
@@ -20,15 +21,11 @@ module.exports = (env) => {
               JSON.stringify({
                 ...manifest,
                 permissions: compact([
-                  ...manifest.host_permissions,
+                  ...manifest.permissions,
                   env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO === "true"
                     ? "http://*.mocoapp.localhost/*"
                     : null,
                 ]),
-                options_ui: {
-                  ...manifest.options_ui,
-                  browser_style: true,
-                },
                 browser_specific_settings: {
                   gecko: {
                     id: process.env.APPLICATION_ID || `{${uuidv4()}}`,

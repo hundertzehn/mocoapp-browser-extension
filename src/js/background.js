@@ -140,6 +140,8 @@ chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
   }
 })
 
+// Manifest V3 uses chrome.action, v2 uses chrome.browserAction
+chrome.action ??= chrome.browserAction
 chrome.action.onClicked.addListener((tab) => {
   if (!isBrowserTab(tab)) {
     messenger.postMessage(tab, { type: "requestService" })

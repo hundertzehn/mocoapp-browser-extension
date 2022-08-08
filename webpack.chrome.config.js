@@ -10,7 +10,8 @@ module.exports = (env) => {
     new CopyWebpackPlugin({
       patterns: [
         {
-          from: "src/manifest.json",
+          from: "src/manifest.chrome.json",
+          to: "manifest.json",
           transform: function (content, _path) {
             const manifest = JSON.parse(
               content.toString().replace(/\[version\]/g, process.env.npm_package_version),
