@@ -11,7 +11,7 @@ const Bubble = ({ bookedSeconds, timedActivity, settingTimeTrackingHHMM }) => {
 
   return (
     <div className="moco-bx-bubble-inner">
-      <img className="moco-bx-logo" src={chrome.extension.getURL(logo)} />
+      <img className="moco-bx-logo" src={chrome.runtime.getURL(logo)} />
       {!timedActivity && bookedSeconds > 0 && (
         <span className="moco-bx-booked-hours">
           {formatDuration(bookedSeconds, { settingTimeTrackingHHMM, showSeconds: false })}

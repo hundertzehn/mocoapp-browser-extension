@@ -9,7 +9,7 @@ const InvalidConfigurationError = () => (
       ein.
     </p>
     <img
-      src={chrome.extension.getURL(settingsUrl)}
+      src={chrome.runtime.getURL(settingsUrl)}
       alt="Browser extension configuration settings"
       style={{ cursor: "pointer", width: "185px", height: "195px" }}
       onClick={() => chrome.runtime.sendMessage({ type: "openOptions" })}

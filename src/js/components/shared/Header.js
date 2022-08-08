@@ -10,7 +10,7 @@ const Header = ({ subdomain }) => (
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img className="moco-bx-logo" src={chrome.extension.getURL(logoUrl)} />
+      <img className="moco-bx-logo" src={chrome.runtime.getURL(logoUrl)} />
     </a>
   </div>
 )
