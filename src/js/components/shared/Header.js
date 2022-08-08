@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import logoUrl from "images/moco-159x159.png"
-import { mocoHost, mocoProtocol } from "utils"
+import { mocoHost, mocoProtocol, globalBrowserObject } from "utils"
 
 const Header = ({ subdomain }) => (
   <div className="moco-bx-logo__container">
@@ -10,7 +10,7 @@ const Header = ({ subdomain }) => (
       target="_blank"
       rel="noopener noreferrer"
     >
-      <img className="moco-bx-logo" src={chrome.runtime.getURL(logoUrl)} />
+      <img className="moco-bx-logo" src={globalBrowserObject().runtime.getURL(logoUrl)} />
     </a>
   </div>
 )

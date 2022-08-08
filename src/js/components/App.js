@@ -16,6 +16,7 @@ import {
   findTask,
   defaultTask,
   formatDate,
+  globalBrowserObject,
 } from "utils"
 import { parseISO } from "date-fns"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
@@ -115,12 +116,12 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
-    chrome.runtime.onMessage.addListener(this.handleSetFormErrors)
+    globalBrowserObject().runtime.onMessage.addListener(this.handleSetFormErrors)
   }
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown)
-    chrome.runtime.onMessage.removeListener(this.handleSetFormErrors)
+    globalBrowserObject().runtime.onMessage.removeListener(this.handleSetFormErrors)
   }
 
   handleChange = (event) => {
@@ -144,7 +145,7 @@ class App extends Component {
   handleStopTimer = (timedActivity) => {
     const { service } = this.props
 
-    chrome.runtime.sendMessage({
+    globalBrowserObject().runtime.sendMessage({
       type: "stopTimer",
       payload: { timedActivity, service },
     })
@@ -154,7 +155,7 @@ class App extends Component {
     event.preventDefault()
     const { service } = this.props
 
-    chrome.runtime.sendMessage({
+    globalBrowserObject().runtime.sendMessage({
       type: "createActivity",
       payload: {
         activity: extractAndSetTag(this.changesetWithDefaults),
@@ -166,7 +167,7 @@ class App extends Component {
   handleKeyDown = (event) => {
     if (event.keyCode === 27) {
       event.stopPropagation()
-      chrome.runtime.sendMessage({ type: "closePopup" })
+      globalBrowserObject().runtime.sendMessage({ type: "closePopup" })
     }
   }
 
