@@ -140,7 +140,7 @@ chrome.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
   }
 })
 
-chrome.browserAction.onClicked.addListener((tab) => {
+chrome.action.onClicked.addListener((tab) => {
   if (!isBrowserTab(tab)) {
     messenger.postMessage(tab, { type: "requestService" })
     messenger.once("newService", ({ payload }) => {
