@@ -1,7 +1,7 @@
 {
   "name": "moco-browser-extensions",
   "description": "Browser plugin for MOCO",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "license": "MIT",
   "browserslist": [
     "defaults",
