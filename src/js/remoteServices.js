@@ -126,7 +126,12 @@ export default {
   youtrack: {
     name: "youtrack",
     host: "https://:org.youtrack.cloud",
-    urlPatterns: [":host:/issue/:id(/*)", ":host:/issues", ":host:/search/:filter"],
+    urlPatterns: [
+      ":host:/issue/:id(/*)",
+      ":host:/youtrack/issue/:id(/*)",
+      ":host:/issues",
+      ":host:/search/:filter",
+    ],
     queryParams: {
       id: "preview",
     },
