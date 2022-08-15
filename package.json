@@ -1,7 +1,7 @@
 {
   "name": "moco-browser-extensions",
   "description": "Browser plugin for MOCO",
-  "version": "1.8.1",
+  "version": "1.9.0",
   "license": "MIT",
   "browserslist": [
     "defaults",
@@ -22,7 +22,8 @@
     "test:watch": "node_modules/.bin/jest --watch"
   },
   "dependencies": {
-    "axios": "0.27.2",
+    "@vespaiach/axios-fetch-adapter": "^0.3.0",
+    "axios": "^0.27.2",
     "classnames": "^2.2.6",
     "core-js": "^3.10.2",
     "date-fns": "^2.15.0",

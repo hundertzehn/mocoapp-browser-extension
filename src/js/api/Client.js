@@ -1,4 +1,5 @@
 import axios from "axios"
+import fetchAdapter from "@vespaiach/axios-fetch-adapter"
 import { formatDate, mocoHost, mocoProtocol } from "utils"
 
 const baseURL = (subdomain) => {
@@ -12,6 +13,7 @@ export default class Client {
   constructor({ subdomain, apiKey, version }) {
     this.#apiKey = apiKey
     this.#client = axios.create({
+      adapter: fetchAdapter,
       responseType: "json",
       baseURL: baseURL(subdomain),
       headers: {

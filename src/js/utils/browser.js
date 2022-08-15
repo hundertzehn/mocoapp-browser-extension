@@ -1,4 +1,5 @@
 import { head, pick, reduce, filter, prop, pipe } from "lodash/fp"
+import { globalBrowserObject } from "."
 import remoteServices from "../remoteServices"
 
 const DEFAULT_SUBDOMAIN = "unset"
@@ -23,44 +24,25 @@ const getHostOverrides = (settings) => ({
 
 export const getSettings = (withDefaultSubdomain = true) => {
   const keys = ["subdomain", "apiKey", "settingTimeTrackingHHMM", "hostOverrides"]
-  const { version } = chrome.runtime.getManifest()
-  if (isChrome()) {
-    return new Promise((resolve) => {
-      chrome.storage.sync.get(keys, (settings) => {
-        if (withDefaultSubdomain) {
-          settings.subdomain = settings.subdomain || DEFAULT_SUBDOMAIN
-        }
-        settings.hostOverrides = getHostOverrides(settings)
-        resolve({ ...settings, version })
-      })
-    })
-  } else {
-    return browser.storage.sync.get(keys).then((settings) => {
+  const { version } = globalBrowserObject().runtime.getManifest()
+
+  return globalBrowserObject()
+    .storage.sync.get(keys)
+    .then((settings) => {
       if (withDefaultSubdomain) {
         settings.subdomain = settings.subdomain || DEFAULT_SUBDOMAIN
       }
       settings.hostOverrides = getHostOverrides(settings)
       return { ...settings, version }
     })
-  }
 }
 
 export const setStorage = (items) => {
-  if (isChrome()) {
-    return new Promise((resolve) => {
-      chrome.storage.sync.set(items, resolve)
-    })
-  } else {
-    return browser.storage.sync.set(items)
-  }
+  return globalBrowserObject().storage.sync.set(items)
 }
 
 export const queryTabs = (queryInfo) => {
-  if (isChrome()) {
-    return new Promise((resolve) => chrome.tabs.query(queryInfo, resolve))
-  } else {
-    return browser.tabs.query(queryInfo)
-  }
+  return globalBrowserObject().tabs.query(queryInfo)
 }
 
 export const getCurrentTab = () => {

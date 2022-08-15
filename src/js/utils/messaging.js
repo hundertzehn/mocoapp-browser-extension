@@ -1,3 +1,5 @@
+import { globalBrowserObject } from "."
+
 export class BackgroundMessenger {
   #ports = new Map()
   #handlers = new Map()
@@ -37,7 +39,7 @@ export class BackgroundMessenger {
   connectTab = (tab) => {
     const currentPort = this.#ports.get(tab.id)
     if (!currentPort) {
-      const port = chrome.tabs.connect(tab.id)
+      const port = globalBrowserObject().tabs.connect(tab.id)
       this.#registerPort(tab.id, port)
     }
   }

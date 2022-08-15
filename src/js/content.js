@@ -6,6 +6,7 @@ import { createServiceFinder } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
 import { ContentMessenger } from "utils/messaging"
 import "../css/content.scss"
+import { globalBrowserObject } from "./utils"
 import { getSettings } from "./utils/browser"
 
 const popupRef = createRef()
@@ -17,7 +18,7 @@ getSettings().then((settings) => {
   findService = createServiceFinder(remoteServices, settings.hostOverrides)(document)
 })
 
-chrome.runtime.onConnect.addListener(function (port) {
+globalBrowserObject().runtime.onConnect.addListener(function (port) {
   const messenger = new ContentMessenger(port)
 
   function clickHandler(event) {

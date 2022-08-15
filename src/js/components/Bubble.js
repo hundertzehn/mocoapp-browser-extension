@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import mocoLogo from "images/moco-32x32.png"
 import mocoTimerLogo from "images/moco-timer-32x32.png"
 import { parseISO } from "date-fns"
-import { formatDuration } from "utils"
+import { formatDuration, globalBrowserObject } from "utils"
 import Timer from "./shared/Timer"
 
 const Bubble = ({ bookedSeconds, timedActivity, settingTimeTrackingHHMM }) => {
@@ -11,7 +11,7 @@ const Bubble = ({ bookedSeconds, timedActivity, settingTimeTrackingHHMM }) => {
 
   return (
     <div className="moco-bx-bubble-inner">
-      <img className="moco-bx-logo" src={chrome.runtime.getURL(logo)} />
+      <img className="moco-bx-logo" src={globalBrowserObject().runtime.getURL(logo)} />
       {!timedActivity && bookedSeconds > 0 && (
         <span className="moco-bx-booked-hours">
           {formatDuration(bookedSeconds, { settingTimeTrackingHHMM, showSeconds: false })}
