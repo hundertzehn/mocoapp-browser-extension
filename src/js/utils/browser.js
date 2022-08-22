@@ -26,23 +26,45 @@ export const getSettings = (withDefaultSubdomain = true) => {
   const keys = ["subdomain", "apiKey", "settingTimeTrackingHHMM", "hostOverrides"]
   const { version } = globalBrowserObject().runtime.getManifest()
 
-  return globalBrowserObject()
-    .storage.sync.get(keys)
-    .then((settings) => {
-      if (withDefaultSubdomain) {
-        settings.subdomain = settings.subdomain || DEFAULT_SUBDOMAIN
-      }
-      settings.hostOverrides = getHostOverrides(settings)
-      return { ...settings, version }
+  if (isChrome()) {
+    return new Promise((resolve) => {
+      chrome.storage.sync.get(keys, (settings) => {
+        if (withDefaultSubdomain) {
+          settings.subdomain = settings.subdomain || DEFAULT_SUBDOMAIN
+        }
+        settings.hostOverrides = getHostOverrides(settings)
+        resolve({ ...settings, version })
+      })
     })
+  } else {
+    return globalBrowserObject()
+      .storage.sync.get(keys)
+      .then((settings) => {
+        if (withDefaultSubdomain) {
+          settings.subdomain = settings.subdomain || DEFAULT_SUBDOMAIN
+        }
+        settings.hostOverrides = getHostOverrides(settings)
+        return { ...settings, version }
+      })
+  }
 }
 
 export const setStorage = (items) => {
-  return globalBrowserObject().storage.sync.set(items)
+  if (isChrome()) {
+    return new Promise((resolve) => {
+      chrome.storage.sync.set(items, resolve)
+    })
+  } else {
+    return globalBrowserObject().storage.sync.set(items)
+  }
 }
 
 export const queryTabs = (queryInfo) => {
-  return globalBrowserObject().tabs.query(queryInfo)
+  if (isChrome()) {
+    return new Promise((resolve) => chrome.tabs.query(queryInfo, resolve))
+  } else {
+    return globalBrowserObject().tabs.query(queryInfo)
+  }
 }
 
 export const getCurrentTab = () => {
