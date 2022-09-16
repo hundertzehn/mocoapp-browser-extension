@@ -17,6 +17,7 @@ import {
   findTask,
   defaultTask,
   formatDate,
+  parseProps,
 } from "utils"
 import { parseISO } from "date-fns"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
@@ -29,48 +30,21 @@ import { get } from "lodash/fp"
 
 @observer
 class App extends Component {
-  static propTypes = {
-    loading: PropTypes.bool,
-    service: PropTypes.shape({
-      id: PropTypes.string,
-      url: PropTypes.string,
-      name: PropTypes.string,
-      description: PropTypes.string,
-      projectId: PropTypes.string,
-      taskId: PropTypes.string,
-    }),
-    subdomain: PropTypes.string,
-    activities: PropTypes.array,
-    schedules: PropTypes.array,
-    projects: PropTypes.array,
-    timedActivity: PropTypes.shape({
-      customer_name: PropTypes.string.isRequired,
-      assignment_name: PropTypes.string.isRequired,
-      task_name: PropTypes.string.isRequired,
-      timer_started_at: PropTypes.string.isRequired,
-      seconds: PropTypes.number.isRequired,
-    }),
-    serviceLastProjectId: PropTypes.number,
-    userLastProjectId: PropTypes.number,
-    serviceLastTaskId: PropTypes.number,
-    userLastTaskId: PropTypes.number,
-    fromDate: PropTypes.string,
-    toDate: PropTypes.string,
-    errorType: PropTypes.string,
-    errorMessage: PropTypes.string,
-  }
-
-  static defaultProps = {
-    activities: [],
-    schedules: [],
-    projects: [],
+  constructor(props) {
+    super(props)
+    this.state = {
+      loading: true,
+      activities: [],
+      schedules: [],
+      projects: [],
+    }
   }
 
   @observable changeset = {}
   @observable formErrors = {}
 
   @computed get project() {
-    const { service, projects, serviceLastProjectId, userLastProjectId } = this.props
+    const { service, projects, serviceLastProjectId, userLastProjectId } = this.state
 
     return (
       findProjectByValue(this.changeset.assignment_id)(projects) ||
@@ -82,7 +56,7 @@ class App extends Component {
   }
 
   @computed get task() {
-    const { service, serviceLastTaskId, userLastTaskId } = this.props
+    const { service, serviceLastTaskId, userLastTaskId } = this.state
     return (
       findTask(this.changeset.task_id || serviceLastTaskId || service?.taskId || userLastTaskId)(
         this.project,
@@ -95,7 +69,7 @@ class App extends Component {
   }
 
   @computed get changesetWithDefaults() {
-    const { service } = this.props
+    const { service } = this.state
 
     const defaults = {
       remote_service: service?.name,
@@ -116,16 +90,19 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
+    window.addEventListener("message", this.handleMessageSerializedProps)
     browser.runtime.onMessage.addListener(this.handleSetFormErrors)
+    window.parent.postMessage({ type: "popup-request-serialized-props" }, "*")
   }
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown)
+    window.removeEventListener("message", this.handleMessageSerializedProps)
     browser.runtime.onMessage.removeListener(this.handleSetFormErrors)
   }
 
   handleChange = (event) => {
-    const { projects } = this.props
+    const { projects } = this.state
     const {
       target: { name, value },
     } = event
@@ -143,7 +120,7 @@ class App extends Component {
   }
 
   handleStopTimer = (timedActivity) => {
-    const { service } = this.props
+    const { service } = this.state
 
     browser.runtime.sendMessage({
       type: "stopTimer",
@@ -153,7 +130,7 @@ class App extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault()
-    const { service } = this.props
+    const { service } = this.state
 
     browser.runtime.sendMessage({
       type: "createActivity",
@@ -168,6 +145,30 @@ class App extends Component {
     if (event.keyCode === 27) {
       event.stopPropagation()
       browser.runtime.sendMessage({ type: "closePopup" })
+    }
+  }
+
+  handleMessageSerializedProps = (event) => {
+    if (event.data.type === "popup-serialized-props") {
+      const newState = parseProps([
+        "tabId",
+        "loading",
+        "service",
+        "subdomain",
+        "projects",
+        "activities",
+        "schedules",
+        "timedActivity",
+        "serviceLastProjectId",
+        "userLastProjectId",
+        "serviceLastTaskId",
+        "userLastTaskId",
+        "fromDate",
+        "toDate",
+        "errorType",
+        "errorMessage",
+      ])(event.data.serializedProps)
+      this.setState(newState)
     }
   }
 
@@ -189,7 +190,7 @@ class App extends Component {
       toDate,
       errorType,
       errorMessage,
-    } = this.props
+    } = this.state
 
     if (loading) {
       return <Spinner />

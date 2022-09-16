@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, forwardRef } from "react"
+import React, { useEffect, useRef, useCallback, forwardRef } from "react"
 import PropTypes from "prop-types"
 import browser from "webextension-polyfill"
 import queryString from "query-string"
@@ -13,30 +13,58 @@ const Popup = forwardRef((props, ref) => {
     }
   }
 
-  const serializedProps = serializeProps([
-    "loading",
-    "service",
-    "subdomain",
-    "projects",
-    "activities",
-    "schedules",
-    "timedActivity",
-    "serviceLastProjectId",
-    "userLastProjectId",
-    "serviceLastTaskId",
-    "userLastTaskId",
-    "fromDate",
-    "toDate",
-    "errorType",
-    "errorMessage",
-  ])(props)
+  const sendSerializedProps = useCallback(() => {
+    if (iFrameRef.current) {
+      const serializedProps = serializeProps([
+        "loading",
+        "service",
+        "subdomain",
+        "projects",
+        "activities",
+        "schedules",
+        "timedActivity",
+        "serviceLastProjectId",
+        "userLastProjectId",
+        "serviceLastTaskId",
+        "userLastTaskId",
+        "fromDate",
+        "toDate",
+        "errorType",
+        "errorMessage",
+      ])(props)
+
+      iFrameRef.current.contentWindow.postMessage(
+        {
+          type: "popup-serialized-props",
+          serializedProps,
+        },
+        "*",
+      )
+    }
+  }, [props])
+
+  const handleRequestSerializedProps = useCallback(
+    (event) => {
+      if (event.data.type === "popup-request-serialized-props") {
+        sendSerializedProps()
+      }
+    },
+    [sendSerializedProps],
+  )
+
+  useEffect(() => {
+    sendSerializedProps()
+    window.addEventListener("message", handleRequestSerializedProps)
+
+    return () => window.removeEventListener("message", handleRequestSerializedProps)
+  }, [props, iFrameRef.current])
 
   return (
     <div ref={ref} className="moco-bx-popup" onClick={handleRequestClose}>
       <div className="moco-bx-popup-content" style={{ width: "516px" }}>
         <iframe
           ref={iFrameRef}
-          src={browser.runtime.getURL(`popup.html?${queryString.stringify(serializedProps)}`)}
+          src={browser.runtime.getURL("popup.html")}
           style={{ width: "516px", height: "576px", transition: "height 0.1s ease-in-out" }}
         />
       </div>
