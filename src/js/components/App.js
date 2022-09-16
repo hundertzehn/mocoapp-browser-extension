@@ -91,8 +91,8 @@ class App extends Component {
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
     window.addEventListener("message", this.handleMessageSerializedProps)
-    browser.runtime.onMessage.addListener(this.handleSetFormErrors)
     window.parent.postMessage({ type: "popup-request-serialized-props" }, "*")
+    browser.runtime.onMessage.addListener(this.handleSetFormErrors)
   }
 
   componentWillUnmount() {
