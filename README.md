@@ -10,6 +10,7 @@
   - Chrome: visit `chrome://extensions` and load unpacked extension from `build/chrome`
   - Firefox: visit `about:debugging` and load temporary Add-on from `build/firefox/manifest.json`
 - the browser should automatically pick up your changes but from time to time it may be useful to reload the extension
+- and most important, if you love working with web tech like this, typescript, graphql etc. (👉 [we are hiring](https://www.mocoapp.com/unternehmen/jobs))
 
 ### Production Build
 
