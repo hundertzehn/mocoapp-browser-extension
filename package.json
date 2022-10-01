@@ -22,7 +22,7 @@
     "test:watch": "node_modules/.bin/jest --watch"
   },
   "dependencies": {
-    "@vespaiach/axios-fetch-adapter": "^0.3.0",
+    "@vespaiach/axios-fetch-adapter": "^0.3.1",
     "axios": "^0.27.2",
     "classnames": "^2.2.6",
     "core-js": "^3.10.2",
