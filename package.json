@@ -62,7 +62,7 @@
     "html-webpack-plugin": "^5.1.0",
     "jest": "^28.0.3",
     "mini-css-extract-plugin": "^2.2.0",
-    "node-sass": "^7.0.1",
+    "node-sass": "^7.0.3",
     "prettier": "^2.2.1",
     "sass-loader": "13.0.2",
     "style-loader": "^3.2.1",
