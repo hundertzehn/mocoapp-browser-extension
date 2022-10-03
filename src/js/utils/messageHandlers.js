@@ -10,86 +10,79 @@ import {
 import { get, forEach, reject, isNil } from "lodash/fp"
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
+import { sendMessage, onMessage } from "webext-bridge/background"
 import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
 
 let matcher
-
 const initMatcher = (settings) => {
   matcher = createMatcher(remoteServices, settings.hostOverrides)
 }
 
-getSettings().then((settings) => {
+export async function tabUpdated(tab) {
+  const settings = await getSettings()
   initMatcher(settings)
-})
-
-export function tabUpdated(tab, { messenger, settings }) {
-  messenger.connectTab(tab)
-
-  const service = matcher(tab.url)
+  const hasService = matcher(tab.url)?.match?.id
   const apiClient = new ApiClient(settings)
 
-  if (service?.match?.id) {
-    messenger.postMessage(tab, { type: "requestService" })
-
-    messenger.once("newService", ({ payload: { service } }) => {
-      apiClient
-        .activitiesStatus(service)
-        .then(({ data }) => {
-          messenger.postMessage(tab, {
-            type: "showBubble",
-            payload: {
-              bookedSeconds: data.seconds,
-              settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
-              timedActivity: data.timed_activity,
-              service,
-            },
-          })
-        })
-        .catch(() => {
-          messenger.postMessage(tab, {
-            type: "showBubble",
-            payload: {
-              bookedSeconds: 0,
-              settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
-              service,
-            },
-          })
-        })
-    })
+  if (hasService) {
+    const { service } = await sendMessage("requestService", null, `content-script@${tab.id}`)
+    try {
+      const data = await apiClient.activitiesStatus(service)
+      sendMessage(
+        "showBubble",
+        {
+          bookedSeconds: data.seconds,
+          settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
+          timedActivity: data.timed_activity,
+          service,
+        },
+        `content-script@${tab.id}`,
+      )
+    } catch {
+      sendMessage(
+        "showBubble",
+        {
+          bookedSeconds: 0,
+          settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
+          service,
+        },
+        `content-script@${tab.id}`,
+      )
+    }
   } else {
-    messenger.postMessage(tab, { type: "hideBubble" })
+    sendMessage("hideBubble", null, `content-script@${tab.id}`)
   }
 }
 
-export function settingsChanged(settings, { messenger }) {
+export function settingsChanged(settings) {
   initMatcher(settings)
 
   queryTabs({ currentWindow: true })
     .then(reject(isBrowserTab))
     .then(
       forEach((tab) => {
-        messenger.postMessage(tab, { type: "closePopup" })
-        tabUpdated(tab, { settings, messenger })
+        sendMessage("closePopup", null, `content-script@${tab.id}`)
+        tabUpdated(tab, { settings })
       }),
     )
 }
 
-export function togglePopup(tab, { messenger }) {
-  return function ({ isOpen, service } = {}) {
-    if (isNil(isOpen)) {
+export function togglePopup(tab) {
+  return function ({ isPopupOpen, service } = {}) {
+    if (isNil(isPopupOpen)) {
       return
     }
 
-    if (isOpen) {
-      messenger.postMessage(tab, { type: "closePopup" })
+    if (isPopupOpen) {
+      sendMessage("closePopup", `content-script@${tab.id}`)
     } else {
-      openPopup(tab, { service, messenger })
+      openPopup(tab, { service })
     }
   }
 }
 
-export async function openPopup(tab, { service, messenger }) {
-  messenger.postMessage(tab, { type: "openPopup", payload: { loading: true } })
+export async function openPopup(tab, { service }) {
+  sendMessage("openPopup", { loading: true }, `content-script@${tab.id}`)
 
   const fromDate = getStartOfWeek()
   const toDate = getEndOfWeek()
@@ -112,26 +105,23 @@ export async function openPopup(tab, { service, messenger }) {
     const settingTimeTrackingHHMM = get("[0].data.setting_time_tracking_hh_mm", responses)
     !isNil(settingTimeTrackingHHMM) && setStorage({ settingTimeTrackingHHMM })
 
-    const action = {
-      type: "openPopup",
-      payload: {
-        service,
-        subdomain: settings.subdomain,
-        timedActivity: get("[0].data.timed_activity", responses),
-        serviceLastProjectId: get("[0].data.service_last_project_id", responses),
-        userLastProjectId: get("[0].data.user_last_project_id", responses),
-        serviceLastTaskId: get("[0].data.service_last_task_id", responses),
-        userLastTaskId: get("[0].data.user_last_task_id", responses),
-        roundTimeEntries: get("[0].data.round_time_entries", responses),
-        projects: groupedProjectOptions(get("[1].data.projects", responses)),
-        activities: get("[2].data", responses),
-        schedules: get("[3].data", responses),
-        fromDate,
-        toDate,
-        loading: false,
-      },
+    const data = {
+      service,
+      subdomain: settings.subdomain,
+      timedActivity: get("[0].data.timed_activity", responses),
+      serviceLastProjectId: get("[0].data.service_last_project_id", responses),
+      userLastProjectId: get("[0].data.user_last_project_id", responses),
+      serviceLastTaskId: get("[0].data.service_last_task_id", responses),
+      userLastTaskId: get("[0].data.user_last_task_id", responses),
+      roundTimeEntries: get("[0].data.round_time_entries", responses),
+      projects: groupedProjectOptions(get("[1].data.projects", responses)),
+      activities: get("[2].data", responses),
+      schedules: get("[3].data", responses),
+      fromDate,
+      toDate,
+      loading: false,
     }
-    messenger.postMessage(tab, action)
+    sendMessage("openPopup", data, `content-script@${tab.id}`)
   } catch (error) {
     let errorType, errorMessage
     if (error.response?.status === 401) {
@@ -142,9 +132,6 @@ export async function openPopup(tab, { service, messenger }) {
       errorType = ERROR_UNKNOWN
       errorMessage = error.message
     }
-    messenger.postMessage(tab, {
-      type: "openPopup",
-      payload: { errorType, errorMessage },
-    })
+    sendMessage("openPopup", { errorType, errorMessage }, `content-script@${tab.id}`)
   }
 }
