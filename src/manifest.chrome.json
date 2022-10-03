@@ -2,7 +2,7 @@
   "name": "MOCO Zeiterfassung",
   "short_name": "MOCO",
   "description": "MOCO Zeiterfassung Plugin",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "icons": {
     "16": "src/images/moco-32x32.png",
     "32": "src/images/moco-32x32.png",
@@ -10,14 +10,14 @@
     "128": "src/images/moco-159x159.png"
   },
   "options_ui": {
-    "page": "options.html",
-    "chrome_style": true
+    "page": "options.html"
   },
-  "permissions": ["https://*.mocoapp.com/*", "storage", "tabs"],
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://*.mocoapp.com/*"],
   "background": {
-    "page": "background.html"
+    "service_worker": "background.[version].js"
   },
-  "browser_action": {
+  "action": {
     "default_icon": "src/images/moco-32x32.png"
   },
   "content_scripts": [
@@ -36,5 +36,7 @@
       }
     }
   },
-  "web_accessible_resources": ["src/images/*", "popup.html"]
+  "web_accessible_resources": [
+    { "resources": ["popup.html", "src/images/*"], "matches": ["<all_urls>"] }
+  ]
 }
