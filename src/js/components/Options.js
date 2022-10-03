@@ -1,7 +1,8 @@
 import React, { Component } from "react"
+import browser from "webextension-polyfill"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
-import { mocoHost, globalBrowserObject } from "utils"
+import { mocoHost } from "utils"
 import { isChrome, getSettings, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
 import { pipe, toPairs, fromPairs, map } from "lodash/fp"
@@ -57,7 +58,7 @@ class Options extends Component {
         fromPairs,
       )(this.hostOverrides),
     }).then(() => {
-      const { version } = globalBrowserObject().runtime.getManifest()
+      const { version } = browser.runtime.getManifest()
       const apiClient = new ApiClient({
         subdomain: this.subdomain,
         apiKey: this.apiKey,

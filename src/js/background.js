@@ -1,6 +1,6 @@
+import browser from "webextension-polyfill"
 import ApiClient from "api/Client"
 import { isChrome, getCurrentTab, getSettings, isBrowserTab } from "utils/browser"
-import { globalBrowserObject } from "./utils"
 import { BackgroundMessenger } from "utils/messaging"
 import { tabUpdated, settingsChanged, togglePopup, openPopup } from "utils/messageHandlers"
 import { isNil } from "lodash"
@@ -46,7 +46,7 @@ messenger.on("togglePopup", () => {
   })
 })
 
-globalBrowserObject().runtime.onMessage.addListener((action) => {
+browser.runtime.onMessage.addListener((action) => {
   if (action.type === "closePopup") {
     getCurrentTab().then((tab) => {
       messenger.postMessage(tab, action)
@@ -63,7 +63,7 @@ globalBrowserObject().runtime.onMessage.addListener((action) => {
           .then(() => resetBubble({ tab, settings, service }))
           .catch((error) => {
             if (error.response?.status === 422) {
-              globalBrowserObject().runtime.sendMessage({
+              browser.runtime.sendMessage({
                 type: "setFormErrors",
                 payload: error.response.data,
               })
@@ -89,37 +89,37 @@ globalBrowserObject().runtime.onMessage.addListener((action) => {
   if (action.type === "openOptions") {
     let url
     if (isChrome()) {
-      url = `chrome://extensions/?options=${globalBrowserObject().runtime.id}`
+      url = `chrome://extensions/?options=${browser.runtime.id}`
     } else {
-      url = globalBrowserObject().runtime.getURL("options.html")
+      url = browser.runtime.getURL("options.html")
     }
-    return globalBrowserObject().tabs.create({ url })
+    return browser.tabs.create({ url })
   }
 
   if (action.type === "openExtensions") {
     if (isChrome()) {
-      globalBrowserObject().tabs.create({ url: "chrome://extensions" })
+      browser.tabs.create({ url: "chrome://extensions" })
     }
   }
 })
 
-globalBrowserObject().runtime.onInstalled.addListener(() => {
-  globalBrowserObject().storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
+browser.runtime.onInstalled.addListener(() => {
+  browser.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {
       getSettings().then((settings) => settingsChanged(settings, { messenger }))
     }
   })
 })
 
-globalBrowserObject().runtime.onStartup.addListener(() => {
-  globalBrowserObject().storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
+browser.runtime.onStartup.addListener(() => {
+  browser.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {
       getSettings().then((settings) => settingsChanged(settings, { messenger }))
     }
   })
 })
 
-globalBrowserObject().tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   if (!isBrowserTab(tab) && changeInfo.status === "complete") {
     getSettings().then((settings) => {
       tabUpdated(tab, { settings, messenger })
@@ -127,23 +127,23 @@ globalBrowserObject().tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 })
 
-globalBrowserObject().tabs.onCreated.addListener((tab) => {
+browser.tabs.onCreated.addListener((tab) => {
   if (!isBrowserTab(tab)) {
     messenger.connectTab(tab)
   }
 })
 
-globalBrowserObject().tabs.onRemoved.addListener(messenger.disconnectTab)
+browser.tabs.onRemoved.addListener(messenger.disconnectTab)
 
-globalBrowserObject().storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
+browser.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
   if (areaName === "sync" && (apiKey || subdomain)) {
     getSettings().then((settings) => settingsChanged(settings, { messenger }))
   }
 })
 
 // Manifest V3 uses chrome.action, v2 uses chrome.browserAction
-globalBrowserObject().action ??= globalBrowserObject().browserAction
-globalBrowserObject().action.onClicked.addListener((tab) => {
+browser.action ??= browser.browserAction
+browser.action.onClicked.addListener((tab) => {
   if (!isBrowserTab(tab)) {
     messenger.postMessage(tab, { type: "requestService" })
     messenger.once("newService", ({ payload }) => {

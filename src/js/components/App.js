@@ -1,5 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
+import browser from "webextension-polyfill"
 import Spinner from "components/Spinner"
 import Form from "components/Form"
 import Calendar from "components/Calendar"
@@ -16,7 +17,6 @@ import {
   findTask,
   defaultTask,
   formatDate,
-  globalBrowserObject,
 } from "utils"
 import { parseISO } from "date-fns"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
@@ -116,12 +116,12 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
-    globalBrowserObject().runtime.onMessage.addListener(this.handleSetFormErrors)
+    browser.runtime.onMessage.addListener(this.handleSetFormErrors)
   }
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown)
-    globalBrowserObject().runtime.onMessage.removeListener(this.handleSetFormErrors)
+    browser.runtime.onMessage.removeListener(this.handleSetFormErrors)
   }
 
   handleChange = (event) => {
@@ -145,7 +145,7 @@ class App extends Component {
   handleStopTimer = (timedActivity) => {
     const { service } = this.props
 
-    globalBrowserObject().runtime.sendMessage({
+    browser.runtime.sendMessage({
       type: "stopTimer",
       payload: { timedActivity, service },
     })
@@ -155,7 +155,7 @@ class App extends Component {
     event.preventDefault()
     const { service } = this.props
 
-    globalBrowserObject().runtime.sendMessage({
+    browser.runtime.sendMessage({
       type: "createActivity",
       payload: {
         activity: extractAndSetTag(this.changesetWithDefaults),
@@ -167,7 +167,7 @@ class App extends Component {
   handleKeyDown = (event) => {
     if (event.keyCode === 27) {
       event.stopPropagation()
-      globalBrowserObject().runtime.sendMessage({ type: "closePopup" })
+      browser.runtime.sendMessage({ type: "closePopup" })
     }
   }
 

@@ -36,7 +36,8 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-select": "^5.1.0",
-    "url-pattern": "^1.0.3"
+    "url-pattern": "^1.0.3",
+    "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
     "@babel/core": "^7.10.2",

@@ -1,13 +1,13 @@
 import React, { createRef } from "react"
+import browser from "webextension-polyfill"
 import { createRoot } from "react-dom/client"
 import Bubble from "./components/Bubble"
 import Popup from "components/Popup"
 import { createServiceFinder } from "utils/urlMatcher"
 import remoteServices from "./remoteServices"
 import { ContentMessenger } from "utils/messaging"
-import "../css/content.scss"
-import { globalBrowserObject } from "./utils"
 import { getSettings } from "./utils/browser"
+import "../css/content.scss"
 
 const popupRef = createRef()
 
@@ -18,7 +18,7 @@ getSettings().then((settings) => {
   findService = createServiceFinder(remoteServices, settings.hostOverrides)(document)
 })
 
-globalBrowserObject().runtime.onConnect.addListener(function (port) {
+browser.runtime.onConnect.addListener(function (port) {
   const messenger = new ContentMessenger(port)
 
   function clickHandler(event) {

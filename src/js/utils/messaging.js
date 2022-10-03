@@ -1,4 +1,4 @@
-import { globalBrowserObject } from "."
+import browser from "webextension-polyfill"
 
 export class BackgroundMessenger {
   #ports = new Map()
@@ -39,7 +39,7 @@ export class BackgroundMessenger {
   connectTab = (tab) => {
     const currentPort = this.#ports.get(tab.id)
     if (!currentPort) {
-      const port = globalBrowserObject().tabs.connect(tab.id)
+      const port = browser.tabs.connect(tab.id)
       this.#registerPort(tab.id, port)
     }
   }
