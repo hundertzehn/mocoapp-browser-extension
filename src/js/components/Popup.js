@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, forwardRef } from "react"
 import PropTypes from "prop-types"
+import browser from "webextension-polyfill"
 import queryString from "query-string"
-import { serializeProps, globalBrowserObject } from "utils"
+import { serializeProps } from "utils"
 
 const Popup = forwardRef((props, ref) => {
   const iFrameRef = useRef()
@@ -35,9 +36,7 @@ const Popup = forwardRef((props, ref) => {
       <div className="moco-bx-popup-content" style={{ width: "516px" }}>
         <iframe
           ref={iFrameRef}
-          src={globalBrowserObject().runtime.getURL(
-            `popup.html?${queryString.stringify(serializedProps)}`,
-          )}
+          src={browser.runtime.getURL(`popup.html?${queryString.stringify(serializedProps)}`)}
           style={{ width: "516px", height: "576px", transition: "height 0.1s ease-in-out" }}
         />
       </div>
