@@ -27,14 +27,15 @@ function clickHandler(event) {
 
 function updateBubble({ service, bookedSeconds, settingTimeTrackingHHMM, timedActivity } = {}) {
   if (!document.getElementById("moco-bx-root")) {
+    window.removeEventListener("click", clickHandler, true)
+
     const domRoot = document.createElement("div")
     domRoot.setAttribute("id", "moco-bx-root")
     document.body.appendChild(domRoot)
-    window.addEventListener("click", clickHandler, true)
-  }
 
-  const container = document.getElementById("moco-bx-root")
-  if (!bubbleRoot) {
+    window.addEventListener("click", clickHandler, true)
+
+    const container = document.getElementById("moco-bx-root")
     bubbleRoot = createRoot(container)
   }
 
@@ -59,10 +60,8 @@ function openPopup(payload) {
     const domRoot = document.createElement("div")
     domRoot.setAttribute("id", "moco-bx-popup-root")
     document.body.appendChild(domRoot)
-  }
 
-  const container = document.getElementById("moco-bx-popup-root")
-  if (!popupRoot) {
+    const container = document.getElementById("moco-bx-popup-root")
     popupRoot = createRoot(container)
   }
   popupRoot.render(<Popup ref={popupRef} data={payload} onRequestClose={closePopup} />)
