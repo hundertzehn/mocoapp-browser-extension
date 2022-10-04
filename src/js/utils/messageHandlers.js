@@ -27,7 +27,7 @@ export async function tabUpdated(tab) {
   if (hasService) {
     const { service } = await sendMessage("requestService", null, `content-script@${tab.id}`)
     try {
-      const data = await apiClient.activitiesStatus(service)
+      const { data } = await apiClient.activitiesStatus(service)
       sendMessage(
         "showBubble",
         {
