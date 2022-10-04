@@ -69,8 +69,7 @@ onMessage("createActivity", (message) => {
         })
         .catch((error) => {
           if (error.response?.status === 422) {
-            // TODO test
-            sendMessage("setFormErrors", error.response.data, `content-script@${tab.id}`)
+            sendMessage("setFormErrors", error.response.data, `popup@${tab.id}`)
           }
         })
     })
