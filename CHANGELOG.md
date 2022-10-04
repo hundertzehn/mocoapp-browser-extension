@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
-- Revert back to Manifest V3 (due to connection issues)
+- Revert back to Manifest V2
 
 ## [1.9.0] - 2022-08-15
 
