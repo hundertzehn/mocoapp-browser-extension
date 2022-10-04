@@ -27,14 +27,11 @@ const Popup = forwardRef((props, ref) => {
     }
   }, [props, iFrameRef])
 
-  const handlePopupReady = useCallback(
-    (event) => {
-      if (event.data.type === "moco-bx-popup-ready") {
-        setPopupReady(true)
-      }
-    },
-    [setPopupReady],
-  )
+  const handlePopupReady = (event) => {
+    if (event.data.type === "moco-bx-popup-ready") {
+      setPopupReady(true)
+    }
+  }
 
   useEffect(() => {
     if (isPopupReady) {
