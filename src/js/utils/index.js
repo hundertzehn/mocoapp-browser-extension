@@ -72,10 +72,6 @@ export const groupedProjectOptions = compose(
   nilToArray,
 )
 
-export const serializeProps = (attrs) => compose(mapValues(JSON.stringify), pick(attrs))
-
-export const parseProps = (attrs) => compose(mapValues(JSON.parse), pick(attrs))
-
 export const trace = curry((tag, value) => {
   // eslint-disable-next-line no-console
   console.log(tag, value)
