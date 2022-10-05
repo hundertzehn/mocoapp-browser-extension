@@ -151,6 +151,7 @@ export default {
     host: "https://:region.wrike.com",
     urlPatterns: [
       ":host:/workspace.htm#folder*",
+      ":host:/workspace.htm#todo",
       ":host:/workspace.htm#created-by-me",
       ":host:/workspace.htm#starred-tasks",
     ],
