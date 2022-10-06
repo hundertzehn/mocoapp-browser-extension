@@ -72,7 +72,7 @@ browser.runtime.onConnect.addListener(function (port) {
     if (!popupRoot) {
       popupRoot = createRoot(container)
     }
-    popupRoot.render(<Popup ref={popupRef} {...payload} onRequestClose={closePopup} />)
+    popupRoot.render(<Popup ref={popupRef} data={payload} onRequestClose={closePopup} />)
   }
 
   function closePopup() {
