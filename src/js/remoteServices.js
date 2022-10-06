@@ -156,7 +156,7 @@ export default {
       ":host:/workspace.htm#starred-tasks",
     ],
     queryParams: {
-      id: "sidePanelItemId",
+      id: ["sidePanelItemId", "overlayEntityId"],
     },
     description: (document) => document.querySelector(".title__ghost")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".header-title__main"),

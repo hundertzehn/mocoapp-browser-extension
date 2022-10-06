@@ -3,9 +3,11 @@
 @import "animation";
 
 #moco-bx-root {
+  position: fixed;
   font-family: $font-family;
   color: $font-color;
   pointer-events: all;
+  z-index: 99999;
 
   .text-red {
     color: $red;
@@ -51,9 +53,11 @@
 }
 
 #moco-bx-popup-root {
+  position: fixed;
   font-family: $font-family;
   color: $font-color;
   pointer-events: all;
+  z-index: 99999;
 
   iframe {
     border: 0;
