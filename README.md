@@ -2,6 +2,16 @@
 
 ## Technical Documentation
 
+### Requirements for Version 2
+
+There is a PR submitted to https://github.com/zikaari/webext-bridge with a fix, but which has not been merged yet. While the bug is not fixed, please follow these instructions:
+
+- clone https://github.com/manubo/webext-bridge.git into the **parent folder** of the browser extension and
+- checkout the branch with the fix: `git checkout format-endpoint-fix`
+- change into the directory of the package `cd webext-bridge` and
+- build it by running `yarn install && yarn build`
+- back in the folder of the browser extension, run `yarn install` also there
+
 ### Development
 
 - run `yarn`

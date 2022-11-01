@@ -6524,10 +6524,8 @@ watchpack@^2.4.0:
     glob-to-regexp "^0.4.1"
     graceful-fs "^4.1.2"
 
-webext-bridge@^6.0.0-rc3:
+webext-bridge@../webext-bridge:
   version "6.0.0-rc3"
-  resolved "https://registry.yarnpkg.com/webext-bridge/-/webext-bridge-6.0.0-rc3.tgz#d10019e4927fce777fec98eb6c7eb49ce056688c"
-  integrity sha512-UIJWfUf3Z2Rq9JDsMSJv65DL5FqtaO40FRmFBoOiGNH7fLpiOjvVuzg5V/2lLJcnnDGLf4lmp8Y76pSapsa5Jw==
   dependencies:
     "@types/webextension-polyfill" "^0.8.3"
     nanoevents "^6.0.2"
