@@ -1,11 +1,16 @@
 import browser from "webextension-polyfill"
 import ApiClient from "api/Client"
 import { isChrome, getCurrentTab, getSettings, isBrowserTab } from "utils/browser"
-import { BackgroundMessenger } from "utils/messaging"
+import { sendMessage, onMessage } from "webext-bridge/background"
 import { tabUpdated, settingsChanged, togglePopup, openPopup } from "utils/messageHandlers"
 import { isNil } from "lodash"
 
-const messenger = new BackgroundMessenger()
+// This is the main entry point for the background script
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (!isBrowserTab(tab) && changeInfo.status === "complete") {
+    tabUpdated(tab)
+  }
+})
 
 function timerStoppedForCurrentService(service, timedActivity) {
   return timedActivity.service_id && timedActivity.service_id === service?.id
@@ -16,128 +21,101 @@ function resetBubble({ tab, settings, service, timedActivity }) {
   apiClient
     .activitiesStatus(service)
     .then(({ data }) => {
-      messenger.postMessage(tab, {
-        type: "showBubble",
-        payload: {
+      sendMessage(
+        "showBubble",
+        {
           bookedSeconds: data.seconds,
           timedActivity: data.timed_activity,
           settingTimeTrackingHHMM: settings.settingTimeTrackingHHMM,
           service,
         },
-      })
+        `content-script@${tab.id}`,
+      )
     })
     .then(() => {
       if (isNil(timedActivity) || timerStoppedForCurrentService(service, timedActivity)) {
-        messenger.postMessage(tab, { type: "closePopup" })
+        sendMessage("closePopup", null, `content-script@${tab.id}`)
       } else {
-        openPopup(tab, { service, messenger })
+        openPopup(tab, { service })
       }
     })
 }
 
-messenger.on("togglePopup", () => {
+onMessage("togglePopup", (message) => {
   getCurrentTab().then((tab) => {
     if (tab && !isBrowserTab(tab)) {
-      messenger.postMessage(tab, { type: "requestService" })
-      messenger.once("newService", ({ payload }) => {
-        togglePopup(tab, { messenger })(payload)
+      sendMessage("requestService", null, `content-script@${tab.id}`).then((data) => {
+        togglePopup(tab)(data)
       })
     }
   })
 })
 
-browser.runtime.onMessage.addListener((action) => {
-  if (action.type === "closePopup") {
-    getCurrentTab().then((tab) => {
-      messenger.postMessage(tab, action)
+onMessage("closePopup", (message) => {
+  getCurrentTab().then((tab) => {
+    sendMessage("closePopup", null, `content-script@${tab.id}`)
+  })
+})
+
+onMessage("createActivity", (message) => {
+  const { activity, service } = message.data
+  getCurrentTab().then((tab) => {
+    getSettings().then((settings) => {
+      const apiClient = new ApiClient(settings)
+      apiClient
+        .createActivity(activity)
+        .then(() => {
+          resetBubble({ tab, settings, service })
+        })
+        .catch((error) => {
+          if (error.response?.status === 422) {
+            sendMessage("setFormErrors", error.response.data, `popup@${tab.id}`)
+          }
+        })
     })
-  }
+  })
+})
 
-  if (action.type === "createActivity") {
-    const { activity, service } = action.payload
-    getCurrentTab().then((tab) => {
-      getSettings().then((settings) => {
-        const apiClient = new ApiClient(settings)
-        apiClient
-          .createActivity(activity)
-          .then(() => resetBubble({ tab, settings, service }))
-          .catch((error) => {
-            if (error.response?.status === 422) {
-              browser.runtime.sendMessage({
-                type: "setFormErrors",
-                payload: error.response.data,
-              })
-            }
-          })
-      })
+onMessage("stopTimer", (message) => {
+  const { timedActivity, service } = message.data
+  getCurrentTab().then((tab) => {
+    getSettings().then((settings) => {
+      const apiClient = new ApiClient(settings)
+      apiClient
+        .stopTimer(timedActivity)
+        .then(() => resetBubble({ tab, settings, service, timedActivity }))
+        .catch(() => null)
     })
-  }
+  })
+})
 
-  if (action.type === "stopTimer") {
-    const { timedActivity, service } = action.payload
-    getCurrentTab().then((tab) => {
-      getSettings().then((settings) => {
-        const apiClient = new ApiClient(settings)
-        apiClient
-          .stopTimer(timedActivity)
-          .then(() => resetBubble({ tab, settings, service, timedActivity }))
-          .catch(() => null)
-      })
-    })
+onMessage("openOptions", () => {
+  let url
+  if (isChrome()) {
+    url = `chrome://extensions/?options=${browser.runtime.id}`
+  } else {
+    url = browser.runtime.getURL("options.html")
   }
+  return browser.tabs.create({ url })
+})
 
-  if (action.type === "openOptions") {
-    let url
-    if (isChrome()) {
-      url = `chrome://extensions/?options=${browser.runtime.id}`
-    } else {
-      url = browser.runtime.getURL("options.html")
-    }
-    return browser.tabs.create({ url })
-  }
-
-  if (action.type === "openExtensions") {
-    if (isChrome()) {
-      browser.tabs.create({ url: "chrome://extensions" })
-    }
+onMessage("openExtensions", () => {
+  if (isChrome()) {
+    browser.tabs.create({ url: "chrome://extensions" })
   }
 })
 
 browser.runtime.onInstalled.addListener(() => {
   browser.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
     if (areaName === "sync" && (apiKey || subdomain)) {
-      getSettings().then((settings) => settingsChanged(settings, { messenger }))
+      getSettings().then((settings) => settingsChanged(settings))
     }
   })
 })
-
-browser.runtime.onStartup.addListener(() => {
-  browser.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
-    if (areaName === "sync" && (apiKey || subdomain)) {
-      getSettings().then((settings) => settingsChanged(settings, { messenger }))
-    }
-  })
-})
-
-browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (!isBrowserTab(tab) && changeInfo.status === "complete") {
-    getSettings().then((settings) => {
-      tabUpdated(tab, { settings, messenger })
-    })
-  }
-})
-
-browser.tabs.onCreated.addListener((tab) => {
-  if (!isBrowserTab(tab)) {
-    messenger.connectTab(tab)
-  }
-})
-
-browser.tabs.onRemoved.addListener(messenger.disconnectTab)
 
 browser.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
   if (areaName === "sync" && (apiKey || subdomain)) {
-    getSettings().then((settings) => settingsChanged(settings, { messenger }))
+    getSettings().then((settings) => settingsChanged(settings))
   }
 })
 
@@ -145,9 +123,8 @@ browser.storage.onChanged.addListener(({ apiKey, subdomain }, areaName) => {
 browser.action ??= browser.browserAction
 browser.action.onClicked.addListener((tab) => {
   if (!isBrowserTab(tab)) {
-    messenger.postMessage(tab, { type: "requestService" })
-    messenger.once("newService", ({ payload }) => {
-      togglePopup(tab, { messenger })(payload)
+    sendMessage("requestService", {}, `content-script@${tab.id}`).then((data) => {
+      togglePopup(tab)(data)
     })
   }
 })

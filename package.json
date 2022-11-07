@@ -1,7 +1,7 @@
 {
   "name": "moco-browser-extensions",
   "description": "Browser plugin for MOCO",
-  "version": "1.9.2",
+  "version": "2.0.0",
   "license": "MIT",
   "browserslist": [
     "defaults",
@@ -42,6 +42,7 @@
     "react-dom": "18.2.0",
     "react-select": "^5.1.0",
     "url-pattern": "^1.0.3",
+    "webext-bridge": "../webext-bridge",
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {

@@ -5,6 +5,7 @@ import remoteServices from "../remoteServices"
 const DEFAULT_SUBDOMAIN = "unset"
 
 export const isChrome = () => typeof globalThis.browser === "undefined" && chrome
+
 export const isFirefox = () => typeof globalThis.browser !== "undefined" && chrome
 
 export const defaultHostOverrides = pipe(

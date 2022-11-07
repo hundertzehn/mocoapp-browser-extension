@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import browser from "webextension-polyfill"
+import { sendMessage } from "webext-bridge/content-script"
+import { onMessage } from "webext-bridge/popup"
 import Spinner from "components/Spinner"
 import Form from "components/Form"
 import Calendar from "components/Calendar"
@@ -90,15 +92,16 @@ class App extends Component {
 
   componentDidMount() {
     window.addEventListener("keydown", this.handleKeyDown)
-    browser.runtime.onMessage.addListener(this.handleSetFormErrors)
     window.addEventListener("message", this.handleMessagePopupData)
     window.parent.postMessage({ type: "moco-bx-popup-ready" }, window.document.referrer || "*")
+    onMessage("setFormErrors", (message) => {
+      this.formErrors = message.data
+    })
   }
 
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown)
     window.removeEventListener("message", this.handleMessagePopupData)
-    browser.runtime.onMessage.removeListener(this.handleSetFormErrors)
   }
 
   handleChange = (event) => {
@@ -121,36 +124,27 @@ class App extends Component {
 
   handleStopTimer = (timedActivity) => {
     const { service } = this.state
-
-    browser.runtime.sendMessage({
-      type: "stopTimer",
-      payload: { timedActivity, service },
-    })
+    sendMessage("stopTimer", { timedActivity, service }, "background")
   }
 
   handleSubmit = (event) => {
     event.preventDefault()
     const { service } = this.state
 
-    browser.runtime.sendMessage({
-      type: "createActivity",
-      payload: {
+    sendMessage(
+      "createActivity",
+      {
         activity: extractAndSetTag(this.changesetWithDefaults),
         service,
       },
-    })
+      "background",
+    )
   }
 
   handleKeyDown = (event) => {
     if (event.keyCode === 27) {
       event.stopPropagation()
-      browser.runtime.sendMessage({ type: "closePopup" })
-    }
-  }
-
-  handleSetFormErrors = ({ type, payload }) => {
-    if (type === "setFormErrors") {
-      this.formErrors = payload
+      sendMessage("closePopup", null, "background")
     }
   }
 

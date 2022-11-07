@@ -1,5 +1,6 @@
 import React from "react"
 import browser from "webextension-polyfill"
+import { sendMessage } from "webext-bridge/content-script"
 import { isChrome } from "utils/browser"
 import logo from "images/moco-159x159.png"
 import firefoxAddons from "images/firefox_addons.png"
@@ -15,10 +16,7 @@ const UpgradeRequiredError = () => (
     <h1>Bitte aktualisieren</h1>
     <p>Die installierte MOCO Browser-Erweiterung ist veraltet &mdash; bitte aktualisieren.</p>
     {isChrome() ? (
-      <button
-        className="moco-bx-btn"
-        onClick={() => browser.runtime.sendMessage({ type: "openExtensions" })}
-      >
+      <button className="moco-bx-btn" onClick={() => sendMessage("openExtensions")}>
         Browser-Erweiterungen öffnen
       </button>
     ) : (
