@@ -9,8 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- Upgrade Chrome to Manifest V3
 - Use package webext-bridge for messaging
+- Upgrade Chrome to Manifest V3
 
 ## [1.9.2] - 2022-10-04
 
