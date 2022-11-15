@@ -28,7 +28,7 @@
     }
   ],
   "commands": {
-    "_execute_browser_action": {
+    "_execute_action": {
       "description": "MOCO-Zeiterfassung ein- und ausblenden",
       "suggested_key": {
         "default": "Ctrl+Shift+K",
