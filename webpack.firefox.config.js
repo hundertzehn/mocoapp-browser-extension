@@ -20,8 +20,8 @@ module.exports = (env) => {
             return Buffer.from(
               JSON.stringify({
                 ...manifest,
-                permissions: compact([
-                  ...manifest.permissions,
+                host_permissions: compact([
+                  ...manifest.host_permissions,
                   env.NODE_ENV === "development" && process.env.USE_LOCAL_MOCO === "true"
                     ? "http://*.mocoapp.localhost/*"
                     : null,
