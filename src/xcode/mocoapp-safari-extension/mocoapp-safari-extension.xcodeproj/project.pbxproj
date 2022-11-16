@@ -1,0 +1,639 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		65731931292543DA005BBF06 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65731930292543DA005BBF06 /* AppDelegate.swift */; };
+		65731935292543DA005BBF06 /* Main.html in Resources */ = {isa = PBXBuildFile; fileRef = 65731933292543DA005BBF06 /* Main.html */; };
+		65731937292543DA005BBF06 /* Icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 65731936292543DA005BBF06 /* Icon.png */; };
+		65731939292543DA005BBF06 /* Style.css in Resources */ = {isa = PBXBuildFile; fileRef = 65731938292543DA005BBF06 /* Style.css */; };
+		6573193B292543DA005BBF06 /* Script.js in Resources */ = {isa = PBXBuildFile; fileRef = 6573193A292543DA005BBF06 /* Script.js */; };
+		6573193D292543DA005BBF06 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6573193C292543DA005BBF06 /* ViewController.swift */; };
+		65731940292543DA005BBF06 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6573193E292543DA005BBF06 /* Main.storyboard */; };
+		65731942292543DB005BBF06 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65731941292543DB005BBF06 /* Assets.xcassets */; };
+		6573194B292543DB005BBF06 /* mocoapp-safari-extension Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 6573194A292543DB005BBF06 /* mocoapp-safari-extension Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		65731950292543DB005BBF06 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6573194F292543DB005BBF06 /* SafariWebExtensionHandler.swift */; };
+		6573196E292543DB005BBF06 /* popup.2.0.1.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6573195D292543DB005BBF06 /* popup.2.0.1.js.LICENSE.txt */; };
+		6573196F292543DB005BBF06 /* background.2.0.1.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6573195E292543DB005BBF06 /* background.2.0.1.js.LICENSE.txt */; };
+		65731970292543DB005BBF06 /* content.css in Resources */ = {isa = PBXBuildFile; fileRef = 6573195F292543DB005BBF06 /* content.css */; };
+		65731971292543DB005BBF06 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 65731960292543DB005BBF06 /* popup.html */; };
+		65731972292543DB005BBF06 /* content.2.0.1.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 65731961292543DB005BBF06 /* content.2.0.1.js.LICENSE.txt */; };
+		65731973292543DB005BBF06 /* background.2.0.1.js in Resources */ = {isa = PBXBuildFile; fileRef = 65731962292543DB005BBF06 /* background.2.0.1.js */; };
+		65731974292543DB005BBF06 /* content.2.0.1.js in Resources */ = {isa = PBXBuildFile; fileRef = 65731963292543DB005BBF06 /* content.2.0.1.js */; };
+		65731975292543DB005BBF06 /* options.2.0.1.js in Resources */ = {isa = PBXBuildFile; fileRef = 65731964292543DB005BBF06 /* options.2.0.1.js */; };
+		65731976292543DB005BBF06 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 65731965292543DB005BBF06 /* manifest.json */; };
+		65731977292543DB005BBF06 /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = 65731966292543DB005BBF06 /* options.html */; };
+		65731978292543DB005BBF06 /* options.2.0.1.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 65731967292543DB005BBF06 /* options.2.0.1.js.LICENSE.txt */; };
+		65731979292543DB005BBF06 /* background.html in Resources */ = {isa = PBXBuildFile; fileRef = 65731968292543DB005BBF06 /* background.html */; };
+		6573197A292543DB005BBF06 /* popup.css in Resources */ = {isa = PBXBuildFile; fileRef = 65731969292543DB005BBF06 /* popup.css */; };
+		6573197B292543DB005BBF06 /* popup.2.0.1.js in Resources */ = {isa = PBXBuildFile; fileRef = 6573196A292543DB005BBF06 /* popup.2.0.1.js */; };
+		6573197C292543DB005BBF06 /* options.css in Resources */ = {isa = PBXBuildFile; fileRef = 6573196B292543DB005BBF06 /* options.css */; };
+		6573197D292543DB005BBF06 /* moco-bx-safari-v2.0.1.zip in Resources */ = {isa = PBXBuildFile; fileRef = 6573196C292543DB005BBF06 /* moco-bx-safari-v2.0.1.zip */; };
+		6573197E292543DB005BBF06 /* src in Resources */ = {isa = PBXBuildFile; fileRef = 6573196D292543DB005BBF06 /* src */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		6573194C292543DB005BBF06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65731925292543DA005BBF06 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 65731949292543DB005BBF06;
+			remoteInfo = "mocoapp-safari-extension Extension";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		65731958292543DB005BBF06 /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				6573194B292543DB005BBF06 /* mocoapp-safari-extension Extension.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		6573192D292543DA005BBF06 /* mocoapp-safari-extension.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mocoapp-safari-extension.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		65731930292543DA005BBF06 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		65731934292543DA005BBF06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = Base; path = ../Base.lproj/Main.html; sourceTree = "<group>"; };
+		65731936292543DA005BBF06 /* Icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Icon.png; sourceTree = "<group>"; };
+		65731938292543DA005BBF06 /* Style.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = Style.css; sourceTree = "<group>"; };
+		6573193A292543DA005BBF06 /* Script.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = Script.js; sourceTree = "<group>"; };
+		6573193C292543DA005BBF06 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		6573193F292543DA005BBF06 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		65731941292543DB005BBF06 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		65731943292543DB005BBF06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		65731944292543DB005BBF06 /* mocoapp_safari_extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = mocoapp_safari_extension.entitlements; sourceTree = "<group>"; };
+		65731945292543DB005BBF06 /* mocoapp-safari-extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "mocoapp-safari-extension.entitlements"; sourceTree = "<group>"; };
+		6573194A292543DB005BBF06 /* mocoapp-safari-extension Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "mocoapp-safari-extension Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6573194F292543DB005BBF06 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
+		65731951292543DB005BBF06 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		65731952292543DB005BBF06 /* mocoapp_safari_extension_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = mocoapp_safari_extension_Extension.entitlements; sourceTree = "<group>"; };
+		6573195D292543DB005BBF06 /* popup.2.0.1.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = popup.2.0.1.js.LICENSE.txt; path = ../../../../build/safari/popup.2.0.1.js.LICENSE.txt; sourceTree = "<group>"; };
+		6573195E292543DB005BBF06 /* background.2.0.1.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = background.2.0.1.js.LICENSE.txt; path = ../../../../build/safari/background.2.0.1.js.LICENSE.txt; sourceTree = "<group>"; };
+		6573195F292543DB005BBF06 /* content.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = content.css; path = ../../../../build/safari/content.css; sourceTree = "<group>"; };
+		65731960292543DB005BBF06 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = popup.html; path = ../../../../build/safari/popup.html; sourceTree = "<group>"; };
+		65731961292543DB005BBF06 /* content.2.0.1.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = content.2.0.1.js.LICENSE.txt; path = ../../../../build/safari/content.2.0.1.js.LICENSE.txt; sourceTree = "<group>"; };
+		65731962292543DB005BBF06 /* background.2.0.1.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = background.2.0.1.js; path = ../../../../build/safari/background.2.0.1.js; sourceTree = "<group>"; };
+		65731963292543DB005BBF06 /* content.2.0.1.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = content.2.0.1.js; path = ../../../../build/safari/content.2.0.1.js; sourceTree = "<group>"; };
+		65731964292543DB005BBF06 /* options.2.0.1.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = options.2.0.1.js; path = ../../../../build/safari/options.2.0.1.js; sourceTree = "<group>"; };
+		65731965292543DB005BBF06 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = ../../../../build/safari/manifest.json; sourceTree = "<group>"; };
+		65731966292543DB005BBF06 /* options.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = options.html; path = ../../../../build/safari/options.html; sourceTree = "<group>"; };
+		65731967292543DB005BBF06 /* options.2.0.1.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = options.2.0.1.js.LICENSE.txt; path = ../../../../build/safari/options.2.0.1.js.LICENSE.txt; sourceTree = "<group>"; };
+		65731968292543DB005BBF06 /* background.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = background.html; path = ../../../../build/safari/background.html; sourceTree = "<group>"; };
+		65731969292543DB005BBF06 /* popup.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = popup.css; path = ../../../../build/safari/popup.css; sourceTree = "<group>"; };
+		6573196A292543DB005BBF06 /* popup.2.0.1.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = popup.2.0.1.js; path = ../../../../build/safari/popup.2.0.1.js; sourceTree = "<group>"; };
+		6573196B292543DB005BBF06 /* options.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = options.css; path = ../../../../build/safari/options.css; sourceTree = "<group>"; };
+		6573196C292543DB005BBF06 /* moco-bx-safari-v2.0.1.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = "moco-bx-safari-v2.0.1.zip"; path = "../../../../build/safari/moco-bx-safari-v2.0.1.zip"; sourceTree = "<group>"; };
+		6573196D292543DB005BBF06 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../../../../build/safari/src; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6573192A292543DA005BBF06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65731947292543DB005BBF06 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		65731924292543DA005BBF06 = {
+			isa = PBXGroup;
+			children = (
+				6573192F292543DA005BBF06 /* mocoapp-safari-extension */,
+				6573194E292543DB005BBF06 /* mocoapp-safari-extension Extension */,
+				6573192E292543DA005BBF06 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6573192E292543DA005BBF06 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6573192D292543DA005BBF06 /* mocoapp-safari-extension.app */,
+				6573194A292543DB005BBF06 /* mocoapp-safari-extension Extension.appex */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6573192F292543DA005BBF06 /* mocoapp-safari-extension */ = {
+			isa = PBXGroup;
+			children = (
+				65731930292543DA005BBF06 /* AppDelegate.swift */,
+				6573193C292543DA005BBF06 /* ViewController.swift */,
+				6573193E292543DA005BBF06 /* Main.storyboard */,
+				65731941292543DB005BBF06 /* Assets.xcassets */,
+				65731943292543DB005BBF06 /* Info.plist */,
+				65731944292543DB005BBF06 /* mocoapp_safari_extension.entitlements */,
+				65731945292543DB005BBF06 /* mocoapp-safari-extension.entitlements */,
+				65731932292543DA005BBF06 /* Resources */,
+			);
+			path = "mocoapp-safari-extension";
+			sourceTree = "<group>";
+		};
+		65731932292543DA005BBF06 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				65731933292543DA005BBF06 /* Main.html */,
+				65731936292543DA005BBF06 /* Icon.png */,
+				65731938292543DA005BBF06 /* Style.css */,
+				6573193A292543DA005BBF06 /* Script.js */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		6573194E292543DB005BBF06 /* mocoapp-safari-extension Extension */ = {
+			isa = PBXGroup;
+			children = (
+				6573195C292543DB005BBF06 /* Resources */,
+				6573194F292543DB005BBF06 /* SafariWebExtensionHandler.swift */,
+				65731951292543DB005BBF06 /* Info.plist */,
+				65731952292543DB005BBF06 /* mocoapp_safari_extension_Extension.entitlements */,
+			);
+			path = "mocoapp-safari-extension Extension";
+			sourceTree = "<group>";
+		};
+		6573195C292543DB005BBF06 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				6573195D292543DB005BBF06 /* popup.2.0.1.js.LICENSE.txt */,
+				6573195E292543DB005BBF06 /* background.2.0.1.js.LICENSE.txt */,
+				6573195F292543DB005BBF06 /* content.css */,
+				65731960292543DB005BBF06 /* popup.html */,
+				65731961292543DB005BBF06 /* content.2.0.1.js.LICENSE.txt */,
+				65731962292543DB005BBF06 /* background.2.0.1.js */,
+				65731963292543DB005BBF06 /* content.2.0.1.js */,
+				65731964292543DB005BBF06 /* options.2.0.1.js */,
+				65731965292543DB005BBF06 /* manifest.json */,
+				65731966292543DB005BBF06 /* options.html */,
+				65731967292543DB005BBF06 /* options.2.0.1.js.LICENSE.txt */,
+				65731968292543DB005BBF06 /* background.html */,
+				65731969292543DB005BBF06 /* popup.css */,
+				6573196A292543DB005BBF06 /* popup.2.0.1.js */,
+				6573196B292543DB005BBF06 /* options.css */,
+				6573196C292543DB005BBF06 /* moco-bx-safari-v2.0.1.zip */,
+				6573196D292543DB005BBF06 /* src */,
+			);
+			name = Resources;
+			path = "mocoapp-safari-extension Extension";
+			sourceTree = SOURCE_ROOT;
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6573192C292543DA005BBF06 /* mocoapp-safari-extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 65731959292543DB005BBF06 /* Build configuration list for PBXNativeTarget "mocoapp-safari-extension" */;
+			buildPhases = (
+				65731929292543DA005BBF06 /* Sources */,
+				6573192A292543DA005BBF06 /* Frameworks */,
+				6573192B292543DA005BBF06 /* Resources */,
+				65731958292543DB005BBF06 /* Embed Foundation Extensions */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				6573194D292543DB005BBF06 /* PBXTargetDependency */,
+			);
+			name = "mocoapp-safari-extension";
+			productName = "mocoapp-safari-extension";
+			productReference = 6573192D292543DA005BBF06 /* mocoapp-safari-extension.app */;
+			productType = "com.apple.product-type.application";
+		};
+		65731949292543DB005BBF06 /* mocoapp-safari-extension Extension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 65731955292543DB005BBF06 /* Build configuration list for PBXNativeTarget "mocoapp-safari-extension Extension" */;
+			buildPhases = (
+				65731946292543DB005BBF06 /* Sources */,
+				65731947292543DB005BBF06 /* Frameworks */,
+				65731948292543DB005BBF06 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "mocoapp-safari-extension Extension";
+			productName = "mocoapp-safari-extension Extension";
+			productReference = 6573194A292543DB005BBF06 /* mocoapp-safari-extension Extension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		65731925292543DA005BBF06 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1410;
+				LastUpgradeCheck = 1410;
+				TargetAttributes = {
+					6573192C292543DA005BBF06 = {
+						CreatedOnToolsVersion = 14.1;
+					};
+					65731949292543DB005BBF06 = {
+						CreatedOnToolsVersion = 14.1;
+					};
+				};
+			};
+			buildConfigurationList = 65731928292543DA005BBF06 /* Build configuration list for PBXProject "mocoapp-safari-extension" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 65731924292543DA005BBF06;
+			productRefGroup = 6573192E292543DA005BBF06 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6573192C292543DA005BBF06 /* mocoapp-safari-extension */,
+				65731949292543DB005BBF06 /* mocoapp-safari-extension Extension */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6573192B292543DA005BBF06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65731937292543DA005BBF06 /* Icon.png in Resources */,
+				65731940292543DA005BBF06 /* Main.storyboard in Resources */,
+				6573193B292543DA005BBF06 /* Script.js in Resources */,
+				65731935292543DA005BBF06 /* Main.html in Resources */,
+				65731942292543DB005BBF06 /* Assets.xcassets in Resources */,
+				65731939292543DA005BBF06 /* Style.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65731948292543DB005BBF06 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65731970292543DB005BBF06 /* content.css in Resources */,
+				65731973292543DB005BBF06 /* background.2.0.1.js in Resources */,
+				6573197C292543DB005BBF06 /* options.css in Resources */,
+				65731971292543DB005BBF06 /* popup.html in Resources */,
+				6573197D292543DB005BBF06 /* moco-bx-safari-v2.0.1.zip in Resources */,
+				65731972292543DB005BBF06 /* content.2.0.1.js.LICENSE.txt in Resources */,
+				6573197E292543DB005BBF06 /* src in Resources */,
+				65731978292543DB005BBF06 /* options.2.0.1.js.LICENSE.txt in Resources */,
+				65731976292543DB005BBF06 /* manifest.json in Resources */,
+				6573197B292543DB005BBF06 /* popup.2.0.1.js in Resources */,
+				65731975292543DB005BBF06 /* options.2.0.1.js in Resources */,
+				6573196F292543DB005BBF06 /* background.2.0.1.js.LICENSE.txt in Resources */,
+				65731977292543DB005BBF06 /* options.html in Resources */,
+				6573196E292543DB005BBF06 /* popup.2.0.1.js.LICENSE.txt in Resources */,
+				65731979292543DB005BBF06 /* background.html in Resources */,
+				65731974292543DB005BBF06 /* content.2.0.1.js in Resources */,
+				6573197A292543DB005BBF06 /* popup.css in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		65731929292543DA005BBF06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6573193D292543DA005BBF06 /* ViewController.swift in Sources */,
+				65731931292543DA005BBF06 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65731946292543DB005BBF06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65731950292543DB005BBF06 /* SafariWebExtensionHandler.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		6573194D292543DB005BBF06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 65731949292543DB005BBF06 /* mocoapp-safari-extension Extension */;
+			targetProxy = 6573194C292543DB005BBF06 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		65731933292543DA005BBF06 /* Main.html */ = {
+			isa = PBXVariantGroup;
+			children = (
+				65731934292543DA005BBF06 /* Base */,
+			);
+			name = Main.html;
+			sourceTree = "<group>";
+		};
+		6573193E292543DA005BBF06 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6573193F292543DA005BBF06 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		65731953292543DB005BBF06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		65731954292543DB005BBF06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 13.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+			};
+			name = Release;
+		};
+		65731956292543DB005BBF06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "mocoapp-safari-extension Extension/mocoapp_safari_extension_Extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mocoapp-safari-extension Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "mocoapp-safari-extension Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.mocoapp-safari-extension.Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		65731957292543DB005BBF06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_ENTITLEMENTS = "mocoapp-safari-extension Extension/mocoapp_safari_extension_Extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mocoapp-safari-extension Extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "mocoapp-safari-extension Extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@executable_path/../../../../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.mocoapp-safari-extension.Extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		6573195A292543DB005BBF06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "mocoapp-safari-extension/mocoapp-safari-extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mocoapp-safari-extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "mocoapp-safari-extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.mocoapp-safari-extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		6573195B292543DB005BBF06 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "mocoapp-safari-extension/mocoapp-safari-extension.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mocoapp-safari-extension/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "mocoapp-safari-extension";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INFOPLIST_KEY_NSMainStoryboardFile = Main;
+				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MARKETING_VERSION = 1.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					SafariServices,
+					"-framework",
+					WebKit,
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.yourCompany.mocoapp-safari-extension";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		65731928292543DA005BBF06 /* Build configuration list for PBXProject "mocoapp-safari-extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65731953292543DB005BBF06 /* Debug */,
+				65731954292543DB005BBF06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		65731955292543DB005BBF06 /* Build configuration list for PBXNativeTarget "mocoapp-safari-extension Extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65731956292543DB005BBF06 /* Debug */,
+				65731957292543DB005BBF06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		65731959292543DB005BBF06 /* Build configuration list for PBXNativeTarget "mocoapp-safari-extension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6573195A292543DB005BBF06 /* Debug */,
+				6573195B292543DB005BBF06 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 65731925292543DA005BBF06 /* Project object */;
+}
