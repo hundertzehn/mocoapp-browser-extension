@@ -1,0 +1,42 @@
+{
+  "name": "MOCO Zeiterfassung",
+  "short_name": "MOCO",
+  "description": "MOCO Zeiterfassung Plugin",
+  "manifest_version": 3,
+  "icons": {
+    "16": "src/images/moco-32x32.png",
+    "32": "src/images/moco-32x32.png",
+    "48": "src/images/moco-159x159.png",
+    "128": "src/images/moco-159x159.png"
+  },
+  "options_ui": {
+    "page": "options.html"
+  },
+  "permissions": ["storage", "tabs"],
+  "host_permissions": ["https://*.mocoapp.com/*"],
+  "background": {
+    "scripts": "background.[version].js"
+  },
+  "action": {
+    "default_icon": "src/images/moco-32x32.png"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.[version].js"],
+      "css": ["content.css"]
+    }
+  ],
+  "commands": {
+    "_execute_browser_action": {
+      "description": "MOCO-Zeiterfassung ein- und ausblenden",
+      "suggested_key": {
+        "default": "Ctrl+Shift+K",
+        "mac": "Command+Shift+K"
+      }
+    }
+  },
+  "web_accessible_resources": [
+    { "resources": ["popup.html", "src/images/*"], "matches": ["<all_urls>"] }
+  ]
+}

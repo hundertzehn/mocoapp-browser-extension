@@ -21,10 +21,12 @@
     "zip:chrome": "zip -qr build/chrome/moco-bx-source.zip . -x .git/\\* build/\\* node_modules/\\* test/\\* .DS_Store",
     "zip:firefox": "zip -qr build/firefox/moco-bx-source.zip . -x .git/\\* build/\\* node_modules/\\* test/\\* .DS_Store",
     "build:chrome": "node_modules/.bin/webpack --config webpack.chrome.config.js --env browser=chrome --env NODE_ENV=production",
+    "build:safari": "node_modules/.bin/webpack --config webpack.safari.config.js --env browser=safari --env NODE_ENV=production",
     "build:firefox": "node_modules/.bin/webpack --config webpack.firefox.config.js --env browser=firefox --env NODE_ENV=production",
-    "build": "yarn build:firefox && yarn zip:firefox && yarn build:chrome && yarn zip:chrome",
+    "build": "yarn build:firefox && yarn zip:firefox && yarn build:chrome && yarn zip:chrome && yarn build:safari",
     "test": "node_modules/.bin/jest",
-    "test:watch": "node_modules/.bin/jest --watch"
+    "test:watch": "node_modules/.bin/jest --watch",
+    "createXCodeProject": "xcrun safari-web-extension-converter ./build/safari --no-open --swift --macos-only --app-name mocoapp-safari-extension --project-location ./src/xcode"
   },
   "dependencies": {
     "@vespaiach/axios-fetch-adapter": "^0.3.0",
