@@ -176,5 +176,16 @@ export default {
     allowHostOverride: false,
   },
 
+  msteams: {
+    name: "microsoft teams",
+    host: "https://teams.microsoft.com/",
+    urlPatterns: [":host:/t/:id", ":host:/t/:id/:customId", ":host:/:space/v/l/f/:folder"],
+    description: (document, service, { id, customId }) => {
+      const title = document.querySelector(".task-name__overlay")?.textContent?.trim()
+      return `#${customId || id} ${title || ""}`.trim()
+    },
+    allowHostOverride: false,
+  },
+
   ...remoteServicesCommunity,
 }
