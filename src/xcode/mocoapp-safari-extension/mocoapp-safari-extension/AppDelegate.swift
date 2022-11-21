@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  mocoapp-safari-extension
 //
-//  Created by Daniel Pangerl on 16.11.22.
+//  Created by Daniel Pangerl on 21.11.22.
 //
 
 import Cocoa

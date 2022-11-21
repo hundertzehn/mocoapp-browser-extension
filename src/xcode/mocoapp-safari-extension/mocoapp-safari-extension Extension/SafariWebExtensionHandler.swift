@@ -2,7 +2,7 @@
 //  SafariWebExtensionHandler.swift
 //  mocoapp-safari-extension Extension
 //
-//  Created by Daniel Pangerl on 16.11.22.
+//  Created by Daniel Pangerl on 21.11.22.
 //
 
 import SafariServices
