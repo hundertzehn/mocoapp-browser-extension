@@ -17,6 +17,7 @@
   "scripts": {
     "start": "yarn start:chrome",
     "start:chrome": "node_modules/.bin/webpack --config webpack.chrome.config.js --watch --env browser=chrome --env NODE_ENV=development",
+    "start:safari": "node_modules/.bin/webpack --config webpack.safari.config.js --watch --env browser=safari --env NODE_ENV=development",
     "start:firefox": "node_modules/.bin/webpack --config webpack.firefox.config.js --watch --env browser=firefox --env NODE_ENV=development",
     "zip:chrome": "zip -qr build/chrome/moco-bx-source.zip . -x .git/\\* build/\\* node_modules/\\* test/\\* .DS_Store",
     "zip:firefox": "zip -qr build/firefox/moco-bx-source.zip . -x .git/\\* build/\\* node_modules/\\* test/\\* .DS_Store",
