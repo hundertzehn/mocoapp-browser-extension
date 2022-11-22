@@ -17,23 +17,23 @@
 		651841F8292B871100DB44B6 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 651841F7292B871100DB44B6 /* Assets.xcassets */; };
 		65184201292B871100DB44B6 /* mocoapp-safari-extension Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 65184200292B871100DB44B6 /* mocoapp-safari-extension Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		65184206292B871100DB44B6 /* SafariWebExtensionHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65184205292B871100DB44B6 /* SafariWebExtensionHandler.swift */; };
-		65184224292B871100DB44B6 /* popup.2.0.2.js in Resources */ = {isa = PBXBuildFile; fileRef = 65184213292B871100DB44B6 /* popup.2.0.2.js */; };
-		65184225292B871100DB44B6 /* content.css in Resources */ = {isa = PBXBuildFile; fileRef = 65184214292B871100DB44B6 /* content.css */; };
-		65184226292B871100DB44B6 /* content.2.0.2.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 65184215292B871100DB44B6 /* content.2.0.2.js.LICENSE.txt */; };
-		65184227292B871100DB44B6 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 65184216292B871100DB44B6 /* popup.html */; };
-		65184228292B871100DB44B6 /* popup.2.0.2.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 65184217292B871100DB44B6 /* popup.2.0.2.js.LICENSE.txt */; };
-		65184229292B871100DB44B6 /* background.2.0.2.js in Resources */ = {isa = PBXBuildFile; fileRef = 65184218292B871100DB44B6 /* background.2.0.2.js */; };
-		6518422A292B871100DB44B6 /* background.2.0.2.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 65184219292B871100DB44B6 /* background.2.0.2.js.LICENSE.txt */; };
-		6518422B292B871100DB44B6 /* content.2.0.2.js in Resources */ = {isa = PBXBuildFile; fileRef = 6518421A292B871100DB44B6 /* content.2.0.2.js */; };
-		6518422C292B871100DB44B6 /* options.2.0.2.js in Resources */ = {isa = PBXBuildFile; fileRef = 6518421B292B871100DB44B6 /* options.2.0.2.js */; };
-		6518422D292B871100DB44B6 /* options.2.0.2.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 6518421C292B871100DB44B6 /* options.2.0.2.js.LICENSE.txt */; };
-		6518422E292B871100DB44B6 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 6518421D292B871100DB44B6 /* manifest.json */; };
-		6518422F292B871100DB44B6 /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = 6518421E292B871100DB44B6 /* options.html */; };
-		65184230292B871100DB44B6 /* background.html in Resources */ = {isa = PBXBuildFile; fileRef = 6518421F292B871100DB44B6 /* background.html */; };
-		65184231292B871100DB44B6 /* popup.css in Resources */ = {isa = PBXBuildFile; fileRef = 65184220292B871100DB44B6 /* popup.css */; };
-		65184232292B871100DB44B6 /* moco-bx-safari-v2.0.2.zip in Resources */ = {isa = PBXBuildFile; fileRef = 65184221292B871100DB44B6 /* moco-bx-safari-v2.0.2.zip */; };
-		65184233292B871100DB44B6 /* options.css in Resources */ = {isa = PBXBuildFile; fileRef = 65184222292B871100DB44B6 /* options.css */; };
-		65184234292B871100DB44B6 /* src in Resources */ = {isa = PBXBuildFile; fileRef = 65184223292B871100DB44B6 /* src */; };
+		65E6A28B292CD65F00169E86 /* background.2.0.2.js in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A27A292CD65F00169E86 /* background.2.0.2.js */; };
+		65E6A28C292CD65F00169E86 /* background.html in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A27B292CD65F00169E86 /* background.html */; };
+		65E6A28D292CD65F00169E86 /* options.html in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A27C292CD65F00169E86 /* options.html */; };
+		65E6A28E292CD65F00169E86 /* content.2.0.2.js in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A27D292CD65F00169E86 /* content.2.0.2.js */; };
+		65E6A28F292CD65F00169E86 /* content.css in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A27E292CD65F00169E86 /* content.css */; };
+		65E6A290292CD65F00169E86 /* popup.2.0.2.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A27F292CD65F00169E86 /* popup.2.0.2.js.LICENSE.txt */; };
+		65E6A291292CD65F00169E86 /* popup.2.0.2.js in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A280292CD65F00169E86 /* popup.2.0.2.js */; };
+		65E6A292292CD65F00169E86 /* options.css in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A281292CD65F00169E86 /* options.css */; };
+		65E6A293292CD65F00169E86 /* manifest.json in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A282292CD65F00169E86 /* manifest.json */; };
+		65E6A294292CD65F00169E86 /* options.2.0.2.js in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A283292CD65F00169E86 /* options.2.0.2.js */; };
+		65E6A295292CD65F00169E86 /* content.2.0.2.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A284292CD65F00169E86 /* content.2.0.2.js.LICENSE.txt */; };
+		65E6A296292CD65F00169E86 /* background.2.0.2.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A285292CD65F00169E86 /* background.2.0.2.js.LICENSE.txt */; };
+		65E6A297292CD65F00169E86 /* moco-bx-safari-v2.0.2.zip in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A286292CD65F00169E86 /* moco-bx-safari-v2.0.2.zip */; };
+		65E6A298292CD65F00169E86 /* popup.css in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A287292CD65F00169E86 /* popup.css */; };
+		65E6A299292CD65F00169E86 /* options.2.0.2.js.LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A288292CD65F00169E86 /* options.2.0.2.js.LICENSE.txt */; };
+		65E6A29A292CD65F00169E86 /* src in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A289292CD65F00169E86 /* src */; };
+		65E6A29B292CD65F00169E86 /* popup.html in Resources */ = {isa = PBXBuildFile; fileRef = 65E6A28A292CD65F00169E86 /* popup.html */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -77,23 +77,23 @@
 		65184205292B871100DB44B6 /* SafariWebExtensionHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SafariWebExtensionHandler.swift; sourceTree = "<group>"; };
 		65184207292B871100DB44B6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		65184208292B871100DB44B6 /* mocoapp_safari_extension_Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = mocoapp_safari_extension_Extension.entitlements; sourceTree = "<group>"; };
-		65184213292B871100DB44B6 /* popup.2.0.2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = popup.2.0.2.js; path = ../../../../build/safari/popup.2.0.2.js; sourceTree = "<group>"; };
-		65184214292B871100DB44B6 /* content.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = content.css; path = ../../../../build/safari/content.css; sourceTree = "<group>"; };
-		65184215292B871100DB44B6 /* content.2.0.2.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = content.2.0.2.js.LICENSE.txt; path = ../../../../build/safari/content.2.0.2.js.LICENSE.txt; sourceTree = "<group>"; };
-		65184216292B871100DB44B6 /* popup.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = popup.html; path = ../../../../build/safari/popup.html; sourceTree = "<group>"; };
-		65184217292B871100DB44B6 /* popup.2.0.2.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = popup.2.0.2.js.LICENSE.txt; path = ../../../../build/safari/popup.2.0.2.js.LICENSE.txt; sourceTree = "<group>"; };
-		65184218292B871100DB44B6 /* background.2.0.2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = background.2.0.2.js; path = ../../../../build/safari/background.2.0.2.js; sourceTree = "<group>"; };
-		65184219292B871100DB44B6 /* background.2.0.2.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = background.2.0.2.js.LICENSE.txt; path = ../../../../build/safari/background.2.0.2.js.LICENSE.txt; sourceTree = "<group>"; };
-		6518421A292B871100DB44B6 /* content.2.0.2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = content.2.0.2.js; path = ../../../../build/safari/content.2.0.2.js; sourceTree = "<group>"; };
-		6518421B292B871100DB44B6 /* options.2.0.2.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; name = options.2.0.2.js; path = ../../../../build/safari/options.2.0.2.js; sourceTree = "<group>"; };
-		6518421C292B871100DB44B6 /* options.2.0.2.js.LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; name = options.2.0.2.js.LICENSE.txt; path = ../../../../build/safari/options.2.0.2.js.LICENSE.txt; sourceTree = "<group>"; };
-		6518421D292B871100DB44B6 /* manifest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = manifest.json; path = ../../../../build/safari/manifest.json; sourceTree = "<group>"; };
-		6518421E292B871100DB44B6 /* options.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = options.html; path = ../../../../build/safari/options.html; sourceTree = "<group>"; };
-		6518421F292B871100DB44B6 /* background.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; name = background.html; path = ../../../../build/safari/background.html; sourceTree = "<group>"; };
-		65184220292B871100DB44B6 /* popup.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = popup.css; path = ../../../../build/safari/popup.css; sourceTree = "<group>"; };
-		65184221292B871100DB44B6 /* moco-bx-safari-v2.0.2.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = "moco-bx-safari-v2.0.2.zip"; path = "../../../../build/safari/moco-bx-safari-v2.0.2.zip"; sourceTree = "<group>"; };
-		65184222292B871100DB44B6 /* options.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; name = options.css; path = ../../../../build/safari/options.css; sourceTree = "<group>"; };
-		65184223292B871100DB44B6 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../../../../build/safari/src; sourceTree = "<group>"; };
+		65E6A27A292CD65F00169E86 /* background.2.0.2.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = background.2.0.2.js; path = ../../../build/safari/background.2.0.2.js; sourceTree = "<group>"; };
+		65E6A27B292CD65F00169E86 /* background.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = background.html; path = ../../../build/safari/background.html; sourceTree = "<group>"; };
+		65E6A27C292CD65F00169E86 /* options.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = options.html; path = ../../../build/safari/options.html; sourceTree = "<group>"; };
+		65E6A27D292CD65F00169E86 /* content.2.0.2.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = content.2.0.2.js; path = ../../../build/safari/content.2.0.2.js; sourceTree = "<group>"; };
+		65E6A27E292CD65F00169E86 /* content.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = content.css; path = ../../../build/safari/content.css; sourceTree = "<group>"; };
+		65E6A27F292CD65F00169E86 /* popup.2.0.2.js.LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = popup.2.0.2.js.LICENSE.txt; path = ../../../build/safari/popup.2.0.2.js.LICENSE.txt; sourceTree = "<group>"; };
+		65E6A280292CD65F00169E86 /* popup.2.0.2.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = popup.2.0.2.js; path = ../../../build/safari/popup.2.0.2.js; sourceTree = "<group>"; };
+		65E6A281292CD65F00169E86 /* options.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = options.css; path = ../../../build/safari/options.css; sourceTree = "<group>"; };
+		65E6A282292CD65F00169E86 /* manifest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = manifest.json; path = ../../../build/safari/manifest.json; sourceTree = "<group>"; };
+		65E6A283292CD65F00169E86 /* options.2.0.2.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = options.2.0.2.js; path = ../../../build/safari/options.2.0.2.js; sourceTree = "<group>"; };
+		65E6A284292CD65F00169E86 /* content.2.0.2.js.LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = content.2.0.2.js.LICENSE.txt; path = ../../../build/safari/content.2.0.2.js.LICENSE.txt; sourceTree = "<group>"; };
+		65E6A285292CD65F00169E86 /* background.2.0.2.js.LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = background.2.0.2.js.LICENSE.txt; path = ../../../build/safari/background.2.0.2.js.LICENSE.txt; sourceTree = "<group>"; };
+		65E6A286292CD65F00169E86 /* moco-bx-safari-v2.0.2.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = "moco-bx-safari-v2.0.2.zip"; path = "../../../build/safari/moco-bx-safari-v2.0.2.zip"; sourceTree = "<group>"; };
+		65E6A287292CD65F00169E86 /* popup.css */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.css; name = popup.css; path = ../../../build/safari/popup.css; sourceTree = "<group>"; };
+		65E6A288292CD65F00169E86 /* options.2.0.2.js.LICENSE.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = options.2.0.2.js.LICENSE.txt; path = ../../../build/safari/options.2.0.2.js.LICENSE.txt; sourceTree = "<group>"; };
+		65E6A289292CD65F00169E86 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; name = src; path = ../../../build/safari/src; sourceTree = "<group>"; };
+		65E6A28A292CD65F00169E86 /* popup.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; name = popup.html; path = ../../../build/safari/popup.html; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -172,23 +172,23 @@
 		65184212292B871100DB44B6 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				65184213292B871100DB44B6 /* popup.2.0.2.js */,
-				65184214292B871100DB44B6 /* content.css */,
-				65184215292B871100DB44B6 /* content.2.0.2.js.LICENSE.txt */,
-				65184216292B871100DB44B6 /* popup.html */,
-				65184217292B871100DB44B6 /* popup.2.0.2.js.LICENSE.txt */,
-				65184218292B871100DB44B6 /* background.2.0.2.js */,
-				65184219292B871100DB44B6 /* background.2.0.2.js.LICENSE.txt */,
-				6518421A292B871100DB44B6 /* content.2.0.2.js */,
-				6518421B292B871100DB44B6 /* options.2.0.2.js */,
-				6518421C292B871100DB44B6 /* options.2.0.2.js.LICENSE.txt */,
-				6518421D292B871100DB44B6 /* manifest.json */,
-				6518421E292B871100DB44B6 /* options.html */,
-				6518421F292B871100DB44B6 /* background.html */,
-				65184220292B871100DB44B6 /* popup.css */,
-				65184221292B871100DB44B6 /* moco-bx-safari-v2.0.2.zip */,
-				65184222292B871100DB44B6 /* options.css */,
-				65184223292B871100DB44B6 /* src */,
+				65E6A27A292CD65F00169E86 /* background.2.0.2.js */,
+				65E6A285292CD65F00169E86 /* background.2.0.2.js.LICENSE.txt */,
+				65E6A27B292CD65F00169E86 /* background.html */,
+				65E6A27D292CD65F00169E86 /* content.2.0.2.js */,
+				65E6A284292CD65F00169E86 /* content.2.0.2.js.LICENSE.txt */,
+				65E6A27E292CD65F00169E86 /* content.css */,
+				65E6A282292CD65F00169E86 /* manifest.json */,
+				65E6A286292CD65F00169E86 /* moco-bx-safari-v2.0.2.zip */,
+				65E6A283292CD65F00169E86 /* options.2.0.2.js */,
+				65E6A288292CD65F00169E86 /* options.2.0.2.js.LICENSE.txt */,
+				65E6A281292CD65F00169E86 /* options.css */,
+				65E6A27C292CD65F00169E86 /* options.html */,
+				65E6A280292CD65F00169E86 /* popup.2.0.2.js */,
+				65E6A27F292CD65F00169E86 /* popup.2.0.2.js.LICENSE.txt */,
+				65E6A287292CD65F00169E86 /* popup.css */,
+				65E6A28A292CD65F00169E86 /* popup.html */,
+				65E6A289292CD65F00169E86 /* src */,
 			);
 			name = Resources;
 			path = "mocoapp-safari-extension Extension";
@@ -288,23 +288,23 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65184226292B871100DB44B6 /* content.2.0.2.js.LICENSE.txt in Resources */,
-				65184227292B871100DB44B6 /* popup.html in Resources */,
-				65184224292B871100DB44B6 /* popup.2.0.2.js in Resources */,
-				65184225292B871100DB44B6 /* content.css in Resources */,
-				6518422B292B871100DB44B6 /* content.2.0.2.js in Resources */,
-				6518422E292B871100DB44B6 /* manifest.json in Resources */,
-				65184234292B871100DB44B6 /* src in Resources */,
-				65184229292B871100DB44B6 /* background.2.0.2.js in Resources */,
-				65184228292B871100DB44B6 /* popup.2.0.2.js.LICENSE.txt in Resources */,
-				65184231292B871100DB44B6 /* popup.css in Resources */,
-				6518422A292B871100DB44B6 /* background.2.0.2.js.LICENSE.txt in Resources */,
-				6518422D292B871100DB44B6 /* options.2.0.2.js.LICENSE.txt in Resources */,
-				6518422C292B871100DB44B6 /* options.2.0.2.js in Resources */,
-				65184232292B871100DB44B6 /* moco-bx-safari-v2.0.2.zip in Resources */,
-				6518422F292B871100DB44B6 /* options.html in Resources */,
-				65184233292B871100DB44B6 /* options.css in Resources */,
-				65184230292B871100DB44B6 /* background.html in Resources */,
+				65E6A290292CD65F00169E86 /* popup.2.0.2.js.LICENSE.txt in Resources */,
+				65E6A291292CD65F00169E86 /* popup.2.0.2.js in Resources */,
+				65E6A28E292CD65F00169E86 /* content.2.0.2.js in Resources */,
+				65E6A29A292CD65F00169E86 /* src in Resources */,
+				65E6A28C292CD65F00169E86 /* background.html in Resources */,
+				65E6A297292CD65F00169E86 /* moco-bx-safari-v2.0.2.zip in Resources */,
+				65E6A295292CD65F00169E86 /* content.2.0.2.js.LICENSE.txt in Resources */,
+				65E6A293292CD65F00169E86 /* manifest.json in Resources */,
+				65E6A294292CD65F00169E86 /* options.2.0.2.js in Resources */,
+				65E6A298292CD65F00169E86 /* popup.css in Resources */,
+				65E6A296292CD65F00169E86 /* background.2.0.2.js.LICENSE.txt in Resources */,
+				65E6A28B292CD65F00169E86 /* background.2.0.2.js in Resources */,
+				65E6A28F292CD65F00169E86 /* content.css in Resources */,
+				65E6A29B292CD65F00169E86 /* popup.html in Resources */,
+				65E6A292292CD65F00169E86 /* options.css in Resources */,
+				65E6A299292CD65F00169E86 /* options.2.0.2.js.LICENSE.txt in Resources */,
+				65E6A28D292CD65F00169E86 /* options.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
