@@ -27,7 +27,7 @@
     "build": "yarn build:firefox && yarn zip:firefox && yarn build:chrome && yarn zip:chrome && yarn build:safari",
     "test": "node_modules/.bin/jest",
     "test:watch": "node_modules/.bin/jest --watch",
-    "createXCodeProject": "xcrun safari-web-extension-converter ./build/safari --no-open --swift --macos-only --app-name mocoapp-safari-extension --project-location ./src/xcode"
+    "createXCodeProject": "xcrun safari-web-extension-converter ./build/safari --no-open --swift --macos-only --app-name mocoapp-safari-extension --project-location safari"
   },
   "dependencies": {
     "@vespaiach/axios-fetch-adapter": "^0.3.0",
