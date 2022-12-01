@@ -30,7 +30,7 @@
     "@vespaiach/axios-fetch-adapter": "^0.3.0",
     "axios": "^0.27.2",
     "classnames": "^2.2.6",
-    "core-js": "^3.10.2",
+    "core-js": "^3.26.1",
     "date-fns": "^2.15.0",
     "dotenv": "^16.0.0",
     "lodash": "^4.17.11",
