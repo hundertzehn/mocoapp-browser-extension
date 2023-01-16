@@ -8,8 +8,12 @@ export default {
     urlPatterns: [
       [/^:host:\/0\/\d+\/(\d+)/, ["id"]],
       [/^:host:\/0\/inbox\/\d+\/(\d+)/, ["id"]],
+      ":host:/0/search",
       [/^:host:\/0\/search\/\d+\/(\d+)/, ["id"]],
     ],
+    queryParams: {
+      id: "child",
+    },
     description: (document) =>
       [
         "Task Name",
@@ -154,6 +158,7 @@ export default {
       ":host:/workspace.htm#todo",
       ":host:/workspace.htm#created-by-me",
       ":host:/workspace.htm#starred-tasks",
+      ":host:/workspace.htm#dashboards",
     ],
     queryParams: {
       id: ["sidePanelItemId", "overlayEntityId"],
