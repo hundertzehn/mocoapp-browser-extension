@@ -152,7 +152,7 @@ class Options extends Component {
                 <div className="input-group">
                   <span
                     className="input-group-addon input-group-addon--left"
-                    style={{ display: "inline-block", width: "70px", textAlign: "left" }}
+                    style={{ display: "inline-block", width: "100px", textAlign: "left" }}
                   >
                     {upperCaseFirstLetter(name)}
                   </span>
