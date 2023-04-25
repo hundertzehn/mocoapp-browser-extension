@@ -129,7 +129,7 @@ class Form extends Component {
             onChange={onChange}
             value={changeset.description}
             placeholder="Beschreibung der Tätigkeit – optional"
-            maxLength={255}
+            maxLength={500}
             rows={3}
             onKeyDown={this.handleTextareaKeyDown}
           />
