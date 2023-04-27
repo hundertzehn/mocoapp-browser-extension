@@ -117,7 +117,7 @@ export default {
 
   openproject: {
     name: "openproject",
-    host: "",
+    host: "https://:org.openproject.com",
     urlPatterns: [
       ":host:/projects/:project/work_packages/:id(/*)",
       ":host:/projects/:project/work_packages/details/:id(/*)",
@@ -137,7 +137,7 @@ export default {
 
       return subject || subjectId;
     },
-    projectId: (document) => {
+    projectLabel: (document) => {
       // ":project" in URL can be project name or OP internal project ID. Therefore, it cannot be used.
       return (document.querySelector(".-project-context a") || document.querySelector("#projects-menu"))?.textContent?.trim() || "";
     },

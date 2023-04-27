@@ -53,8 +53,8 @@ class App extends Component {
       findProjectByValue(this.changeset.assignment_id)(projects) ||
       findProjectByValue(Number(serviceLastProjectId))(projects) ||
       findProjectByIdentifier(service?.projectId)(projects) ||
-      findProjectByLabel(String(service?.projectId || ""))(projects) || // extern project
-      findProjectByLabel("(" + String(service?.projectId || "") + ")")(projects) || // intern project
+      findProjectByLabel(String(service?.projectLabel || ""))(projects) || // extern project
+      findProjectByLabel("(" + String(service?.projectLabel || "") + ")")(projects) || // intern project
       findProjectByValue(Number(userLastProjectId))(projects) ||
       head(projects.flatMap(get("options")))
     )
