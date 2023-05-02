@@ -115,6 +115,36 @@ export default {
     allowHostOverride: false,
   },
 
+  openproject: {
+    name: "openproject",
+    host: "https://:org.openproject.com",
+    urlPatterns: [
+      ":host:/projects/:project/work_packages/:id(/*)",
+      ":host:/projects/:project/work_packages/details/:id(/*)",
+      ":host:/work_packages/:id(/*)",
+      ":host:/work_packages/details/:id(/*)",
+    ],
+    description: (document) => {
+      let subject   = document.querySelector(".work-packages--details--subject")?.textContent?.trim()     || "";
+      let subjectId = document.querySelector(".work-packages--info-row")?.firstChild?.textContent?.trim() || "";
+
+      if (subjectId) {
+        subjectId = "OP " + subjectId;
+      }
+      if (subject && subjectId) {
+        subject = subjectId + " " + subject;
+      }
+
+      return subject || subjectId;
+    },
+    projectLabel: (document) => {
+      // ":project" in URL can be project name or OP internal project ID. Therefore, it cannot be used.
+      return (document.querySelector(".-project-context a") || document.querySelector("#projects-menu"))?.textContent?.trim() || "";
+    },
+    allowHostOverride: true,
+    position: { left: "calc(2rem + 5px)"  },
+  },
+
   trello: {
     name: "trello",
     host: "https://trello.com",

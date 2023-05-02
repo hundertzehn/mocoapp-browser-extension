@@ -36,6 +36,7 @@ export const findProjectBy = (prop) => (val) => (projects) => {
 }
 
 export const findProjectByIdentifier = findProjectBy("identifier")
+export const findProjectByLabel = findProjectBy("label")
 export const findProjectByValue = findProjectBy("value")
 
 export const findTask = (id) => compose(find(pathEq("value", Number(id))), get("tasks"))
