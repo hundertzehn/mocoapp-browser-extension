@@ -7,11 +7,11 @@ const baseConfig = require("./webpack.base.config")
 
 const appliationId = process.env.APPLICATION_ID
 
-if (isEmpty(appliationId)) {
-  throw new Error("APPLICATION_ID is not set, set it in .env or as an environment variable")
-}
-
 module.exports = (env) => {
+  if (env.NODE_ENV === "production" && isEmpty(appliationId)) {
+    throw new Error("APPLICATION_ID is not set, set it in .env or as an environment variable")
+  }
+
   const config = baseConfig(env)
 
   config.plugins.unshift(
