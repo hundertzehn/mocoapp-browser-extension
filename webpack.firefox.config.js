@@ -1,10 +1,17 @@
 const { v4: uuidv4 } = require("uuid")
 const CopyWebpackPlugin = require("copy-webpack-plugin")
 const { compact } = require("lodash/fp")
+const isEmpty = require("lodash/isEmpty")
 
 const baseConfig = require("./webpack.base.config")
 
+const appliationId = process.env.APPLICATION_ID
+
 module.exports = (env) => {
+  if (env.NODE_ENV === "production" && isEmpty(appliationId)) {
+    throw new Error("APPLICATION_ID is not set, set it in .env or as an environment variable")
+  }
+
   const config = baseConfig(env)
 
   config.plugins.unshift(
@@ -28,7 +35,7 @@ module.exports = (env) => {
                 ]),
                 browser_specific_settings: {
                   gecko: {
-                    id: process.env.APPLICATION_ID || `{${uuidv4()}}`,
+                    id: appliationId || `{${uuidv4()}}`,
                   },
                 },
                 description: process.env.npm_package_description,

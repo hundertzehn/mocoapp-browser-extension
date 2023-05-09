@@ -5,9 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.3.0] - 2023-05-02
+
+### Added
+
+- Support OpenProject ([PR 680](https://github.com/hundertzehn/mocoapp-browser-extension/pull/680) – community supported, contribution by Bernhard Krop: https://github.com/Bernhard-Krop)
+
+### Changed
+
+- Allow 500 characters for time entry description
+
+## [2.2.0] - 2023-02-06
+
+### Fixed
+
+- Fix a crash where the extension stopped working
+
 ## [2.1.0] - 2023-01-16
 
-## Added
+### Added
 
 - Support Wrike dashboards
 - Support Asana search
@@ -18,13 +34,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Fixed an error where the root of the bubble was not defined
 
-## Added
+### Added
 
 - Support Basecamp 3 cards ([PR 590](https://github.com/hundertzehn/mocoapp-browser-extension/pull/590) – community supported, contribution by Florian Jahn: https://github.com/fjahn)
 
 ## [2.0.1] - 2022-10-08
 
-## Added
+### Added
 
 - Support Basecamp 3 cards ([PR 590](https://github.com/hundertzehn/mocoapp-browser-extension/pull/590) – community supported, contribution by Florian Jahn: https://github.com/fjahn)
 
