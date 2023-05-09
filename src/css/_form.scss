@@ -56,6 +56,7 @@ input {
     }
 
     .input-group-addon {
+      box-sizing: content-box;
       flex: 0 0 auto;
       padding: 6px 12px;
       font-weight: normal;
