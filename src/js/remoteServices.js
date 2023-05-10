@@ -137,6 +137,10 @@ export default {
 
       return subject || subjectId;
     },
+    projectId: (document) => {
+      // ":project" in URL can be project name or OP internal project ID. Therefore, it cannot be used.
+      return projectIdentifierBySelector(".-project-context a")(document) || projectIdentifierBySelector("#projects-menu")(document);
+    },
     projectLabel: (document) => {
       // ":project" in URL can be project name or OP internal project ID. Therefore, it cannot be used.
       return (document.querySelector(".-project-context a") || document.querySelector("#projects-menu"))?.textContent?.trim() || "";
