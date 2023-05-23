@@ -1,12 +1,12 @@
 import React, { createRef } from "react"
 import browser from "webextension-polyfill"
 import { createRoot } from "react-dom/client"
-import Bubble from "./components/Bubble"
-import Popup from "components/Popup"
-import { createServiceFinder } from "utils/urlMatcher"
-import remoteServices from "./remoteServices"
+import Bubble from "./components/Bubble.js"
+import Popup from "components/Popup.js"
+import { createServiceFinder } from "utils/urlMatcher.js"
+import remoteServices from "./remoteServices.js"
 import { sendMessage, onMessage } from "webext-bridge/content-script"
-import { getSettings } from "./utils/browser"
+import { getSettings } from "./utils/browser.js"
 import "../css/content.scss"
 
 const popupRef = createRef()

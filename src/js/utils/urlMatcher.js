@@ -1,7 +1,9 @@
 import UrlPattern from "url-pattern"
-import { isFunction, isUndefined, compose, toPairs, map, pipe, isNil, reduce } from "lodash/fp"
-import { asArray } from "./index"
+import lodash from "lodash/fp.js"
+import { asArray } from "./index.js"
 import queryString from "query-string"
+
+const { compose, isFunction, isUndefined, toPairs, map, pipe, isNil, reduce } = lodash
 
 function parseUrl(url) {
   const urlObject = new URL(url)

@@ -1,13 +1,19 @@
-require("dotenv").config()
+import path from "path"
+import { fileURLToPath } from "url"
+import webpack from "webpack"
+import { CleanWebpackPlugin } from "clean-webpack-plugin"
+import MiniCssExtractPlugin from "mini-css-extract-plugin"
+import HtmlWebpackPlugin from "html-webpack-plugin"
+import ZipPlugin from "zip-webpack-plugin"
+import { config as dotenvConfig } from "dotenv"
 
-const path = require("path")
-const webpack = require("webpack")
-const { CleanWebpackPlugin } = require("clean-webpack-plugin")
-const MiniCssExtractPlugin = require("mini-css-extract-plugin")
-const HtmlWebpackPlugin = require("html-webpack-plugin")
-const ZipPlugin = require("zip-webpack-plugin")
+dotenvConfig()
 
-module.exports = (env) => {
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename)
+console.log(import.meta.url, __filename, __dirname)
+
+export default (env) => {
   const config = {
     entry: {
       background: "./src/js/background.js",

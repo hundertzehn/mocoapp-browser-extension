@@ -9,6 +9,10 @@
     "not ie_mob 11",
     "not chrome 49"
   ],
+  "type": "module",
+  "engines": {
+    "node": ">=16"
+  },
   "jest": {
     "setupFiles": [
       "<rootDir>/test/jest.setup.js"
@@ -16,15 +20,15 @@
   },
   "scripts": {
     "start": "yarn start:chrome",
-    "start:chrome": "node_modules/.bin/webpack --config webpack.chrome.config.js --watch --env browser=chrome --env NODE_ENV=development",
+    "start:chrome": "yarn node --experimental-specifier-resolution=node node_modules/.bin/webpack --config webpack.chrome.config.js --watch --env browser=chrome --env NODE_ENV=development",
     "start:firefox": "node_modules/.bin/webpack --config webpack.firefox.config.js --watch --env browser=firefox --env NODE_ENV=development",
     "zip:chrome": "zip -qr build/chrome/moco-bx-source.zip . -x .git/\\* build/\\* node_modules/\\* test/\\* .DS_Store",
     "zip:firefox": "zip -qr build/firefox/moco-bx-source.zip . -x .git/\\* build/\\* node_modules/\\* test/\\* .DS_Store",
     "build:chrome": "node_modules/.bin/webpack --config webpack.chrome.config.js --env browser=chrome --env NODE_ENV=production",
     "build:firefox": "node_modules/.bin/webpack --config webpack.firefox.config.js --env browser=firefox --env NODE_ENV=production",
     "build": "yarn build:firefox && yarn zip:firefox && yarn build:chrome && yarn zip:chrome",
-    "test": "node_modules/.bin/jest",
-    "test:watch": "node_modules/.bin/jest --watch"
+    "test": "yarn node --experimental-vm-modules $(yarn bin jest)",
+    "test:watch": "yarn node --experimental-vm-modules $(yarn bin jest) --watch"
   },
   "dependencies": {
     "@vespaiach/axios-fetch-adapter": "^0.3.0",
@@ -46,7 +50,7 @@
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.2",
+    "@babel/core": "^7.21.8",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
     "@babel/plugin-proposal-decorators": "^7.10.1",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.8.3",

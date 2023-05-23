@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill"
-import { head, pick, reduce, filter, prop, pipe } from "lodash/fp"
-import remoteServices from "../remoteServices"
+import { head, pick, reduce, filter, prop, pipe } from "lodash/fp.js"
+import remoteServices from "../remoteServices.js"
 
 const DEFAULT_SUBDOMAIN = "unset"
 

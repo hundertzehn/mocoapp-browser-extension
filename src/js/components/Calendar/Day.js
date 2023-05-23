@@ -1,9 +1,9 @@
 import React, { useCallback } from "react"
 import PropTypes from "prop-types"
-import Hours from "./Hours"
 import { format, getDay } from "date-fns"
-import deLocale from "date-fns/locale/de"
+import deLocale from "date-fns/locale/de/index.js"
 import cn from "classnames"
+import Hours from "./Hours.js"
 
 const Day = ({ date, hours, absence, active, onClick }) => {
   const handleClick = useCallback(() => onClick(date), [date])

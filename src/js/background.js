@@ -1,8 +1,8 @@
 import browser from "webextension-polyfill"
-import ApiClient from "api/Client"
-import { isChrome, getCurrentTab, getSettings, isBrowserTab } from "utils/browser"
+import ApiClient from "api/Client.js"
+import { isChrome, getCurrentTab, getSettings, isBrowserTab } from "utils/browser.js"
 import { sendMessage, onMessage } from "webext-bridge/background"
-import { tabUpdated, settingsChanged, togglePopup, openPopup } from "utils/messageHandlers"
+import { tabUpdated, settingsChanged, togglePopup, openPopup } from "utils/messageHandlers.js"
 import { isNil } from "lodash"
 
 // This is the main entry point for the background script

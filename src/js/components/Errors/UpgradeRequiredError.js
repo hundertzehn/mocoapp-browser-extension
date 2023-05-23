@@ -1,7 +1,7 @@
 import React from "react"
 import browser from "webextension-polyfill"
 import { sendMessage } from "webext-bridge/content-script"
-import { isChrome } from "utils/browser"
+import { isChrome } from "utils/browser.js"
 import logo from "images/moco-159x159.png"
 import firefoxAddons from "images/firefox_addons.png"
 

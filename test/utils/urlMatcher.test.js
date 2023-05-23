@@ -1,5 +1,6 @@
 import remoteServices from "../../src/js/remoteServices"
 import { createMatcher, createEnhancer } from "../../src/js/utils/urlMatcher"
+import { jest } from "@jest/globals"
 
 describe("utils", () => {
   describe("urlMatcher", () => {

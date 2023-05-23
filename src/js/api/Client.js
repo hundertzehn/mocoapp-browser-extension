@@ -1,6 +1,6 @@
 import axios from "axios"
 import fetchAdapter from "@vespaiach/axios-fetch-adapter"
-import { formatDate, mocoHost, mocoProtocol } from "utils"
+import { formatDate, mocoHost, mocoProtocol } from "utils/index.js"
 
 const baseURL = (subdomain) => {
   return `${mocoProtocol()}://${encodeURIComponent(subdomain)}.${mocoHost()}/api/browser_extensions`

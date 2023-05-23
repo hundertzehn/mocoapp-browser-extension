@@ -1,4 +1,4 @@
-import { projects } from "../data"
+import { projects } from "../data.js"
 import {
   findProjectByValue,
   findProjectByIdentifier,
@@ -8,13 +8,10 @@ import {
   extractAndSetTag,
   formatDuration,
 } from "../../src/js/utils"
-import { map, compose } from "lodash/fp"
+import compose from "lodash/fp/compose.js"
+import map from "lodash/fp/map.js"
 
-const getProjectBy = finder => key =>
-  compose(
-    finder(key),
-    groupedProjectOptions,
-  )(projects)
+const getProjectBy = (finder) => (key) => compose(finder(key), groupedProjectOptions)(projects)
 
 const getProjectByValue = getProjectBy(findProjectByValue)
 const getProjectByIdentifier = getProjectBy(findProjectByIdentifier)

@@ -4,8 +4,8 @@ import browser from "webextension-polyfill"
 import mocoLogo from "images/moco-32x32.png"
 import mocoTimerLogo from "images/moco-timer-32x32.png"
 import { parseISO } from "date-fns"
-import { formatDuration } from "utils"
-import Timer from "./shared/Timer"
+import { formatDuration } from "utils/index.js"
+import Timer from "./shared/Timer.js"
 
 const Bubble = ({ bookedSeconds, timedActivity, settingTimeTrackingHHMM }) => {
   const logo = timedActivity ? mocoTimerLogo : mocoLogo

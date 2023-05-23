@@ -1,9 +1,9 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import Select from "components/Select"
-import { formatDate } from "utils"
 import cn from "classnames"
-import StopWatch from "components/shared/StopWatch"
+import Select from "components/Select.js"
+import { formatDate } from "utils/index.js"
+import StopWatch from "components/shared/StopWatch.js"
 
 class Form extends Component {
   static propTypes = {

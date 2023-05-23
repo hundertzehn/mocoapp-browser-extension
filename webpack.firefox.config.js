@@ -1,10 +1,9 @@
-const { v4: uuidv4 } = require("uuid")
-const CopyWebpackPlugin = require("copy-webpack-plugin")
-const { compact } = require("lodash/fp")
+import { v4 as uuidv4 } from "uuid"
+import CopyWebpackPlugin from "copy-webpack-plugin"
+import compact from "lodash/fp/compact.js"
+import baseConfig from "./webpack.base.config.js"
 
-const baseConfig = require("./webpack.base.config")
-
-module.exports = (env) => {
+export default (env) => {
   const config = baseConfig(env)
 
   config.plugins.unshift(

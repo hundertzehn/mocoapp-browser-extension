@@ -12,7 +12,7 @@ import {
   flatMap,
   pathEq,
   isNil,
-} from "lodash/fp"
+} from "lodash/fp.js"
 
 const hasOptionGroups = (options) => options.some((option) => Boolean(option.options))
 

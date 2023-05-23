@@ -1,8 +1,8 @@
 import React, { useState } from "react"
 import PropTypes from "prop-types"
-import { useInterval } from "./hooks"
 import { differenceInSeconds } from "date-fns"
-import { formatDuration } from "utils"
+import { useInterval } from "./hooks.js"
+import { formatDuration } from "utils/index.js"
 
 Timer.propTypes = {
   startedAt: PropTypes.instanceOf(Date).isRequired,

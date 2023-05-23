@@ -1,4 +1,4 @@
-import ApiClient from "api/Client"
+import ApiClient from "api/Client.js"
 import {
   ERROR_UNAUTHORIZED,
   ERROR_UPGRADE_REQUIRED,
@@ -7,11 +7,11 @@ import {
   getStartOfWeek,
   getEndOfWeek,
 } from "utils"
-import { get, forEach, reject, isNil } from "lodash/fp"
-import { createMatcher } from "utils/urlMatcher"
-import remoteServices from "remoteServices"
+import { get, forEach, reject, isNil } from "lodash/fp.js"
+import { createMatcher } from "utils/urlMatcher.js"
+import remoteServices from "remoteServices.js"
 import { sendMessage, onMessage } from "webext-bridge/background"
-import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
+import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser.js"
 
 let matcher
 const initMatcher = (settings) => {

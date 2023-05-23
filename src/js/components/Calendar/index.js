@@ -1,9 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
-import Day from "./Day"
-import { formatDate } from "utils"
 import { eachDayOfInterval } from "date-fns"
-import { pathEq } from "lodash/fp"
+import Day from "./Day.js"
+import { formatDate } from "utils/index.js"
+import { pathEq } from "lodash/fp.js"
 
 const findAbsence = (date, schedules) => schedules.find(pathEq("date", formatDate(date)))
 

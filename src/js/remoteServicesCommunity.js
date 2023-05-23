@@ -1,4 +1,4 @@
-import { projectIdentifierBySelector, projectRegex } from "./utils"
+import { projectIdentifierBySelector, projectRegex } from "./utils/index.js"
 
 export default {
   gitlab: {

@@ -1,8 +1,8 @@
 import React from "react"
 import PropTypes from "prop-types"
-import Timer from "components/shared/Timer"
 import { parseISO } from "date-fns"
-import StopWatch from "components/shared/StopWatch"
+import Timer from "components/shared/Timer.js"
+import StopWatch from "components/shared/StopWatch.js"
 
 export default function TimerView({ timedActivity, onStopTimer }) {
   const handleStopTimer = () => {

@@ -2,10 +2,10 @@ import React, { Component } from "react"
 import browser from "webextension-polyfill"
 import { observable } from "mobx"
 import { observer } from "mobx-react"
-import { mocoHost } from "utils"
-import { isChrome, getSettings, setStorage } from "utils/browser"
-import ApiClient from "api/Client"
-import { pipe, toPairs, fromPairs, map } from "lodash/fp"
+import { mocoHost } from "utils/index.js"
+import { isChrome, getSettings, setStorage } from "utils/browser.js"
+import ApiClient from "api/Client.js"
+import { pipe, toPairs, fromPairs, map } from "lodash/fp.js"
 
 function upperCaseFirstLetter(input) {
   return input[0].toUpperCase() + input.slice(1)

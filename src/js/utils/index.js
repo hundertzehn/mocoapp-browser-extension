@@ -1,5 +1,8 @@
 import browser from "webextension-polyfill"
-import {
+import lodash from "lodash/fp.js"
+import { startOfWeek, endOfWeek, format } from "date-fns"
+
+const {
   groupBy,
   compose,
   map,
@@ -14,9 +17,7 @@ import {
   head,
   defaultTo,
   padCharsStart,
-} from "lodash/fp"
-import { startOfWeek, endOfWeek } from "date-fns"
-import { format } from "date-fns"
+} = lodash
 
 const nilToArray = (input) => input || []
 

@@ -3,10 +3,10 @@ import PropTypes from "prop-types"
 import browser from "webextension-polyfill"
 import { sendMessage } from "webext-bridge/content-script"
 import { onMessage } from "webext-bridge/popup"
-import Spinner from "components/Spinner"
-import Form from "components/Form"
-import Calendar from "components/Calendar"
-import TimerView from "components/App/TimerView"
+import Spinner from "components/Spinner.js"
+import Form from "components/Form.js"
+import Calendar from "components/Calendar/index.js"
+import TimerView from "components/App/TimerView.js"
 import { observable, computed } from "mobx"
 import { Observer, observer } from "mobx-react"
 import {
@@ -20,16 +20,15 @@ import {
   findTask,
   defaultTask,
   formatDate,
-} from "utils"
-
+} from "utils/index.js"
 import { parseISO } from "date-fns"
-import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
-import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
-import UnknownError from "components/Errors/UnknownError"
-import Header from "./shared/Header"
+import InvalidConfigurationError from "components/Errors/InvalidConfigurationError.js"
+import UpgradeRequiredError from "components/Errors/UpgradeRequiredError.js"
+import UnknownError from "components/Errors/UnknownError.js"
+import Header from "./shared/Header.js"
 import { head } from "lodash"
-import TimeInputParser from "utils/TimeInputParser"
-import { get } from "lodash/fp"
+import TimeInputParser from "utils/TimeInputParser.js"
+import { get } from "lodash/fp.js"
 
 @observer
 class App extends Component {
