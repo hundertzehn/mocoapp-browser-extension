@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Use customId as service.id if it is defined for ClickUp
+- Moved openproject to remoteServicesCommunity.js
+
+### Added
+
+- projectId service property to openproject ([PR 686](https://github.com/hundertzehn/mocoapp-browser-extension/pull/686) – community supported, contribution by Bernhard Krop: https://github.com/Bernhard-Krop)
 
 ## [2.3.0] - 2023-05-02
 
