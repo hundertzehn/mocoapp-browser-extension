@@ -245,6 +245,24 @@ describe("utils", () => {
         expect(enhancedService.projectId).toEqual("4321")
         expect(enhancedService.taskId).toBe(undefined)
       })
+
+      it("should use id as service.id when customId is undefined for clickup", () => {
+        const document = {
+          querySelector: jest.fn().mockReturnValue({ textContent: "" }),
+        }
+        const service = matcher("https://app.clickup.com/t/24301549")
+        const enhancedService = createEnhancer(document)(service)
+        expect(enhancedService.id).toEqual("24301549")
+      })
+
+      it("should use customId as service.id for clickup", () => {
+        const document = {
+          querySelector: jest.fn().mockReturnValue({ textContent: "" }),
+        }
+        const service = matcher("https://app.clickup.com/t/24301549/T2023-53")
+        const enhancedService = createEnhancer(document)(service)
+        expect(enhancedService.id).toEqual("T2023-53")
+      })
     })
   })
 
