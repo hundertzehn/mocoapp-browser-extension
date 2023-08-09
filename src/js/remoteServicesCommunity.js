@@ -132,7 +132,7 @@ export default {
 
       return [projectName, taskName].filter(p => p).join(' - ');
     },
-    allowHostOverride: true,
+    allowHostOverride: false,
     position: { right: "10px", bottom: "90px" },
   },
 }
