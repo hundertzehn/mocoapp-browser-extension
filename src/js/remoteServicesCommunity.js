@@ -82,4 +82,57 @@ export default {
     allowHostOverride: true,
     position: { left: "calc(2rem + 5px)" },
   },
+
+  awork: {
+    name: "awork",
+    host: "https://:org.awork.io",
+    urlPatterns: [
+      ":host:/projects/:id/details",
+      ":host:/projects/:id/tasks/list",
+      ":host:/projects/:id/tasks/board",
+      ":host:/projects/:id/tasks/timeline",
+      ":host:/projects/:id/times/list",
+      ":host:/projects/:projectId/tasks/list/\\(detail\\::id/details\\)",
+      ":host:/projects/:projectId/tasks/board/\\(modal\\::id/details\\)",
+      ":host:/projects/:projectId/tasks/timeline/\\(detailModal\\::id/details\\)",
+      ":host:/tasks/:id/details",
+      ":host:/tasks/filters/\\(detail\\::id/details\\)",
+    ],
+    projectLabel: (document) => {
+      var names = {
+        projectNameFromProjectDetail: document
+          .querySelector("aw-project-detail #projectName textarea")
+          ?.value,
+        projectNameFromEntityDetail: document
+          .querySelector("aw-header-navigation-history div.main div.entity-details.project")
+          ?.textContent,
+      }
+
+      return (names.projectNameFromProjectDetail || names.projectNameFromEntityDetail || "").trim();
+    },
+    description: (document, service, { org, projectId, id }) => {
+      var names = {
+        projectNameFromProjectDetail: document
+          .querySelector("aw-project-detail #projectName textarea")
+          ?.value,
+        projectNameFromEntityDetail: document
+          .querySelector("aw-header-navigation-history div.main div.entity-details.project")
+          ?.textContent,
+        
+        taskNameFromTaskDetail: document
+          .querySelector("aw-task-detail h1 textarea")
+          ?.value,
+        taskNameFromEntityDetail: document
+          .querySelector("aw-header-navigation-history div.main div.entity-details.task")
+          ?.textContent,  
+      }
+
+      var projectName = (names.projectNameFromProjectDetail || names.projectNameFromEntityDetail || "").trim();
+      var taskName = (names.taskNameFromTaskDetail || names.taskNameFromEntityDetail || "").trim();
+
+      return [projectName, taskName].filter(p => p).join(' - ');
+    },
+    allowHostOverride: true,
+    position: { right: "10px", bottom: "90px" },
+  },
 }
