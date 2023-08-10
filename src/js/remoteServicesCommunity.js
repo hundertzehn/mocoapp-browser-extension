@@ -82,4 +82,56 @@ export default {
     allowHostOverride: true,
     position: { left: "calc(2rem + 5px)" },
   },
+
+  awork: {
+    name: "awork",
+    host: "https://:org.awork.io",
+    urlPatterns: [
+      ":host:/projects/:id/details",
+      ":host:/projects/:id/tasks/list",
+      ":host:/projects/:id/tasks/board",
+      ":host:/projects/:id/tasks/timeline",
+      ":host:/projects/:id/times/list",
+      ":host:/projects/:project/tasks/list/\\(detail\\::id/details\\)",
+      ":host:/projects/:project/tasks/board/\\(modal\\::id/details\\)",
+      ":host:/projects/:project/tasks/timeline/\\(detailModal\\::id/details\\)",
+      ":host:/tasks/:id/details",
+      ":host:/tasks/filters/\\(detail\\::id/details\\)",
+    ],
+    projectId: (document) => {
+      const projectId =
+        projectIdentifierBySelector("aw-project-detail #projectName textarea", "value")(document) ||
+        projectIdentifierBySelector(
+          "aw-header-navigation-history div.main div.entity-details.project",
+          "textContent",
+        )(document)
+      return projectId || ""
+    },
+    projectLabel: (document) => {
+      const projectName =
+        document.querySelector("aw-project-detail #projectName textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.project")
+          ?.textContent
+
+      return (projectName || "").trim()
+    },
+    description: (document, service, { org, projectId, id }) => {
+      let projectName =
+        document.querySelector("aw-project-detail #projectName textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.project")
+          ?.textContent
+
+      let taskName =
+        document.querySelector("aw-task-detail h1 textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.task")
+          ?.textContent
+
+      projectName = (projectName || "").trim()
+      taskName = (taskName || "").trim()
+
+      return [projectName, taskName].filter((p) => p).join(" - ")
+    },
+    allowHostOverride: false,
+    position: { right: "10px", bottom: "90px" },
+  },
 }
