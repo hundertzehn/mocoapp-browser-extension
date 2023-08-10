@@ -92,45 +92,44 @@ export default {
       ":host:/projects/:id/tasks/board",
       ":host:/projects/:id/tasks/timeline",
       ":host:/projects/:id/times/list",
-      ":host:/projects/:projectId/tasks/list/\\(detail\\::id/details\\)",
-      ":host:/projects/:projectId/tasks/board/\\(modal\\::id/details\\)",
-      ":host:/projects/:projectId/tasks/timeline/\\(detailModal\\::id/details\\)",
+      ":host:/projects/:project/tasks/list/\\(detail\\::id/details\\)",
+      ":host:/projects/:project/tasks/board/\\(modal\\::id/details\\)",
+      ":host:/projects/:project/tasks/timeline/\\(detailModal\\::id/details\\)",
       ":host:/tasks/:id/details",
       ":host:/tasks/filters/\\(detail\\::id/details\\)",
     ],
+    projectId: (document) => {
+      const projectId =
+        projectIdentifierBySelector("aw-project-detail #projectName textarea", "value")(document) ||
+        projectIdentifierBySelector(
+          "aw-header-navigation-history div.main div.entity-details.project",
+          "textContent",
+        )(document)
+      return projectId || ""
+    },
     projectLabel: (document) => {
-      var names = {
-        projectNameFromProjectDetail: document
-          .querySelector("aw-project-detail #projectName textarea")
-          ?.value,
-        projectNameFromEntityDetail: document
-          .querySelector("aw-header-navigation-history div.main div.entity-details.project")
-          ?.textContent,
-      }
+      const projectName =
+        document.querySelector("aw-project-detail #projectName textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.project")
+          ?.textContent
 
-      return (names.projectNameFromProjectDetail || names.projectNameFromEntityDetail || "").trim();
+      return (projectName || "").trim()
     },
     description: (document, service, { org, projectId, id }) => {
-      var names = {
-        projectNameFromProjectDetail: document
-          .querySelector("aw-project-detail #projectName textarea")
-          ?.value,
-        projectNameFromEntityDetail: document
-          .querySelector("aw-header-navigation-history div.main div.entity-details.project")
-          ?.textContent,
-        
-        taskNameFromTaskDetail: document
-          .querySelector("aw-task-detail h1 textarea")
-          ?.value,
-        taskNameFromEntityDetail: document
-          .querySelector("aw-header-navigation-history div.main div.entity-details.task")
-          ?.textContent,  
-      }
+      let projectName =
+        document.querySelector("aw-project-detail #projectName textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.project")
+          ?.textContent
 
-      var projectName = (names.projectNameFromProjectDetail || names.projectNameFromEntityDetail || "").trim();
-      var taskName = (names.taskNameFromTaskDetail || names.taskNameFromEntityDetail || "").trim();
+      let taskName =
+        document.querySelector("aw-task-detail h1 textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.task")
+          ?.textContent
 
-      return [projectName, taskName].filter(p => p).join(' - ');
+      projectName = (projectName || "").trim()
+      taskName = (taskName || "").trim()
+
+      return [projectName, taskName].filter((p) => p).join(" - ")
     },
     allowHostOverride: false,
     position: { right: "10px", bottom: "90px" },
