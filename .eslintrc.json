@@ -44,36 +44,7 @@
     "jest/no-identical-title": "error",
     "jest/prefer-to-have-length": "warn",
     "jest/valid-expect": "error",
-    "react/prop-types": [
-      "error",
-      {
-        "ignore": [
-          "activityStore",
-          "commentStore",
-          "contactStore",
-          "dealStore",
-          "holidayStore",
-          "scheduleStore",
-          "presenceStore",
-          "employmentStore",
-          "match",
-          "permission",
-          "presenceStore",
-          "projectStore",
-          "purchaseBudgetStore",
-          "purchaseCategoryStore",
-          "purchasePaymentStore",
-          "userStore",
-          "vacationDailyHoursOverrideStore",
-          "purchaseStore",
-          "routing",
-          "scheduleStore",
-          "tagStore",
-          "taskTemplateStore",
-          "userStore"
-        ]
-      }
-    ],
+    "react/prop-types": "error",
     "prettier/prettier": "error"
   }
 }
