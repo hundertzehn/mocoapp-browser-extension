@@ -1,6 +1,4 @@
 import React, { Component } from "react"
-import PropTypes from "prop-types"
-import browser from "webextension-polyfill"
 import { sendMessage } from "webext-bridge/content-script"
 import { onMessage } from "webext-bridge/popup"
 import Spinner from "components/Spinner"

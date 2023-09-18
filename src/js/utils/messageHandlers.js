@@ -10,7 +10,7 @@ import {
 import { get, forEach, reject, isNil } from "lodash/fp"
 import { createMatcher } from "utils/urlMatcher"
 import remoteServices from "remoteServices"
-import { sendMessage, onMessage } from "webext-bridge/background"
+import { sendMessage } from "webext-bridge/background"
 import { queryTabs, isBrowserTab, getSettings, setStorage } from "utils/browser"
 
 let matcher

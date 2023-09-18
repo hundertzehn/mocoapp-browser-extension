@@ -9,7 +9,8 @@
   },
   "globals": {
     "chrome": false,
-    "browser": false
+    "browser": false,
+    "globalThis": true
   },
   "plugins": ["jest"],
   "parser": "@babel/eslint-parser",

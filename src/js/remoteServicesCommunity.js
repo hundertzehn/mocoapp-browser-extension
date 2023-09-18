@@ -1,4 +1,4 @@
-import { projectIdentifierBySelector, projectRegex } from "./utils"
+import { projectIdentifierBySelector } from "./utils"
 
 export default {
   gitlab: {
@@ -10,7 +10,7 @@ export default {
       ":host:/:org/:group(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
       ":host:/:org(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
     ],
-    description: (document, service, { id, noteId }) => {
+    description: (document, service, { id, noteId: _noteId }) => {
       const title = document.querySelector(".detail-page-description .title")?.textContent?.trim()
       return `#${id} ${title || ""}`.trim()
     },
@@ -21,7 +21,7 @@ export default {
     name: "monday",
     host: "https://:org.monday.com",
     urlPatterns: [":host:/boards/:board/pulses/:id"],
-    description: (document, service, { id }) => {
+    description: (document, _service, { id: _id }) => {
       return document.querySelector(".pulse_title")?.textContent?.trim()
     },
     allowHostOverride: false,
@@ -116,7 +116,7 @@ export default {
 
       return (projectName || "").trim()
     },
-    description: (document, service, { org, projectId, id }) => {
+    description: (document, _service, { org: _org, projectId: _projectId, id: _id }) => {
       let projectName =
         document.querySelector("aw-project-detail #projectName textarea")?.value ||
         document.querySelector("aw-header-navigation-history div.main div.entity-details.project")
