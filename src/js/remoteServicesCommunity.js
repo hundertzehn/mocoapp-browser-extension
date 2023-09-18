@@ -33,6 +33,7 @@ export default {
     urlPatterns: [
       ":host:/:instanceId/buckets/:projectId/:bucketType/:id",
       ":host:/:instanceId/buckets/:projectId/:bucketType/cards/:id",
+      ":host:/:instanceId/buckets/:projectId/:bucketType/occurrences/:id",
     ],
     description: (document) =>
       document.head.querySelector("meta[name='current-recording-title']")?.content,
