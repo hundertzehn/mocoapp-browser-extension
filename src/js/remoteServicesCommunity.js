@@ -86,7 +86,7 @@ export default {
 
   awork: {
     name: "awork",
-    host: "https://:org.awork.:tld",
+    host: "https://:org.awork.com",
     urlPatterns: [
       ":host:/projects/:id/details",
       ":host:/projects/:id/tasks/list",
