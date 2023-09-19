@@ -36,7 +36,11 @@ export default {
     host: "https://app.clickup.com",
     urlPatterns: [":host:/t/:id", ":host:/t/:id/:customId", ":host:/:space/v/l/f/:folder"],
     description: (document, service, { id, customId }) => {
-      const title = document.querySelector(".task-name__overlay")?.textContent?.trim()
+      const title =
+        // ClickUp Version 3
+        document.querySelector(".cu-task-title__overlay")?.textContent?.trim() ||
+        // ClickUp Version <3
+        document.querySelector(".task-name__overlay")?.textContent?.trim()
       return `#${customId || id} ${title || ""}`.trim()
     },
     id: (document, service, { id, customId }) => customId || id,
