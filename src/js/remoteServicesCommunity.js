@@ -88,11 +88,6 @@ export default {
     name: "awork",
     host: "https://:org.awork.com",
     urlPatterns: [
-      ":host:/projects/:id/details",
-      ":host:/projects/:id/tasks/list",
-      ":host:/projects/:id/tasks/board",
-      ":host:/projects/:id/tasks/timeline",
-      ":host:/projects/:id/times/list",
       ":host:/projects/:project/tasks/list/\\(detail\\::id/details\\)",
       ":host:/projects/:project/tasks/board/\\(modal\\::id/details\\)",
       ":host:/projects/:project/tasks/timeline/\\(detailModal\\::id/details\\)",
@@ -106,7 +101,15 @@ export default {
           "aw-header-navigation-history div.main div.entity-details.project",
           "textContent",
         )(document)
-      return projectId || ""
+
+      const taskId =
+        projectIdentifierBySelector("aw-task-detail h1 textarea", "value")(document) ||
+        projectIdentifierBySelector(
+          "aw-header-navigation-history div.main div.entity-details.task",
+          "textContent",
+        )(document)
+
+      return projectId || taskId || ""
     },
     projectLabel: (document) => {
       const projectName =
@@ -114,7 +117,12 @@ export default {
         document.querySelector("aw-header-navigation-history div.main div.entity-details.project")
           ?.textContent
 
-      return (projectName || "").trim()
+      const taskName =
+        document.querySelector("aw-task-detail h1 textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.task")
+          ?.textContent
+
+      return (projectName || taskName || "").trim()
     },
     description: (document, _service, { org: _org, projectId: _projectId, id: _id }) => {
       let projectName =
