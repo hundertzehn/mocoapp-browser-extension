@@ -1,6 +1,5 @@
 import { projectIdentifierBySelector, projectRegex } from "./utils"
 import remoteServicesCommunity from "./remoteServicesCommunity"
-import { compact } from "lodash"
 
 export default {
   asana: {
@@ -37,7 +36,11 @@ export default {
     host: "https://app.clickup.com",
     urlPatterns: [":host:/t/:id", ":host:/t/:id/:customId", ":host:/:space/v/l/f/:folder"],
     description: (document, service, { id, customId }) => {
-      const title = document.querySelector(".task-name__overlay")?.textContent?.trim()
+      const title =
+        // ClickUp Version 3
+        document.querySelector(".cu-task-title__overlay")?.textContent?.trim() ||
+        // ClickUp Version <3
+        document.querySelector(".task-name__overlay")?.textContent?.trim()
       return `#${customId || id} ${title || ""}`.trim()
     },
     id: (document, service, { id, customId }) => customId || id,
@@ -59,7 +62,7 @@ export default {
     host: "https://github.com",
     urlPatterns: [":host:/:org/:repo/issues/:id"],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
-    description: (document, service, { org, repo, id }) =>
+    description: (document, _service, { org: _org, repo: _repo, id: _id }) =>
       document.querySelector(".js-issue-title")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".js-issue-title"),
     allowHostOverride: false,

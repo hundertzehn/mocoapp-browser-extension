@@ -41,7 +41,7 @@ function resetBubble({ tab, settings, service, timedActivity }) {
     })
 }
 
-onMessage("togglePopup", (message) => {
+onMessage("togglePopup", (_message) => {
   getCurrentTab().then((tab) => {
     if (tab && !isBrowserTab(tab)) {
       sendMessage("requestService", null, `content-script@${tab.id}`).then((data) => {
@@ -51,7 +51,7 @@ onMessage("togglePopup", (message) => {
   })
 })
 
-onMessage("closePopup", (message) => {
+onMessage("closePopup", (_message) => {
   getCurrentTab().then((tab) => {
     sendMessage("closePopup", null, `content-script@${tab.id}`)
   })

@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback, useState, useRef, forwardRef } from "react"
 import PropTypes from "prop-types"
 import browser from "webextension-polyfill"
-import { isChrome } from "utils/browser"
 
 const Popup = forwardRef((props, ref) => {
   const [isPopupReady, setPopupReady] = useState(false)

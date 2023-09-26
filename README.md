@@ -2,15 +2,6 @@
 
 ## Technical Documentation
 
-### Requirements for Version 2
-
-- clone https://github.com/hundertzehn/webext-bridge.git into the **parent folder** of the browser extension
-- change into the directory of the package `cd webext-bridge`
-- checkout the branch with the fix: `git checkout fix`
-- build webext-bridge by running `yarn install && yarn build`
-- back in the folder of the browser extension, run `yarn install` also there
-
-
 ### Development
 
 - run `yarn`

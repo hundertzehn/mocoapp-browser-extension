@@ -1,5 +1,4 @@
 import React, { createRef } from "react"
-import browser from "webextension-polyfill"
 import { createRoot } from "react-dom/client"
 import Bubble from "./components/Bubble"
 import Popup from "components/Popup"
@@ -78,7 +77,7 @@ function closePopup() {
   }
 }
 
-onMessage("requestService", (message) => {
+onMessage("requestService", (_message) => {
   const service = findService(window.location.href)
   return { isPopupOpen: !!popupRef.current, service }
 })

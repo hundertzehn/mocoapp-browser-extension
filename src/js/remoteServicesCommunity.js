@@ -1,4 +1,4 @@
-import { projectIdentifierBySelector, projectRegex } from "./utils"
+import { projectIdentifierBySelector } from "./utils"
 
 export default {
   gitlab: {
@@ -10,7 +10,7 @@ export default {
       ":host:/:org/:group(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
       ":host:/:org(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
     ],
-    description: (document, service, { id, noteId }) => {
+    description: (document, service, { id, noteId: _noteId }) => {
       const title = document.querySelector(".detail-page-description .title")?.textContent?.trim()
       return `#${id} ${title || ""}`.trim()
     },
@@ -21,7 +21,7 @@ export default {
     name: "monday",
     host: "https://:org.monday.com",
     urlPatterns: [":host:/boards/:board/pulses/:id"],
-    description: (document, service, { id }) => {
+    description: (document, _service, { id: _id }) => {
       return document.querySelector(".pulse_title")?.textContent?.trim()
     },
     allowHostOverride: false,
@@ -33,6 +33,7 @@ export default {
     urlPatterns: [
       ":host:/:instanceId/buckets/:projectId/:bucketType/:id",
       ":host:/:instanceId/buckets/:projectId/:bucketType/cards/:id",
+      ":host:/:instanceId/buckets/:projectId/:bucketType/occurrences/:id",
     ],
     description: (document) =>
       document.head.querySelector("meta[name='current-recording-title']")?.content,
@@ -81,5 +82,65 @@ export default {
     },
     allowHostOverride: true,
     position: { left: "calc(2rem + 5px)" },
+  },
+
+  awork: {
+    name: "awork",
+    host: "https://:org.awork.com",
+    urlPatterns: [
+      ":host:/projects/:project/tasks/list/\\(detail\\::id/details\\)",
+      ":host:/projects/:project/tasks/board/\\(modal\\::id/details\\)",
+      ":host:/projects/:project/tasks/timeline/\\(detailModal\\::id/details\\)",
+      ":host:/tasks/:id/details",
+      ":host:/tasks/filters/\\(detail\\::id/details\\)",
+    ],
+    projectId: (document) => {
+      const projectId =
+        projectIdentifierBySelector("aw-project-detail #projectName textarea", "value")(document) ||
+        projectIdentifierBySelector(
+          "aw-header-navigation-history div.main div.entity-details.project",
+          "textContent",
+        )(document)
+
+      const taskId =
+        projectIdentifierBySelector("aw-task-detail h1 textarea", "value")(document) ||
+        projectIdentifierBySelector(
+          "aw-header-navigation-history div.main div.entity-details.task",
+          "textContent",
+        )(document)
+
+      return projectId || taskId || ""
+    },
+    projectLabel: (document) => {
+      const projectName =
+        document.querySelector("aw-project-detail #projectName textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.project")
+          ?.textContent
+
+      const taskName =
+        document.querySelector("aw-task-detail h1 textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.task")
+          ?.textContent
+
+      return (projectName || taskName || "").trim()
+    },
+    description: (document, _service, { org: _org, projectId: _projectId, id: _id }) => {
+      let projectName =
+        document.querySelector("aw-project-detail #projectName textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.project")
+          ?.textContent
+
+      let taskName =
+        document.querySelector("aw-task-detail h1 textarea")?.value ||
+        document.querySelector("aw-header-navigation-history div.main div.entity-details.task")
+          ?.textContent
+
+      projectName = (projectName || "").trim()
+      taskName = (taskName || "").trim()
+
+      return [projectName, taskName].filter((p) => p).join(" - ")
+    },
+    allowHostOverride: false,
+    position: { right: "10px", bottom: "90px" },
   },
 }
