@@ -77,9 +77,11 @@ export default {
       ":host:/jira/software/projects/:projectId/boards/:board",
       ":host:/jira/software/projects/:projectId/boards/:board/backlog",
       ":host:/jira/software/projects/:projectId/boards/:board/roadmap",
+      ":host:/jira/software/projects/:projectId/boards/:board/timeline",
       ":host:/jira/software/c/projects/:projectId/boards/:board",
       ":host:/jira/software/c/projects/:projectId/boards/:board/backlog",
       ":host:/jira/software/c/projects/:projectId/boards/:board/roadmap",
+      ":host:/jira/software/c/projects/:projectId/boards/:board/timeline",
     ],
     queryParams: {
       id: "selectedIssue",
@@ -88,7 +90,7 @@ export default {
     description: (document, service, { id }) => {
       const title =
         document
-          .querySelector('[data-test-id="issue.views.issue-base.foundation.summary.heading"]')
+          .querySelector('[data-testid="issue.views.issue-base.foundation.summary.heading"]')
           ?.textContent?.trim() ||
         document.querySelector(".ghx-selected .ghx-summary")?.textContent?.trim()
       return `#${id} ${title || ""}`
