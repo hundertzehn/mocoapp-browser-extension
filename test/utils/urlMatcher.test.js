@@ -166,6 +166,14 @@ describe("utils", () => {
         expect(service.projectId).toEqual("testproject")
       })
 
+      it("should match gitlab-issue url with dot in project name", () => {
+        const service = matcher("https://gitlab.com/testorganisatzion/project.test/-/issues/1")
+        expect(service.id).toEqual("1")
+        expect(service.match.id).toEqual("1")
+        expect(service.name).toEqual("gitlab")
+        expect(service.projectId).toEqual("project.test")
+      })
+
       it("should match gitlab-issue url with note anchor", () => {
         const service = matcher(
           "https://gitlab.com/testorganisatzion/testproject/-/issues/1#note_85524",

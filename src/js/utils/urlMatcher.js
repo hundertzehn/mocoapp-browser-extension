@@ -54,15 +54,22 @@ const replaceHostInPattern = (host, pattern) => {
   }
 }
 
+const urlPatternOptions = {
+  segmentValueCharset: UrlPattern.defaultOptions.segmentValueCharset + ".",
+}
+
 const parseServices = compose(
   map(([key, config]) => ({
     ...config,
     key,
     patterns: config.urlPatterns.map((pattern) => {
       if (Array.isArray(pattern)) {
-        return new UrlPattern(...pattern.map((p) => replaceHostInPattern(config.host, p)))
+        return new UrlPattern(
+          ...pattern.map((p) => replaceHostInPattern(config.host, p)),
+          urlPatternOptions,
+        )
       }
-      return new UrlPattern(replaceHostInPattern(config.host, pattern))
+      return new UrlPattern(replaceHostInPattern(config.host, pattern), urlPatternOptions)
     }),
   })),
   toPairs,
