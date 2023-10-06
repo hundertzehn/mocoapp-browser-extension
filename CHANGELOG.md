@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.4.3] - 2023-10-06
+
+### Fixed
+
+- Added namespace to fadeIn keyframe animage ([#742](https://github.com/hundertzehn/mocoapp-browser-extension/pull/742))
+- Updated selector for description in Jira ([#744](https://github.com/hundertzehn/mocoapp-browser-extension/pull/744))
+
+### Added
+
+- Support dots in url segments ([#745](https://github.com/hundertzehn/mocoapp-browser-extension/pull/745))
+
 ## [2.4.2] - 2023-09-26
 
 ### Changed
