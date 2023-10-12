@@ -1,7 +1,5 @@
 import React, { Component } from "react"
 import browser from "webextension-polyfill"
-import { observable } from "mobx"
-import { observer } from "mobx-react"
 import { mocoHost } from "utils"
 import { isChrome, getSettings, setStorage } from "utils/browser"
 import ApiClient from "api/Client"
@@ -15,53 +13,72 @@ function removePathFromUrl(url) {
   return url.replace(/(\.[a-z]+)\/.*$/, "$1")
 }
 
-@observer
 class Options extends Component {
-  @observable subdomain = ""
-  @observable apiKey = ""
-  @observable hostOverrides = {}
-  @observable errorMessage = null
-  @observable isSuccess = false
-  @observable showHostOverrideOptions = false
+  constructor(props) {
+    super(props)
+    this.state = {
+      subdomain: "",
+      apiKey: "",
+      hostOverrides: {},
+      errorMessage: null,
+      isSuccess: false,
+      showHostOverrideOptions: false,
+    }
+  }
 
   componentDidMount() {
     getSettings(false).then((settings) => {
-      this.subdomain = settings.subdomain || ""
-      this.apiKey = settings.apiKey || ""
-      this.hostOverrides = settings.hostOverrides
+      this.setState((prev) => {
+        prev.subdomain = settings.subdomain || ""
+        prev.apiKey = settings.apiKey || ""
+        prev.hostOverrides = settings.hostOverrides
+        return { ...prev }
+      })
     })
   }
 
   handleChange = (event) => {
-    this[event.target.name] = event.target.value.trim()
+    this.setState((prev) => ({
+      ...prev,
+      [event.target.name]: event.target.value.trim(),
+    }))
   }
 
   handleChangeHostOverrides = (event) => {
-    this.hostOverrides[event.target.name] = event.target.value.trim()
+    this.setState((prev) => {
+      prev.hostOverrides[event.target.name] = event.target.value.trim()
+      return { ...prev }
+    })
   }
 
   toggleHostOverrideOptions = () => {
-    this.showHostOverrideOptions = !this.showHostOverrideOptions
+    this.setState((prev) => ({
+      ...prev,
+      showHostOverrideOptions: !prev.showHostOverrideOptions,
+    }))
   }
 
   handleSubmit = (_event) => {
-    this.isSuccess = false
-    this.errorMessage = null
+    this.setState((prev) => ({
+      ...prev,
+      isSuccess: false,
+      errorMessage: null,
+    }))
 
     setStorage({
-      subdomain: this.subdomain,
-      apiKey: this.apiKey,
+      subdomain: this.state.subdomain,
+      apiKey: this.state.apiKey,
       settingTimeTrackingHHMM: false,
       hostOverrides: pipe(
         toPairs,
         map(([key, url]) => [key, removePathFromUrl(url)]),
         fromPairs,
-      )(this.hostOverrides),
+      )(this.state.hostOverrides),
     }).then(() => {
       const { version } = browser.runtime.getManifest()
       const apiClient = new ApiClient({
-        subdomain: this.subdomain,
-        apiKey: this.apiKey,
+        subdomain: this.state.subdomain,
+        apiKey: this.state.apiKey,
         version,
       })
       apiClient
@@ -70,11 +87,17 @@ class Options extends Component {
           setStorage({ settingTimeTrackingHHMM: data.setting_time_tracking_hh_mm }),
         )
         .then(() => {
-          this.isSuccess = true
+          this.setState((prev) => ({
+            ...prev,
+            isSuccess: true,
+          }))
           this.closeWindow()
         })
         .catch((error) => {
-          this.errorMessage = error.response?.data?.message || "Anmeldung fehlgeschlagen"
+          this.setState((prev) => ({
+            ...prev,
+            errorMessage: error.response?.data?.message || "Anmeldung fehlgeschlagen",
+          }))
         })
     })
   }
@@ -93,15 +116,15 @@ class Options extends Component {
     return (
       <div className="moco-bx-options">
         <h2 style={{ textAlign: "center" }}>Einstellungen</h2>
-        {this.errorMessage && <div className="text-danger">{this.errorMessage}</div>}
-        {this.isSuccess && <div className="text-success">Anmeldung erfolgreich</div>}
+        {this.state.errorMessage && <div className="text-danger">{this.state.errorMessage}</div>}
+        {this.state.isSuccess && <div className="text-success">Anmeldung erfolgreich</div>}
         <div className="form-group">
           <label>Internetadresse</label>
           <div className="input-group">
             <input
               type="text"
               name="subdomain"
-              value={this.subdomain}
+              value={this.state.subdomain}
               onKeyDown={this.handleInputKeyDown}
               onChange={this.handleChange}
             />
@@ -113,7 +136,7 @@ class Options extends Component {
           <input
             type="text"
             name="apiKey"
-            value={this.apiKey}
+            value={this.state.apiKey}
             onKeyDown={this.handleInputKeyDown}
             onChange={this.handleChange}
           />
@@ -121,14 +144,14 @@ class Options extends Component {
             Den API-Schlüssel findest du in deinem Profil unter &quot;Integrationen&quot;.
           </p>
         </div>
-        {!this.showHostOverrideOptions && (
+        {!this.state.showHostOverrideOptions && (
           <div className="moco-bx-options__host-overrides">
             <a href="#" className="moco-bx-btn__secondary" onClick={this.toggleHostOverrideOptions}>
               Service-URLs überschreiben?
             </a>
           </div>
         )}
-        {this.showHostOverrideOptions && (
+        {this.state.showHostOverrideOptions && (
           <div style={{ marginBottom: "1.5rem" }}>
             <h3 style={{ marginBottom: 0 }}>Service-URLs</h3>
             <small>
@@ -147,7 +170,7 @@ class Options extends Component {
             {pipe(
               Object.entries,
               Array.from,
-            )(this.hostOverrides).map(([name, host]) => (
+            )(this.state.hostOverrides).map(([name, host]) => (
               <div className="form-group" key={name} style={{ margin: "0.5rem 0" }}>
                 <div className="input-group">
                   <span
