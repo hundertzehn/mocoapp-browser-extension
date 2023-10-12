@@ -5,8 +5,6 @@ import Spinner from "components/Spinner"
 import Form from "components/Form"
 import Calendar from "components/Calendar"
 import TimerView from "components/App/TimerView"
-import { observable, computed } from "mobx"
-import { Observer, observer } from "mobx-react"
 import {
   ERROR_UNKNOWN,
   ERROR_UNAUTHORIZED,
@@ -29,7 +27,6 @@ import { head } from "lodash"
 import TimeInputParser from "utils/TimeInputParser"
 import { get } from "lodash/fp"
 
-@observer
 class App extends Component {
   constructor(props) {
     super(props)
@@ -38,17 +35,16 @@ class App extends Component {
       activities: [],
       schedules: [],
       projects: [],
+      changeset: {},
+      formErrors: {},
     }
   }
 
-  @observable changeset = {}
-  @observable formErrors = {}
-
-  @computed get project() {
+  get project() {
     const { service, projects, serviceLastProjectId, userLastProjectId } = this.state
 
     return (
-      findProjectByValue(this.changeset.assignment_id)(projects) ||
+      findProjectByValue(this.state.changeset.assignment_id)(projects) ||
       findProjectByValue(Number(serviceLastProjectId))(projects) ||
       findProjectByIdentifier(service?.projectId)(projects) ||
       findProjectByLabel(String(service?.projectLabel || ""))(projects) || // extern project
@@ -58,20 +54,20 @@ class App extends Component {
     )
   }
 
-  @computed get task() {
+  get task() {
     const { service, serviceLastTaskId, userLastTaskId } = this.state
     return (
-      findTask(this.changeset.task_id || serviceLastTaskId || service?.taskId || userLastTaskId)(
-        this.project,
-      ) || defaultTask(this.project?.tasks)
+      findTask(
+        this.state.changeset.task_id || serviceLastTaskId || service?.taskId || userLastTaskId,
+      )(this.project) || defaultTask(this.project?.tasks)
     )
   }
 
-  @computed get billable() {
-    return /\(.+\)/.test(this.changeset.hours) === true ? false : !!this.task?.billable
+  get billable() {
+    return /\(.+\)/.test(this.state.changeset.hours) === true ? false : !!this.task?.billable
   }
 
-  @computed get changesetWithDefaults() {
+  get changesetWithDefaults() {
     const { service } = this.state
 
     const defaults = {
@@ -83,12 +79,12 @@ class App extends Component {
       task_id: this.task?.value,
       billable: this.billable,
       hours: "",
-      seconds: new TimeInputParser(this.changeset.hours).parseSeconds(),
+      seconds: new TimeInputParser(this.state.changeset.hours).parseSeconds(),
       description: service?.description || "",
       tag: "",
     }
 
-    return { ...defaults, ...this.changeset }
+    return { ...defaults, ...this.state.changeset }
   }
 
   componentDidMount() {
@@ -96,7 +92,7 @@ class App extends Component {
     window.addEventListener("message", this.handleMessagePopupData)
     window.parent.postMessage({ type: "moco-bx-popup-ready" }, window.document.referrer || "*")
     onMessage("setFormErrors", (message) => {
-      this.formErrors = message.data
+      this.setState((prev) => ({ ...prev, formErrors: message.data }))
     })
   }
 
@@ -111,16 +107,25 @@ class App extends Component {
       target: { name, value },
     } = event
 
-    this.changeset[name] = value
+    this.setState((prev) => {
+      prev.changeset[name] = value
+      return { ...prev }
+    })
 
     if (name === "assignment_id") {
       const project = findProjectByValue(value)(projects)
-      this.changeset.task_id = defaultTask(project?.tasks)?.value
+      this.setState((prev) => {
+        prev.changeset.task_id = defaultTask(project?.tasks)?.value
+        return { ...prev }
+      })
     }
   }
 
   handleSelectDate = (date) => {
-    this.changeset.date = formatDate(date)
+    this.setState((prev) => {
+      prev.changeset.date = formatDate(date)
+      return { ...prev }
+    })
   }
 
   handleStopTimer = (timedActivity) => {
@@ -191,31 +196,27 @@ class App extends Component {
     return (
       <div className="moco-bx-app-container">
         <Header subdomain={subdomain} />
-        <Observer>
-          {() =>
-            timedActivity ? (
-              <TimerView timedActivity={timedActivity} onStopTimer={this.handleStopTimer} />
-            ) : (
-              <>
-                <Calendar
-                  fromDate={parseISO(fromDate)}
-                  toDate={parseISO(toDate)}
-                  activities={activities}
-                  schedules={schedules}
-                  selectedDate={new Date(this.changesetWithDefaults.date)}
-                  onChange={this.handleSelectDate}
-                />
-                <Form
-                  changeset={this.changesetWithDefaults}
-                  projects={projects}
-                  errors={this.formErrors}
-                  onChange={this.handleChange}
-                  onSubmit={this.handleSubmit}
-                />
-              </>
-            )
-          }
-        </Observer>
+        {timedActivity ? (
+          <TimerView timedActivity={timedActivity} onStopTimer={this.handleStopTimer} />
+        ) : (
+          <>
+            <Calendar
+              fromDate={parseISO(fromDate)}
+              toDate={parseISO(toDate)}
+              activities={activities}
+              schedules={schedules}
+              selectedDate={new Date(this.changesetWithDefaults.date)}
+              onChange={this.handleSelectDate}
+            />
+            <Form
+              changeset={this.changesetWithDefaults}
+              projects={projects}
+              errors={this.state.formErrors}
+              onChange={this.handleChange}
+              onSubmit={this.handleSubmit}
+            />
+          </>
+        )}
       </div>
     )
   }
