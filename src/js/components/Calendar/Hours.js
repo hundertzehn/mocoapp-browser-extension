@@ -1,5 +1,8 @@
 import React from "react"
 import PropTypes from "prop-types"
+import HolidayIcon from "components/shared/HolidayIcon"
+import XmarkIcon from "components/shared/XmarkIcon"
+import HatchBackground from "../shared/HatchBackground"
 
 const Hours = ({ hours, absence, active }) => {
   let style
@@ -13,15 +16,17 @@ const Hours = ({ hours, absence, active }) => {
     }
 
     content =
-      absence.assignment_code === "1"
-        ? "/"
-        : absence.assignment_code === "2"
-        ? "★"
-        : absence.assignment_code === "3"
-        ? "K"
-        : absence.assignment_code === "4"
-        ? "✈"
-        : null
+      absence.assignment_code === "1" ? (
+        <HatchBackground />
+      ) : absence.assignment_code === "2" ? (
+        "★"
+      ) : absence.assignment_code === "3" ? (
+        "K"
+      ) : absence.assignment_code === "4" ? (
+        <HolidayIcon />
+      ) : absence.assignment_code === "5" ? (
+        <XmarkIcon />
+      ) : null
   }
 
   return (
