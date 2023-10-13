@@ -1,7 +1,7 @@
 import React from "react"
 import umbrellaBeach from "images/icons/umbrella-beach-solid.svg"
 
-export default function UmbrellaBeachIcon() {
+export default function HolidayIcon() {
   return (
     <i
       dangerouslySetInnerHTML={{ __html: umbrellaBeach }}
