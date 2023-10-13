@@ -3,7 +3,7 @@ import PropTypes from "prop-types"
 import Select from "components/Select"
 import { formatDate } from "utils"
 import cn from "classnames"
-import StopWatch from "components/shared/StopWatch"
+import StopWatchIcon from "components/shared/StopWatchIcon"
 
 class Form extends Component {
   static propTypes = {
@@ -144,7 +144,7 @@ class Form extends Component {
           disabled={!this.isValid()}
           style={this.buttonStyle()}
         >
-          {this.isTimerStartable ? <StopWatch /> : "OK"}
+          {this.isTimerStartable ? <StopWatchIcon /> : "OK"}
         </button>
       </form>
     )
