@@ -41,7 +41,7 @@ module.exports = (env) => {
           exclude: /node_modules/,
         },
         {
-          test: /\.js$/,
+          test: /\.(js|jsx)$/,
           exclude: /node_modules/,
           use: {
             loader: "babel-loader",
@@ -91,6 +91,7 @@ module.exports = (env) => {
     ],
     resolve: {
       modules: [path.join(__dirname, "src/js"), "node_modules"],
+      extensions: [".js", ".jsx", ".ts", ".tsx"],
       alias: {
         images: path.join(__dirname, "src/images"),
       },
