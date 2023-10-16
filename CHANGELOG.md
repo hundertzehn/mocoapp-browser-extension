@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.0] – 2023-10-16
+
+### Changed
+
+- Absences are now displayed with the same icons and styles as in the web application ([#747](https://github.com/hundertzehn/mocoapp-browser-extension/pull/747))
+
+### Removed
+
+- Removed MobX dependency ([#748](https://github.com/hundertzehn/mocoapp-browser-extension/pull/748))
+
 ## [2.4.3] - 2023-10-06
 
 ### Fixed
