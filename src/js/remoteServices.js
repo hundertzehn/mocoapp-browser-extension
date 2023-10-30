@@ -97,9 +97,11 @@ export default {
     },
     projectId: (document, service, { projectId }) =>
       projectIdentifierBySelector(
-        "[data-test-id='issue.views.issue-base.foundation.summary.heading']",
+        "[data-testid='issue.views.issue-base.foundation.summary.heading']",
       )(document) ||
-      projectIdentifierBySelector("[data-navheader] [data-item-title]")(document) ||
+      projectIdentifierBySelector("[data-testid='software-board.header.title.container']")(
+        document,
+      ) ||
       projectId,
     allowHostOverride: true,
   },
