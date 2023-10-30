@@ -129,10 +129,10 @@ export default {
     host: "https://trello.com",
     urlPatterns: [":host:/c/:id/:title"],
     description: (document, service, { title }) =>
-      document.querySelector(".js-title-helper")?.textContent?.trim() || title,
+      document.querySelector("#js-dialog-title")?.textContent?.trim() || title,
     projectId: (document) =>
-      projectIdentifierBySelector(".js-title-helper")(document) ||
-      projectIdentifierBySelector(".js-board-editing-target")(document),
+      projectIdentifierBySelector("#js-dialog-title")(document) ||
+      projectIdentifierBySelector("[data-testid='board-name-display']")(document),
     allowHostOverride: false,
   },
 
