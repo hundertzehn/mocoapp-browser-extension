@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - Fixed reading project identifier from project and ticket name in Jira ([commit](https://github.com/hundertzehn/mocoapp-browser-extension/commit/dee024011918177d120146095e1f944c7114bebf))
+- Fixed reading project identifier from board name in Trello ([commit](https://github.com/hundertzehn/mocoapp-browser-extension/commit/134530f92e48264749f5fbaf195983bf072dd88e))
 
 ### Added
 
