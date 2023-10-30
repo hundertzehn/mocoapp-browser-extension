@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.5.1] – 2023-10-30
+
+### Fixed
+
+- Fixed reading project identifier from project and ticket name in Jira ([commit](https://github.com/hundertzehn/mocoapp-browser-extension/commit/dee024011918177d120146095e1f944c7114bebf))
+
+### Added
+
+- Add support for awork task detail modal from the dashboard view ([#750](https://github.com/hundertzehn/mocoapp-browser-extension/pull/750))
+
 ## [2.5.0] – 2023-10-16
 
 ### Changed
