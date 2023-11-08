@@ -43,6 +43,7 @@ export default {
         document.querySelector(".task-name__overlay")?.textContent?.trim()
       return `#${customId || id} ${title || ""}`.trim()
     },
+    projectId: projectIdentifierBySelector('[data-test="location-editable__title-editable"]'),
     id: (document, service, { id, customId }) => customId || id,
     allowHostOverride: false,
   },
