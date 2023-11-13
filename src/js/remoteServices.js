@@ -118,14 +118,27 @@ export default {
         document.querySelector(".ghx-selected .ghx-summary")?.textContent?.trim()
       return `#${id} ${title || ""}`
     },
-    projectId: (document, service, { projectId }) =>
-      projectIdentifierBySelector(
+    projectId: (document, service, { projectId }) => {
+      // The title of the issue
+      const projectIdFromIssue = projectIdentifierBySelector(
         "[data-testid='issue.views.issue-base.foundation.summary.heading']",
-      )(document) ||
-      projectIdentifierBySelector("[data-testid='software-board.header.title.container']")(
-        document,
-      ) ||
-      projectId,
+      )(document)
+
+      if (projectIdFromIssue) {
+        return projectIdFromIssue
+      }
+
+      // The second breadcrumb item
+      const match = document
+        .querySelector('nav[aria-label="Breadcrumbs"] ol li:nth-child(2)')
+        ?.textContent?.match(projectRegex)
+
+      if (match && match[1]) {
+        return match[1]
+      }
+
+      return projectId
+    },
     allowHostOverride: true,
   },
 
