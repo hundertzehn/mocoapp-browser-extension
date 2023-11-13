@@ -43,7 +43,29 @@ export default {
         document.querySelector(".task-name__overlay")?.textContent?.trim()
       return `#${customId || id} ${title || ""}`.trim()
     },
-    projectId: projectIdentifierBySelector('[data-test="location-editable__title-editable"]'),
+    projectId: (document) => {
+      // The title of the task
+      const match = document
+        .querySelector(".cu-task-title__overlay")
+        ?.textContent?.match(projectRegex)
+      if (match && match[1]) {
+        return match[1]
+      }
+
+      // Breadcrumbs on top of the card, reverse order in order ot priritize the last item
+      return Array.from(document.querySelectorAll(".cu-task-view-breadcrumbs__text"))
+        .reverse()
+        .reduce((projectId, element) => {
+          if (projectId) {
+            return projectId
+          }
+          const match = element.textContent.match(projectRegex)
+          if (match && match[1]) {
+            return match[1]
+          }
+          return null
+        }, null)
+    },
     id: (document, service, { id, customId }) => customId || id,
     allowHostOverride: false,
   },
