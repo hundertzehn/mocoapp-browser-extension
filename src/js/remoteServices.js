@@ -52,7 +52,7 @@ export default {
         return match[1]
       }
 
-      // Breadcrumbs on top of the card, reverse order in order ot priritize the last item
+      // Breadcrumbs on top of the card, reverse order in order ot prioritize the last item
       return Array.from(document.querySelectorAll(".cu-task-view-breadcrumbs__text"))
         .reverse()
         .reduce((projectId, element) => {
