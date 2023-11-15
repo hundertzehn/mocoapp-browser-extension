@@ -14,18 +14,7 @@ export default {
     queryParams: {
       id: "child",
     },
-    description: (document) =>
-      [
-        "Task Name",
-        "Aufgabenname",
-        "Nombre de la tarea",
-        "Nom de la tâche",
-        "Nome da tarefa",
-      ].reduce(
-        (description, value) =>
-          description ?? document.querySelector(`[aria-label="${value}"]`)?.textContent?.trim(),
-        null,
-      ),
+    description: (document) => document.querySelector(".TitleInput textarea")?.textContent?.trim(),
     projectId: projectIdentifierBySelector(".TopbarPageHeaderStructure-titleRow h1"),
     allowHostOverride: false,
     position: { right: "50%", transform: "translateX(50%)" },
