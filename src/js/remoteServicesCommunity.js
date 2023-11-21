@@ -153,6 +153,6 @@ export default {
         var desc = "#" + id + " " + document.querySelector(".title__subject-text")?.innerText?.trim();
         return desc;
     },
-    allowHostOverride: true,
+    allowHostOverride: false,
   },
 }
