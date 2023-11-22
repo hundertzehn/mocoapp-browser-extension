@@ -149,9 +149,9 @@ export default {
     host: "https://:org.teamwork.com",
     urlPatterns: [":host:/desk/tickets/:id/messages"],
     id: (document, service, { id }) => [service.key, id].join("."),
-    description: (document, _service, { id }) =>{
-        var desc = "#" + id + " " + document.querySelector(".title__subject-text")?.innerText?.trim();
-        return desc;
+    description: (document, _service, { id }) => {
+      var desc = "#" + id + " " + document.querySelector(".title__subject-text")?.innerText?.trim()
+      return desc
     },
     allowHostOverride: false,
   },
