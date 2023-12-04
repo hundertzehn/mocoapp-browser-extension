@@ -257,6 +257,7 @@ describe("utils", () => {
       it("should use id as service.id when customId is undefined for clickup", () => {
         const document = {
           querySelector: jest.fn().mockReturnValue({ textContent: "" }),
+          querySelectorAll: jest.fn().mockReturnValue({ textContent: "" }),
         }
         const service = matcher("https://app.clickup.com/t/24301549")
         const enhancedService = createEnhancer(document)(service)
@@ -266,6 +267,7 @@ describe("utils", () => {
       it("should use customId as service.id for clickup", () => {
         const document = {
           querySelector: jest.fn().mockReturnValue({ textContent: "" }),
+          querySelectorAll: jest.fn().mockReturnValue({ textContent: "" }),
         }
         const service = matcher("https://app.clickup.com/t/24301549/T2023-53")
         const enhancedService = createEnhancer(document)(service)
