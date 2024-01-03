@@ -3,13 +3,14 @@ import PropTypes from "prop-types"
 import HolidayIcon from "components/shared/HolidayIcon"
 import XmarkIcon from "components/shared/XmarkIcon"
 import HatchBackground from "../shared/HatchBackground"
+import { formatDuration } from "utils"
 
-const Hours = ({ hours, absence, active }) => {
+const Hours = ({ seconds, absence, active, settingTimeTrackingHHMM }) => {
   let style
   let content = null
 
-  if (hours > 0) {
-    content = hours.toFixed(1)
+  if (seconds > 0) {
+    content = formatDuration(seconds, { settingTimeTrackingHHMM, showSeconds: false })
   } else if (absence) {
     if (!active) {
       style = { backgroundColor: absence.assignment_color }
@@ -37,12 +38,13 @@ const Hours = ({ hours, absence, active }) => {
 }
 
 Hours.propTypes = {
-  hours: PropTypes.number.isRequired,
+  seconds: PropTypes.number.isRequired,
   absence: PropTypes.shape({
     assignment_code: PropTypes.string,
     assignment_color: PropTypes.string,
   }),
   active: PropTypes.bool.isRequired,
+  settingTimeTrackingHHMM: PropTypes.bool.isRequired,
 }
 
 export default Hours
