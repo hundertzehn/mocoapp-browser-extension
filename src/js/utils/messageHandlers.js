@@ -102,8 +102,8 @@ export async function openPopup(tab, { service }) {
       )
     }
 
-    const settingTimeTrackingHHMM = get("[0].data.setting_time_tracking_hh_mm", responses)
-    !isNil(settingTimeTrackingHHMM) && setStorage({ settingTimeTrackingHHMM })
+    const settingTimeTrackingHHMM = get("[0].data.setting_time_tracking_hh_mm", responses) ?? false
+    setStorage({ settingTimeTrackingHHMM })
 
     const data = {
       service,
@@ -119,6 +119,7 @@ export async function openPopup(tab, { service }) {
       schedules: get("[3].data", responses),
       fromDate,
       toDate,
+      settingTimeTrackingHHMM,
       loading: false,
     }
     sendMessage("openPopup", data, `content-script@${tab.id}`)
