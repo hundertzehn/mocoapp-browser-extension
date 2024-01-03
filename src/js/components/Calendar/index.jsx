@@ -7,20 +7,29 @@ import { pathEq } from "lodash/fp"
 
 const findAbsence = (date, schedules) => schedules.find(pathEq("date", formatDate(date)))
 
-const hoursAtDate = (date, activities) =>
+const secondsAtDate = (date, activities) =>
   activities
     .filter(pathEq("date", formatDate(date)))
-    .reduce((acc, activity) => acc + activity.hours, 0)
+    .reduce((acc, activity) => acc + activity.seconds, 0)
 
-const Calendar = ({ fromDate, toDate, selectedDate, activities, schedules, onChange }) => (
+const Calendar = ({
+  fromDate,
+  toDate,
+  selectedDate,
+  activities,
+  schedules,
+  settingTimeTrackingHHMM,
+  onChange,
+}) => (
   <div className="moco-bx-calendar">
     {eachDayOfInterval({ start: fromDate, end: toDate }).map((date) => (
       <Day
         key={date}
         date={date}
-        hours={hoursAtDate(date, activities)}
+        seconds={secondsAtDate(date, activities)}
         absence={findAbsence(date, schedules)}
         active={formatDate(date) === formatDate(selectedDate)}
+        settingTimeTrackingHHMM={settingTimeTrackingHHMM}
         onClick={onChange}
       />
     ))}
@@ -35,7 +44,7 @@ Calendar.propTypes = {
     PropTypes.shape({
       id: PropTypes.number.isRequired,
       date: PropTypes.string.isRequired,
-      hours: PropTypes.number.isRequired,
+      seconds: PropTypes.number.isRequired,
       timer_started_at: PropTypes.string,
     }).isRequired,
   ),
@@ -46,6 +55,7 @@ Calendar.propTypes = {
       assignment_color: PropTypes.string,
     }),
   ).isRequired,
+  settingTimeTrackingHHMM: PropTypes.bool.isRequired,
   onChange: PropTypes.func.isRequired,
 }
 
