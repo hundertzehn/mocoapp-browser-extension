@@ -156,7 +156,7 @@ class Options extends Component {
             <h3 style={{ marginBottom: 0 }}>Service-URLs</h3>
             <small>
               Doppelpunkt für Platzhalter verwenden, z.B.{" "}
-              <span style={{ backgroundColor: "rgba(100, 100, 100, 0.1)" }}>:org</span>. Siehe{" "}
+              <span style={{ backgroundColor: "rgba(100, 100, 100, 0.1)" }}>:org</span>. Mehrere URLs komma-getrennt aufschreiben. Siehe{" "}
               <a
                 href="https://github.com/hundertzehn/mocoapp-browser-extension#remote-service-configuration"
                 target="_blank"
