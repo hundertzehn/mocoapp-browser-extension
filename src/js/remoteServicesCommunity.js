@@ -20,7 +20,7 @@ export default {
       }
       return `${reference} ${title || ""}`.trim()
     },
-    projectLabel: (document) => document.querySelector(".js-breadcrumb-item-text")?.textContent?.trim(),
+    projectLabel: (document) => document.querySelector("span.js-breadcrumb-item-text")?.textContent?.trim(),
     allowHostOverride: true,
   },
 
