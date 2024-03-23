@@ -68,7 +68,7 @@ export default {
     ],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
     description: (document, service, { id }) => 
-      `${id || ""} ${document.querySelector(".js-issue-title")?.textContent || ""}`.trim(),
+      `#${id || ""} ${document.querySelector(".js-issue-title")?.textContent || ""}`.trim(),
     projectLabel: (document) => document.querySelector(".AppHeader-context-compact-mainItem")?.textContent?.trim(),
     allowHostOverride: false,
   },
