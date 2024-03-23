@@ -5,18 +5,18 @@ export default {
     name: "gitlab",
     host: "https://gitlab.com",
     urlPatterns: [
-      ":host:/:org/:group(/*)/:projectId/-/issues/:issueId(#note_:noteId)",
-      ":host:/:org(/*)/:projectId/-/issues/:issueId(#note_:noteId)",
-      ":host:/:org/:group(/*)/:projectId/-/merge_requests/:mergeRequestId(#note_:noteId)",
-      ":host:/:org(/*)/:projectId/-/merge_requests/:mergeRequestId(#note_:noteId)",
+      ":host:/:org/:group(/*)/:projectId/-/issues/:id(#note_:noteId)",
+      ":host:/:org(/*)/:projectId/-/issues/:id(#note_:noteId)",
+      ":host:/:org/:group(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
+      ":host:/:org(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
     ],
-    description: (document, service, { issueId, mergeRequestId, noteId: _noteId }) => {
+    description: (document, service, { id, noteId: _noteId }) => {
       const title = document.querySelector(".title")?.textContent?.trim()
       let reference = undefined;
-      if (issueId) {
-        reference = `##${issueId}`; // add '#' as prefix so that we can identify it as an issue
-      } else if (mergeRequestId) {
-        reference = `#!${mergeRequestId}`; // add '!' as prefix so that we can identify it as an merge request
+      if (service.url.includes('/issues/')) {
+        reference = `##${id}`; // add '#' as prefix so that we can identify it as an issue
+      } else if (service.url.includes('/merge_requests/')) {
+        reference = `#!${id}`; // add '!' as prefix so that we can identify it as an merge request
       }
       return `${reference} ${title || ""}`.trim()
     },
