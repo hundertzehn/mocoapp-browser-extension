@@ -59,24 +59,17 @@ export default {
     allowHostOverride: false,
   },
 
-  "github-pr": {
+  "github": {
     name: "github",
     host: "https://github.com",
-    urlPatterns: [":host:/:org/:repo/pull/:id(/:tab)"],
+    urlPatterns: [
+      ":host:/:org/:repo/issues/:id",
+      ":host:/:org/:repo/pull/:id(/:tab)"
+    ],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
-    description: (document) => document.querySelector(".js-issue-title")?.textContent?.trim(),
-    projectId: projectIdentifierBySelector(".js-issue-title"),
-    allowHostOverride: false,
-  },
-
-  "github-issue": {
-    name: "github",
-    host: "https://github.com",
-    urlPatterns: [":host:/:org/:repo/issues/:id"],
-    id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
-    description: (document, _service, { org: _org, repo: _repo, id: _id }) =>
-      document.querySelector(".js-issue-title")?.textContent?.trim(),
-    projectId: projectIdentifierBySelector(".js-issue-title"),
+    description: (document, service, { id }) => 
+      `${id || ""} ${document.querySelector(".js-issue-title")?.textContent || ""}`.trim(),
+    projectLabel: (document) => document.querySelector(".AppHeader-context-compact-mainItem")?.textContent?.trim(),
     allowHostOverride: false,
   },
 
