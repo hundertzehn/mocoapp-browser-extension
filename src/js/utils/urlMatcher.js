@@ -1,7 +1,6 @@
 import UrlPattern from "url-pattern"
 import { isFunction, isUndefined, compose, toPairs, map, pipe, isNil, reduce } from "lodash/fp"
 import { asArray } from "./index"
-import queryString from "query-string"
 
 function parseUrl(url) {
   const urlObject = new URL(url)
@@ -9,8 +8,8 @@ function parseUrl(url) {
   let { hash } = urlObject
   const hashQueryString = hash.substring(hash.indexOf("?"))
   const query = {
-    ...queryString.parse(search),
-    ...queryString.parse(hashQueryString),
+    ...Object.fromEntries(new URLSearchParams(search)),
+    ...Object.fromEntries(new URLSearchParams(hashQueryString)),
   }
   if (hash) {
     hash = hash.match(/#[^?]+/)[0]

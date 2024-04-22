@@ -10,14 +10,9 @@ import {
 } from "../../src/js/utils"
 import { map, compose } from "lodash/fp"
 
-const getProjectBy = finder => key =>
-  compose(
-    finder(key),
-    groupedProjectOptions,
-  )(projects)
+const getProjectBy = (finder) => (key) => compose(finder(key), groupedProjectOptions)(projects)
 
 const getProjectByValue = getProjectBy(findProjectByValue)
-const getProjectByIdentifier = getProjectBy(findProjectByIdentifier)
 
 describe("utils", () => {
   describe("findProjectByValue", () => {
