@@ -33,7 +33,7 @@
     "react-select": "^5.8.0",
     "url-pattern": "^1.0.3",
     "webext-bridge": "^6.0.1",
-    "webextension-polyfill": "^0.10.0"
+    "webextension-polyfill": "^0.11.0"
   },
   "devDependencies": {
     "@babel/core": "^7.24.4",
