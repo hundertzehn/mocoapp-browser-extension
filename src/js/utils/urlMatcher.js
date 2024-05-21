@@ -60,19 +60,21 @@ const urlPatternOptions = {
 
 const parseServices = compose(
   map(([key, config]) => {
-    const hosts = config.host.split(',').map((host) => host.trim());
+    const hosts = config.host.split(",").map((host) => host.trim())
     return {
       ...config,
       key,
-      patterns: hosts.flatMap((host) => config.urlPatterns.map((pattern) => {
-        if (Array.isArray(pattern)) {
-          return new UrlPattern(
-            ...pattern.map((p) => replaceHostInPattern(host, p)),
-            urlPatternOptions,
-          )
-        }
-        return new UrlPattern(replaceHostInPattern(host, pattern), urlPatternOptions)
-      })),
+      patterns: hosts.flatMap((host) =>
+        config.urlPatterns.map((pattern) => {
+          if (Array.isArray(pattern)) {
+            return new UrlPattern(
+              ...pattern.map((p) => replaceHostInPattern(host, p)),
+              urlPatternOptions,
+            )
+          }
+          return new UrlPattern(replaceHostInPattern(host, pattern), urlPatternOptions)
+        }),
+      ),
     }
   }),
   toPairs,
