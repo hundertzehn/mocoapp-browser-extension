@@ -282,6 +282,7 @@ describe("utils", () => {
     beforeEach(() => {
       matcher = createMatcher(remoteServices, {
         github: "https://my-custom-github-url.com",
+        gitlab: "https://gitlab.com,https://gitlab.example.com",
       })
     })
 
@@ -295,6 +296,20 @@ describe("utils", () => {
       it("doesn't match default host and path", () => {
         const service = matcher("https://github.com/hundertzehn/mocoapp/pull/123")
         expect(service).toBe(undefined)
+      })
+
+      it("matches multiple overridden hosts", () => {
+        const service = matcher(
+          "https://gitlab.example.com/testorganisatzion/testproject/-/merge_requests/1",
+        )
+        expect(service.key).toEqual("gitlab")
+        expect(service.name).toEqual("gitlab")
+
+        const service2 = matcher(
+          "https://gitlab.com/testorganisatzion/testproject/-/merge_requests/1",
+        )
+        expect(service2.key).toEqual("gitlab")
+        expect(service2.name).toEqual("gitlab")
       })
     })
   })
