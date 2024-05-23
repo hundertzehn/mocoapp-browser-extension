@@ -59,17 +59,15 @@ export default {
     allowHostOverride: false,
   },
 
-  "github": {
+  github: {
     name: "github",
     host: "https://github.com",
-    urlPatterns: [
-      ":host:/:org/:repo/issues/:id",
-      ":host:/:org/:repo/pull/:id(/:tab)"
-    ],
+    urlPatterns: [":host:/:org/:repo/issues/:id", ":host:/:org/:repo/pull/:id(/:tab)"],
     id: (document, service, { org, repo, id }) => [service.key, org, repo, id].join("."),
-    description: (document, service, { id }) => 
+    description: (document, service, { id }) =>
       `#${id || ""} ${document.querySelector(".js-issue-title")?.textContent || ""}`.trim(),
-    projectLabel: (document) => document.querySelector(".AppHeader-context-compact-mainItem")?.textContent?.trim(),
+    projectLabel: (document) =>
+      document.querySelector(".AppHeader-context-compact-mainItem")?.textContent?.trim(),
     allowHostOverride: false,
   },
 

@@ -11,16 +11,17 @@ export default {
       ":host:/:org(/*)/:projectId/-/merge_requests/:id(#note_:noteId)",
     ],
     description: (document, service, { id, noteId: _noteId }) => {
-      const title = document.querySelector(".title")?.textContent?.trim()
-      let reference = undefined;
-      if (service.url.includes('/issues/')) {
-        reference = `##${id}`; // add '#' as prefix so that we can identify it as an issue
-      } else if (service.url.includes('/merge_requests/')) {
-        reference = `#!${id}`; // add '!' as prefix so that we can identify it as an merge request
+      const title = document.querySelector(".detail-page-description .title")?.textContent?.trim()
+      let reference = undefined
+      if (service.url.includes("/issues/")) {
+        reference = `##${id}` // add '#' as prefix so that we can identify it as an issue
+      } else if (service.url.includes("/merge_requests/")) {
+        reference = `#!${id}` // add '!' as prefix so that we can identify it as an merge request
       }
       return `${reference} ${title || ""}`.trim()
     },
-    projectLabel: (document) => document.querySelector("span.js-breadcrumb-item-text")?.textContent?.trim(),
+    projectLabel: (document) =>
+      document.querySelector("span.js-breadcrumb-item-text")?.textContent?.trim(),
     allowHostOverride: true,
   },
 
