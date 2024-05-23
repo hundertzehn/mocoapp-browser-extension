@@ -1,7 +1,6 @@
 import UrlPattern from "url-pattern"
 import { isFunction, isUndefined, compose, toPairs, map, pipe, isNil, reduce } from "lodash/fp"
 import { asArray } from "./index"
-import queryString from "query-string"
 
 function parseUrl(url) {
   const urlObject = new URL(url)
@@ -9,8 +8,8 @@ function parseUrl(url) {
   let { hash } = urlObject
   const hashQueryString = hash.substring(hash.indexOf("?"))
   const query = {
-    ...queryString.parse(search),
-    ...queryString.parse(hashQueryString),
+    ...Object.fromEntries(new URLSearchParams(search)),
+    ...Object.fromEntries(new URLSearchParams(hashQueryString)),
   }
   if (hash) {
     hash = hash.match(/#[^?]+/)[0]
@@ -59,19 +58,24 @@ const urlPatternOptions = {
 }
 
 const parseServices = compose(
-  map(([key, config]) => ({
-    ...config,
-    key,
-    patterns: config.urlPatterns.map((pattern) => {
-      if (Array.isArray(pattern)) {
-        return new UrlPattern(
-          ...pattern.map((p) => replaceHostInPattern(config.host, p)),
-          urlPatternOptions,
-        )
-      }
-      return new UrlPattern(replaceHostInPattern(config.host, pattern), urlPatternOptions)
-    }),
-  })),
+  map(([key, config]) => {
+    const hosts = config.host.split(",").map((host) => host.trim())
+    return {
+      ...config,
+      key,
+      patterns: hosts.flatMap((host) =>
+        config.urlPatterns.map((pattern) => {
+          if (Array.isArray(pattern)) {
+            return new UrlPattern(
+              ...pattern.map((p) => replaceHostInPattern(host, p)),
+              urlPatternOptions,
+            )
+          }
+          return new UrlPattern(replaceHostInPattern(host, pattern), urlPatternOptions)
+        }),
+      ),
+    }
+  }),
   toPairs,
 )
 
