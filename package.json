@@ -36,7 +36,7 @@
     "webextension-polyfill": "^0.10.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.24.4",
+    "@babel/core": "^7.24.7",
     "@babel/eslint-parser": "^7.23.3",
     "@babel/preset-env": "^7.24.4",
     "@babel/preset-react": "^7.23.3",
