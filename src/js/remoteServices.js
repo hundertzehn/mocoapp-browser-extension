@@ -94,6 +94,10 @@ export default {
       ":host:/jira/software/c/projects/:projectId/boards/:board/backlog",
       ":host:/jira/software/c/projects/:projectId/boards/:board/roadmap",
       ":host:/jira/software/c/projects/:projectId/boards/:board/timeline",
+      ":host:/jira/core/projects/:projectId/board",
+      ":host:/jira/core/projects/:projectId/issues",
+      ":host:/jira/core/projects/:projectId/list",
+      ":host:/jira/core/projects/:projectId/timeline",
     ],
     queryParams: {
       id: "selectedIssue",
