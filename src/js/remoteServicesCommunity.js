@@ -161,16 +161,20 @@ export default {
     urlPatterns: [":host:/inbox/:id"],
     id: (document, service, { id }) => [service.key, id].join("."),
     description: (document, _service, { id }) => {
-      let subjectsRaw =   document.querySelectorAll("div#__next div div#bodySafeArea  h4.hy-font-semibold.hy-text-sm.hy-mt-6.hy-px-6.hy-cursor-pointer")
+      let subjectsRaw = document.querySelectorAll(
+        "div#__next div div#bodySafeArea  h4.hy-font-semibold.hy-text-sm.hy-mt-6.hy-px-6.hy-cursor-pointer",
+      )
       let subject = id.toString()
-      if(subjectsRaw.length == 1){
+      if (subjectsRaw.length == 1) {
         let subjectRaw = subjectsRaw[0].innerHTML
-        subject = subjectRaw.substring(subjectRaw.indexOf(":")+2)
+        subject = subjectRaw.substring(subjectRaw.indexOf(":") + 2)
       }
 
-      let contactNameFields = document.querySelectorAll("div#__next div#bodySafeArea div.font-semibold.cursor-pointer.text-hy-black.text-hy-base.whitespace-nowrap.truncate.mr-2")
+      let contactNameFields = document.querySelectorAll(
+        "div#__next div#bodySafeArea div.font-semibold.cursor-pointer.text-hy-black.text-hy-base.whitespace-nowrap.truncate.mr-2",
+      )
       let contactName = ""
-      if(contactNameFields.length == 1){
+      if (contactNameFields.length == 1) {
         contactName = contactNameFields[0].title
       }
 
@@ -179,9 +183,14 @@ export default {
     },
     projectId: (document) => {
       let projectId = ""
-      let projectLabels = document.querySelectorAll("div#__next  div#bodySafeArea span[title='Moco ProjectId']")
-      if(projectLabels.length == 1){
-        projectId = projectLabels[0].parentElement.parentElement.nextElementSibling.querySelector("input").value 
+      let projectLabels = document.querySelectorAll(
+        "div#__next  div#bodySafeArea span[title='Moco ProjectId']",
+      )
+      if (projectLabels.length == 1) {
+        projectId =
+          projectLabels[0].parentElement.parentElement.nextElementSibling.querySelector(
+            "input",
+          ).value
       }
 
       return projectId
