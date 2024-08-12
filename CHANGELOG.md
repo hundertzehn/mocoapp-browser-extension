@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.7.0] – 2024-07-23
+## [2.7.0] – 2024-08-12
+
+### Added
+
+- Support for Superchat ([#866](https://github.com/hundertzehn/mocoapp-browser-extension/pull/866)) – contribution by [Niiiklaas](https://github.com/Niiiklaas)
+
+### Changed
 
 - Update urlPatterns list for jira - add jira core project urls ([#861](https://github.com/hundertzehn/mocoapp-browser-extension/pull/861)) – contribution by [Der-Alex](https://github.com/Der-Alex))
 
