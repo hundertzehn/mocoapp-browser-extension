@@ -108,7 +108,8 @@ export default {
         document
           .querySelector('[data-testid="issue.views.issue-base.foundation.summary.heading"]')
           ?.textContent?.trim() ||
-        document.querySelector(".ghx-selected .ghx-summary")?.textContent?.trim()
+        document.querySelector(".ghx-selected .ghx-summary")?.textContent?.trim() ||
+        document.querySelector('[id="summary-val"]')?.innerText?.trim()
       return `#${id} ${title || ""}`
     },
     projectId: (document, service, { projectId }) => {
