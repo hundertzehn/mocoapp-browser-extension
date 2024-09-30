@@ -25,10 +25,6 @@ class Form extends Component {
     onSubmit: PropTypes.func.isRequired,
   }
 
-  static defaultProps = {
-    inline: true,
-  }
-
   isValid() {
     const { changeset } = this.props
     return (

@@ -7,7 +7,7 @@ import { parseISO } from "date-fns"
 import { formatDuration } from "utils"
 import Timer from "./shared/Timer"
 
-const Bubble = ({ bookedSeconds, timedActivity, settingTimeTrackingHHMM }) => {
+const Bubble = ({ bookedSeconds = 0, timedActivity, settingTimeTrackingHHMM = false }) => {
   const logo = timedActivity ? mocoTimerLogo : mocoLogo
 
   return (
@@ -37,11 +37,6 @@ Bubble.propTypes = {
     seconds: PropTypes.number.isRequired,
   }),
   settingTimeTrackingHHMM: PropTypes.bool,
-}
-
-Bubble.defaultProps = {
-  bookedSeconds: 0,
-  settingTimeTrackingHHMM: false,
 }
 
 export default Bubble
