@@ -66,22 +66,15 @@ function openPopup(payload) {
   }
 
   const container = document.getElementById("moco-bx-popup-root")
-
-  if (!popupRoot) {
-    popupRoot = createRoot(container)
-  }
-
-  if (!focusTrap) {
-    focusTrap = createFocusTrap(container, { clickOutsideDeactivates: true })
-  }
-
+  popupRoot = createRoot(container)
+  focusTrap = createFocusTrap(container, { clickOutsideDeactivates: true })
   popupRoot.render(<Popup ref={popupRef} data={payload} onRequestClose={closePopup} />)
   focusTrap.activate()
 }
 
 function closePopup() {
   if (popupRoot) {
-    popupRoot.render(null)
+    popupRoot.unmount()
   }
 
   if (focusTrap) {
