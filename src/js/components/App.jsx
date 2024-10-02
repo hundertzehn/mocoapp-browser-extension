@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React, { Component, createRef } from "react"
 import { sendMessage } from "webext-bridge/content-script"
 import { onMessage } from "webext-bridge/popup"
 import Spinner from "components/Spinner"
@@ -17,7 +17,6 @@ import {
   defaultTask,
   formatDate,
 } from "utils"
-
 import { parseISO } from "date-fns"
 import InvalidConfigurationError from "components/Errors/InvalidConfigurationError"
 import UpgradeRequiredError from "components/Errors/UpgradeRequiredError"
@@ -26,6 +25,7 @@ import Header from "./shared/Header"
 import { head } from "lodash"
 import TimeInputParser from "utils/TimeInputParser"
 import { get } from "lodash/fp"
+import { createFocusTrap } from "focus-trap"
 
 class App extends Component {
   constructor(props) {
@@ -38,6 +38,7 @@ class App extends Component {
       changeset: {},
       formErrors: {},
     }
+    this.containerRef = createRef()
   }
 
   get project() {
@@ -96,9 +97,19 @@ class App extends Component {
     })
   }
 
+  componentDidUpdate() {
+    if (this.containerRef.current && !this.focusTrap) {
+      this.focusTrap = createFocusTrap(this.containerRef.current, { clickOutsideDeactivates: true })
+      this.focusTrap.activate()
+    }
+  }
+
   componentWillUnmount() {
     window.removeEventListener("keydown", this.handleKeyDown)
     window.removeEventListener("message", this.handleMessagePopupData)
+    if (this.focusTrap) {
+      this.focusTrap.deactivate()
+    }
   }
 
   handleChange = (event) => {
@@ -195,7 +206,7 @@ class App extends Component {
     }
 
     return (
-      <div className="moco-bx-app-container">
+      <div ref={this.containerRef} className="moco-bx-app-container">
         <Header subdomain={subdomain} />
         {timedActivity ? (
           <TimerView timedActivity={timedActivity} onStopTimer={this.handleStopTimer} />

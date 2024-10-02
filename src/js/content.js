@@ -7,11 +7,10 @@ import remoteServices from "./remoteServices"
 import { sendMessage, onMessage } from "webext-bridge/content-script"
 import { getSettings } from "./utils/browser"
 import "../css/content.scss"
-import { createFocusTrap } from "focus-trap"
 
 const popupRef = createRef()
 
-let bubbleRoot, popupRoot, focusTrap
+let bubbleRoot, popupRoot
 
 let findService
 getSettings().then((settings) => {
@@ -59,26 +58,23 @@ function updateBubble({ service, bookedSeconds, settingTimeTrackingHHMM, timedAc
 
 function openPopup(payload) {
   if (!document.getElementById("moco-bx-popup-root")) {
-    const domRoot = document.createElement("div")
-    domRoot.setAttribute("id", "moco-bx-popup-root")
+    const popupNode = document.createElement("div")
+    popupNode.setAttribute("id", "moco-bx-popup-root")
     const rootNode = document.querySelector("[aria-modal]") || document.body
-    rootNode.appendChild(domRoot)
+    rootNode.appendChild(popupNode)
   }
 
   const container = document.getElementById("moco-bx-popup-root")
-  popupRoot = createRoot(container)
-  focusTrap = createFocusTrap(container, { clickOutsideDeactivates: true })
+  if (!popupRoot) {
+    popupRoot = createRoot(container)
+  }
   popupRoot.render(<Popup ref={popupRef} data={payload} onRequestClose={closePopup} />)
-  focusTrap.activate()
 }
 
 function closePopup() {
   if (popupRoot) {
     popupRoot.unmount()
-  }
-
-  if (focusTrap) {
-    focusTrap.deactivate()
+    popupRoot = null
   }
 }
 
