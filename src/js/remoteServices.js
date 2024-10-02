@@ -160,7 +160,9 @@ export default {
     urlPatterns: [":host:/c/:id/:title"],
     description: (document, _service, { title }) =>
       document.querySelector("#card-back-name")?.textContent?.trim() || title,
-    projectId: (document) => projectIdentifierBySelector("#card-back-name")(document),
+    projectId: (document) =>
+      projectIdentifierBySelector("#card-back-name")(document) ||
+      projectIdentifierBySelector("[data-testid='board-name-display']")(document),
     allowHostOverride: false,
   },
 
