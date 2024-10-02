@@ -7,10 +7,11 @@ import remoteServices from "./remoteServices"
 import { sendMessage, onMessage } from "webext-bridge/content-script"
 import { getSettings } from "./utils/browser"
 import "../css/content.scss"
+import { createFocusTrap } from "focus-trap"
 
 const popupRef = createRef()
 
-let bubbleRoot, popupRoot
+let bubbleRoot, popupRoot, focusTrap
 
 let findService
 getSettings().then((settings) => {
@@ -60,20 +61,31 @@ function openPopup(payload) {
   if (!document.getElementById("moco-bx-popup-root")) {
     const domRoot = document.createElement("div")
     domRoot.setAttribute("id", "moco-bx-popup-root")
-    document.body.appendChild(domRoot)
+    const rootNode = document.querySelector("[aria-modal]") || document.body
+    rootNode.appendChild(domRoot)
   }
 
+  const container = document.getElementById("moco-bx-popup-root")
+
   if (!popupRoot) {
-    const container = document.getElementById("moco-bx-popup-root")
     popupRoot = createRoot(container)
   }
 
+  if (!focusTrap) {
+    focusTrap = createFocusTrap(container, { clickOutsideDeactivates: true })
+  }
+
   popupRoot.render(<Popup ref={popupRef} data={payload} onRequestClose={closePopup} />)
+  focusTrap.activate()
 }
 
 function closePopup() {
   if (popupRoot) {
     popupRoot.render(null)
+  }
+
+  if (focusTrap) {
+    focusTrap.deactivate()
   }
 }
 

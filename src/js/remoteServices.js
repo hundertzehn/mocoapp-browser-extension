@@ -158,10 +158,10 @@ export default {
     name: "trello",
     host: "https://trello.com",
     urlPatterns: [":host:/c/:id/:title"],
-    description: (document, service, { title }) =>
-      document.querySelector("#js-dialog-title")?.textContent?.trim() || title,
+    description: (document, _service, { title }) =>
+      document.querySelector("#card-back-name")?.textContent?.trim() || title,
     projectId: (document) =>
-      projectIdentifierBySelector("#js-dialog-title")(document) ||
+      projectIdentifierBySelector("#card-back-name")(document) ||
       projectIdentifierBySelector("[data-testid='board-name-display']")(document),
     allowHostOverride: false,
   },
