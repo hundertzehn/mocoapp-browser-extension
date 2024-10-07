@@ -56,12 +56,27 @@ function updateBubble({ service, bookedSeconds, settingTimeTrackingHHMM, timedAc
   }
 }
 
+function findRootNode() {
+  const el = document.querySelector("[aria-modal]")
+
+  if (!el) {
+    return document.body
+  }
+
+  const { display, visibility } = window.getComputedStyle(el)
+  if (display === "none" || visibility == "hidden") {
+    return document.body
+  }
+
+  return el
+}
+
 function openPopup(payload) {
   if (!document.getElementById("moco-bx-popup-root")) {
     const popupNode = document.createElement("div")
     popupNode.setAttribute("id", "moco-bx-popup-root")
-    const rootNode = document.querySelector("[aria-modal]") || document.body
-    rootNode.appendChild(popupNode)
+
+    findRootNode().appendChild(popupNode)
   }
 
   const container = document.getElementById("moco-bx-popup-root")
