@@ -24,7 +24,7 @@
     "axios": "^0.28.1",
     "classnames": "^2.5.1",
     "core-js": "^3.38.1",
-    "date-fns": "^3.0.6",
+    "date-fns": "^4.1.0",
     "dotenv": "^16.0.0",
     "focus-trap": "^7.6.0",
     "lodash": "^4.17.11",
