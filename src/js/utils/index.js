@@ -92,7 +92,7 @@ export const extractAndSetTag = (changeset) => {
   }
   return {
     ...changeset,
-    description: description.replace(/^#\S+\s/, ""),
+    description: description.replace(/^#\S+/, "").trim(),
     tag: match[1],
   }
 }
