@@ -57,7 +57,7 @@ function updateBubble({ service, bookedSeconds, settingTimeTrackingHHMM, timedAc
 }
 
 function findRootNode() {
-  const el = document.querySelector("[aria-modal]")
+  const el = document.querySelector('[aria-modal="true"]')
 
   if (!el) {
     return document.body
