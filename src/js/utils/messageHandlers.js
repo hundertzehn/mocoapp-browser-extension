@@ -74,7 +74,7 @@ export function togglePopup(tab) {
     }
 
     if (isPopupOpen) {
-      sendMessage("closePopup", `content-script@${tab.id}`)
+      sendMessage("closePopup", null, `content-script@${tab.id}`)
     } else {
       openPopup(tab, { service })
     }
