@@ -103,6 +103,20 @@ export default {
       id: "selectedIssue",
       projectId: "projectKey",
     },
+    mocoProjectId: async (document, service, { id }) => {
+      const issue = await fetch(`/rest/api/3/issue/${id}`).then((res) => res.json())
+      const parentKey = issue.fields.parent?.key
+      const parent = await fetch(`/rest/api/3/issue/${parentKey}`).then((res) => res.json())
+      const mocoLabels = parent.fields.labels.filter((label) => label.includes("moco:"))
+      if (mocoLabels.length === 0) {
+        console.log("no moco labels")
+        return null
+      }
+      alert("Open the Browser Console.")
+      console.log("moco label")
+      const projectId = parseInt(mocoLabels[0].split(":")[1])
+      return projectId
+    },
     description: (document, service, { id }) => {
       const title =
         document
@@ -110,7 +124,8 @@ export default {
           ?.textContent?.trim() ||
         document.querySelector(".ghx-selected .ghx-summary")?.textContent?.trim() ||
         document.querySelector('[id="summary-val"]')?.innerText?.trim()
-      return `#${id} ${title || ""}`
+
+      return `${id} ${title || ""}`
     },
     projectId: (document, service, { projectId }) => {
       // The title of the issue

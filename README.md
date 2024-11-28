@@ -4,6 +4,9 @@
 
 ### Development
 
+- run `python3 -m venv .venv`
+- run `source .venv/bin/activate`
+- run `pip install setuptools`
 - run `yarn`
 - run `yarn start:chrome` or `yarn start:firefox` (`yarn start` is an alias for `yarn start:chrome`)
 - load extension into browser:

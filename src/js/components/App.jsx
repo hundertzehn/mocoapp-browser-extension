@@ -82,6 +82,7 @@ class App extends Component {
       hours: "",
       seconds: new TimeInputParser(this.state.changeset.hours).parseSeconds(),
       description: service?.description || "",
+      mocoProjectId: service?.mocoProjectId || "",
       tag: "",
     }
 
@@ -167,11 +168,34 @@ class App extends Component {
 
   handleMessagePopupData = (event) => {
     if (event.data.type === "moco-bx-popup-data") {
-      this.setState({
-        loading: false,
-        ...JSON.parse(event.data.data),
+      const data = JSON.parse(event.data.data)
+      if (data.loading == true) {
+        return
+      }
+      this.loadMocoProjectId(data).then((mocoProjectId) => {
+        console.log(mocoProjectId)
+        data.service.mocoProjectId = mocoProjectId
+        this.setState({
+          loading: false,
+          ...data,
+        })
       })
     }
+  }
+
+  loadMocoProjectId = async (data) => {
+    const issue = await fetch(
+      `https://protofy.atlassian.net/rest/api/3/issue/${data.service.description.split(" ")[0]}`,
+    ).then((res) => res.json())
+    const parentKey = issue.fields.parent?.key
+    const parent = await fetch(`https://protofy.atlassian.net/rest/api/3/issue/${parentKey}`).then(
+      (res) => res.json(),
+    )
+    const mocoLabels = parent.fields.labels.filter((label) => label.includes("moco:"))
+    if (mocoLabels.length === 0) {
+      return null
+    }
+    return parseInt(mocoLabels[0].split(":")[1])
   }
 
   render() {

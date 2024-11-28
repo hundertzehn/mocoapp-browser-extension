@@ -98,7 +98,7 @@ export default class Select extends Component {
   static findOptionByValue = (selectOptions, value) => {
     const options = flatMap((option) => (option.options ? option.options : option), selectOptions)
 
-    return options.find(pathEq("value", value)) || null
+    return options.find(pathEq("value", value)) || options[0]
   }
 
   constructor(props) {
