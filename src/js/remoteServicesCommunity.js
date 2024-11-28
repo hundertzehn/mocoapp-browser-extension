@@ -12,7 +12,7 @@ export default {
     ],
     description: (document, service, { id, noteId: _noteId }) => {
       const title = document.querySelector(".detail-page-description .title")?.textContent?.trim()
-      return `#${id} ${title || ""}`.trim()
+      return `#${id} ${title || ""} | ${window.location.href}`.trim()
     },
     allowHostOverride: true,
   },
