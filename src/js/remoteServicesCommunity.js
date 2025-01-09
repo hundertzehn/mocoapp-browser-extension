@@ -197,4 +197,19 @@ export default {
     },
     allowHostOverride: false,
   },
+
+  // redmine service config provided by zeroseven (@pdaether)
+  redmine: {
+    name: "redmine",
+    host: "", // No central cloud hosting, so no host by default
+    urlPatterns: [":host:/issues/:id"],
+    description: (document, _service, { title }) => {
+      const issueIdMatch = window.location.href.match(/\/issues\/(\d+)(\?.*)?$/)
+      const issueId = issueIdMatch ? issueIdMatch[1] : null
+      const issueTitle = document.querySelector(".subject>div>h3")?.textContent?.trim() || title
+      return issueId ? `${issueId}: ${issueTitle}` : issueTitle
+    },
+    projectId: (document) => projectIdentifierBySelector(".current-project")(document),
+    allowHostOverride: true,
+  },
 }
