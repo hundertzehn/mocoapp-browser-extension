@@ -93,6 +93,7 @@ export default {
       ":host:/projects/:project/tasks/timeline/\\(detailModal\\::id/details\\)",
       ":host:/tasks/:id/details",
       ":host:/tasks/filters/\\(detail\\::id/details\\)",
+      ":host:/tasks/filters/:filterId/\\(detail\\::id/details\\)",
       ":host:/my/dashboard/\\(detailModal\\::id/details\\)",
     ],
     projectId: (document) => {
